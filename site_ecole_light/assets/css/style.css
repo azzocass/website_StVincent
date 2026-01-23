@@ -1,0 +1,264 @@
+/* Font Variables */
+:root {
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Nunito', sans-serif;
+
+    /* Blue-Dominant Palette */
+    --color-primary: #00A8E8;
+    /* Sky Blue */
+    --color-primary-dark: #007EA7;
+    --color-royal: #003459;
+    /* Deep Blue */
+    --color-text: #4a5568;
+    /* Grey */
+
+    /* Accents */
+    --color-secondary: #7209B7;
+    /* Violet */
+    --color-accent: #EF476F;
+    /* Pink */
+    --color-success: #06D6A0;
+    /* Mint */
+
+    --color-bg-light: #F0F8FF;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--color-text);
+    background-color: #f8fbff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+    font-family: var(--font-heading);
+    color: var(--color-royal);
+    font-weight: 700;
+}
+
+/* Utility Classes for Colors */
+.text-royal {
+    color: var(--color-royal) !important;
+}
+
+.bg-royal {
+    background-color: var(--color-royal) !important;
+}
+
+.text-primary {
+    color: var(--color-primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+
+.text-secondary {
+    color: var(--color-secondary) !important;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 0.8rem 0;
+    border-bottom: 3px solid var(--color-primary);
+}
+
+.navbar-brand {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--color-royal) !important;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: var(--color-royal) !important;
+    transition: all 0.3s;
+    border-radius: 8px;
+    padding: 0.5rem 1rem !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--color-primary) !important;
+    background-color: rgba(0, 168, 232, 0.05);
+}
+
+/* Carousel */
+.carousel-caption {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    padding: 2.5rem;
+    bottom: 15%;
+    left: 10%;
+    max-width: 550px;
+    box-shadow: 0 10px 30px rgba(0, 52, 89, 0.15);
+    text-align: left;
+}
+
+.carousel-caption h1,
+.carousel-caption h2 {
+    color: var(--color-royal);
+    margin-bottom: 1rem;
+}
+
+.carousel-caption p {
+    color: var(--color-text);
+    margin-bottom: 0;
+}
+
+/* Animations */
+.slide-in-bottom {
+    animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.delay-1 {
+    animation-delay: 0.2s;
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sections */
+.bg-light-fun {
+    background-color: var(--color-bg-light);
+}
+
+.bg-royal-light {
+    background-color: #E0F2FE;
+    color: var(--color-royal);
+}
+
+.sep-line {
+    height: 4px;
+    width: 60px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+}
+
+/* Cards */
+.card-team {
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: white;
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-team:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 52, 89, 0.1);
+}
+
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-primary);
+    padding: 3px;
+    background: white;
+}
+
+/* Agenda */
+.date-box {
+    font-family: var(--font-heading);
+    border-radius: 12px;
+}
+
+.date-box.primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.date-box.secondary {
+    background-color: var(--color-secondary);
+    color: white;
+}
+
+.date-box.accent {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.bg-menu {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+}
+
+/* Tabs */
+.nav-pills .nav-link {
+    border-radius: 50rem;
+    padding: 0.5rem 1.5rem;
+    color: var(--color-royal);
+    background: white;
+    border: 1px solid var(--color-primary);
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* Footer */
+.bg-footer {
+    background-color: var(--color-royal);
+    color: white;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: var(--color-primary);
+}
+
+.grayscale-logo {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    border: none;
+}
+
+.btn-royal {
+    background-color: var(--color-royal);
+    color: white;
+}
+
+.btn-royal:hover {
+    background-color: #002038;
+    color: white;
+}
+
+.btn-action {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.btn-action:hover {
+    background-color: #d13056;
+    color: white;
+}
