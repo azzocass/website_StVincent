@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="École Saint Vincent à Sainte-Luce-sur-Loire. Établissement catholique d'enseignement maternelle et élémentaire, ouvert à tous. Pédagogie bienveillante et inclusion.">
     <title>École Saint Vincent - Sainte-Luce-sur-Loire</title>
     <!-- Google Fonts: Outfit for headings, Nunito for text -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +25,7 @@
     <link rel="icon" href="assets/images/favicon.png" type="image/png">
 </head>
 
-<body>
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="70">
     <!-- Preloader -->
     <div id="loader">
         <div class="spinner"></div>
@@ -68,8 +70,8 @@
                 <div class="blob-shape"></div>
             </div>
             <div class="carousel-item active">
-                <img src="assets/images/banner1.jpg" class="d-block w-100 placeholder-img" alt="École Saint Vincent"
-                    style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
+                <img src="assets/images/banner1.jpg" loading="lazy" class="d-block w-100 placeholder-img"
+                    alt="École Saint Vincent" style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h1 class="display-3 fw-bold mb-3 slide-in-bottom">Bienvenue à Saint Vincent</h1>
                     <p class="lead fs-4 slide-in-bottom delay-1">Ensemble, vivre une école de toutes les intelligences.
@@ -77,16 +79,16 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="assets/images/banner2.jpg" class="d-block w-100 placeholder-img" alt="Apprentissage"
-                    style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
+                <img src="assets/images/banner2.jpg" loading="lazy" class="d-block w-100 placeholder-img"
+                    alt="Apprentissage" style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="display-3 fw-bold mb-3">Construire son Histoire</h2>
                     <p class="lead fs-4">Accompagner chaque enfant sur un chemin de réussite.</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="assets/images/banner3.jpg" class="d-block w-100 placeholder-img" alt="Camaraderie"
-                    style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
+                <img src="assets/images/banner3.jpg" loading="lazy" class="d-block w-100 placeholder-img"
+                    alt="Camaraderie" style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="display-3 fw-bold mb-3">Au Cœur de Sainte-Luce</h2>
                     <p class="lead fs-4">Un établissement catholique ouvert à tous.</p>
@@ -447,9 +449,36 @@
                                 <h5 class="fw-bold text-royal">Dernières Actualités</h5>
                                 <p class="mb-2">Course solidaire : Un immense merci à tous pour votre participation !
                                 </p>
-                                <a href="#" class="small fw-bold text-decoration-none">Lire la suite <i
-                                        class="bi bi-arrow-right"></i></a>
+                                <button class="btn btn-link small fw-bold text-decoration-none p-0"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasActu">Lire la suite <i
+                                        class="bi bi-arrow-right"></i></button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Offcanvas Actualités -->
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasActu"
+                        aria-labelledby="offcanvasActuLabel">
+                        <div class="offcanvas-header bg-royal-light">
+                            <h5 class="offcanvas-title fw-bold text-royal" id="offcanvasActuLabel">Actualités</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <article class="mb-5">
+                                <h6 class="fw-bold text-primary mb-2">Course Solidaire</h6>
+                                <p class="text-muted small mb-3">20 Juin 2025</p>
+                                <img src="assets/images/banner3.jpg" loading="lazy" class="img-fluid rounded-3 mb-3"
+                                    alt="Course">
+                                <p>Un grand bravo à tous nos élèves pour leur énergie lors de la course solidaire !
+                                    Grâce à vos efforts, nous avons récolté des fonds pour l'association partenaire.</p>
+                            </article>
+                            <article class="mb-5">
+                                <h6 class="fw-bold text-primary mb-2">Matinée Travaux</h6>
+                                <p class="text-muted small mb-3">13 Mars 2025</p>
+                                <p>Merci aux parents venus aider pour l'entretien des espaces verts et la peinture des
+                                    classes de maternelle.</p>
+                            </article>
                         </div>
                     </div>
                 </div>
@@ -478,11 +507,66 @@
                                         Gâteau de semoule aux pruneaux</li>
                                 </ul>
                             </div>
-                            <a href="cantine.html" class="btn btn-light text-primary fw-bold rounded-pill w-100">Voir le
-                                Menu complet</a>
+                            <button class="btn btn-light text-primary fw-bold rounded-pill w-100"
+                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasCantine">Voir le
+                                Menu complet</button>
                         </div>
                         <i
                             class="bi bi-egg-fried position-absolute bottom-0 end-0 display-1 opacity-10 me-n3 mb-n3"></i>
+                    </div>
+
+                    <!-- Offcanvas Cantine -->
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCantine"
+                        aria-labelledby="offcanvasCantineLabel">
+                        <div class="offcanvas-header bg-primary text-white">
+                            <h5 class="offcanvas-title fw-bold" id="offcanvasCantineLabel">Menu de la Cantine</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div class="alert alert-light border-start border-4 border-primary mb-4">
+                                <p class="small mb-0"><strong>Note :</strong> Les repas sont préparés sur place avec des
+                                    produits frais et locaux.</p>
+                            </div>
+
+                            <h6 class="fw-bold text-royal border-bottom pb-2 mb-3">Semaine du 20 au 24 Janvier</h6>
+
+                            <div class="mb-4">
+                                <span class="badge bg-royal-light text-primary mb-2">Lundi</span>
+                                <ul class="list-unstyled small">
+                                    <li><strong>Entrée :</strong> Salade de tomates</li>
+                                    <li><strong>Plat :</strong> Cordon bleu & Purée</li>
+                                    <li><strong>Dessert :</strong> Fruit de saison</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <span class="badge bg-royal-light text-primary mb-2">Mardi</span>
+                                <ul class="list-unstyled small">
+                                    <li><strong>Entrée :</strong> Concombre à la crème</li>
+                                    <li><strong>Plat :</strong> Poisson pané & Riz</li>
+                                    <li><strong>Dessert :</strong> Yaourt nature</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <span class="badge bg-royal-light text-primary mb-2">Jeudi</span>
+                                <ul class="list-unstyled small">
+                                    <li><strong>Entrée :</strong> Œuf mayonnaise</li>
+                                    <li><strong>Plat :</strong> Sauté de porc & Haricots verts</li>
+                                    <li><strong>Dessert :</strong> Compote de pommes</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <span class="badge bg-royal-light text-primary mb-2">Vendredi</span>
+                                <ul class="list-unstyled small">
+                                    <li><strong>Entrée :</strong> Carottes râpées</li>
+                                    <li><strong>Plat :</strong> Colin sauce cajun & Boulgour</li>
+                                    <li><strong>Dessert :</strong> Gâteau de semoule</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Périscolaire -->
