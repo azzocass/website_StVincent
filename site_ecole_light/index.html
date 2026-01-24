@@ -529,42 +529,14 @@
                                     produits frais et locaux.</p>
                             </div>
 
-                            <h6 class="fw-bold text-royal border-bottom pb-2 mb-3">Semaine du 20 au 24 Janvier</h6>
+                            <h6 id="cantine-week-title" class="fw-bold text-royal border-bottom pb-2 mb-3">Semaine du
+                                ...</h6>
 
-                            <div class="mb-4">
-                                <span class="badge bg-royal-light text-primary mb-2">Lundi</span>
-                                <ul class="list-unstyled small">
-                                    <li><strong>Entrée :</strong> Salade de tomates</li>
-                                    <li><strong>Plat :</strong> Cordon bleu & Purée</li>
-                                    <li><strong>Dessert :</strong> Fruit de saison</li>
-                                </ul>
-                            </div>
-
-                            <div class="mb-4">
-                                <span class="badge bg-royal-light text-primary mb-2">Mardi</span>
-                                <ul class="list-unstyled small">
-                                    <li><strong>Entrée :</strong> Concombre à la crème</li>
-                                    <li><strong>Plat :</strong> Poisson pané & Riz</li>
-                                    <li><strong>Dessert :</strong> Yaourt nature</li>
-                                </ul>
-                            </div>
-
-                            <div class="mb-4">
-                                <span class="badge bg-royal-light text-primary mb-2">Jeudi</span>
-                                <ul class="list-unstyled small">
-                                    <li><strong>Entrée :</strong> Œuf mayonnaise</li>
-                                    <li><strong>Plat :</strong> Sauté de porc & Haricots verts</li>
-                                    <li><strong>Dessert :</strong> Compote de pommes</li>
-                                </ul>
-                            </div>
-
-                            <div class="mb-4">
-                                <span class="badge bg-royal-light text-primary mb-2">Vendredi</span>
-                                <ul class="list-unstyled small">
-                                    <li><strong>Entrée :</strong> Carottes râpées</li>
-                                    <li><strong>Plat :</strong> Colin sauce cajun & Boulgour</li>
-                                    <li><strong>Dessert :</strong> Gâteau de semoule</li>
-                                </ul>
+                            <div id="cantine-content">
+                                <div class="text-center p-4">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <p class="mt-2 small text-muted">Chargement du menu...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -904,6 +876,9 @@
             }, 500);
         });
     </script>
+    <!-- Custom Scripts -->
+    <script src="assets/js/csv-loader.js"></script>
+    <script src="assets/js/cantine.js"></script>
 </body>
 
 </html>
