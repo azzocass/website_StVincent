@@ -23,10 +23,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Reset time to avoid mismatch
     today.setHours(0, 0, 0, 0);
 
-    // Find Monday of current week
-    const day = today.getDay(); // 0 (Sun) to 6 (Sat)
-    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-    const monday = new Date(today.setDate(diff));
+    // Determine "Effective Date" for display
+    // If it's Saturday (6) or Sunday (0), we want to show the NEXT week.
+    let effectiveDate = new Date(today);
+    const dayOfWeek = today.getDay(); // 0-6
+
+    if (dayOfWeek === 6) { // Saturday
+        effectiveDate.setDate(today.getDate() + 2); // Jump to Monday
+    } else if (dayOfWeek === 0) { // Sunday
+        effectiveDate.setDate(today.getDate() + 1); // Jump to Monday
+    }
+
+    // Find Monday of the "Effective Week"
+    const eDay = effectiveDate.getDay();
+    // eDay should be 1 (Monday) if we just jumped, but rely on standard math:
+    const diff = effectiveDate.getDate() - eDay + (eDay === 0 ? -6 : 1);
+    const monday = new Date(effectiveDate.setDate(diff));
     monday.setHours(0, 0, 0, 0);
 
     // Friday
@@ -86,4 +98,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
         container.insertAdjacentHTML('beforeend', html);
     });
+
+    // --- Dynamic Home Widget Logic ---
+    const homeWidgetDate = document.getElementById('cantine-home-date');
+    const homeWidgetList = document.getElementById('cantine-home-list');
+
+    if (homeWidgetDate && homeWidgetList) {
+        const now = new Date();
+        const currentDay = now.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+
+        // Calculate Target Date based on rules
+        let targetDate = new Date(now);
+        let prefix = "Au menu ce";
+        let suffix = "";
+
+        if (currentDay === 3) {
+            // Wednesday -> Show Thursday
+            targetDate.setDate(now.getDate() + 1);
+            prefix = "Au menu";
+            suffix = " prochain";
+        } else if (currentDay === 6) {
+            // Saturday -> Show Monday
+            targetDate.setDate(now.getDate() + 2);
+            prefix = "Au menu";
+            suffix = " prochain";
+        } else if (currentDay === 0) {
+            // Sunday -> Show Monday
+            targetDate.setDate(now.getDate() + 1);
+            prefix = "Au menu";
+            suffix = " prochain";
+        }
+
+        // Reset time for comparison
+        targetDate.setHours(0, 0, 0, 0);
+
+        // Find meal matching targetDate
+        let targetMeal = allMeals.find(m => {
+            const d = getMealDate(m);
+            return d && d.getDate() === targetDate.getDate() && d.getMonth() === targetDate.getMonth();
+        });
+
+        // Fallback: If target meal not found (e.g. next week Monday not in current CSV), 
+        // try to show *any* meal from the list to avoid empty box? 
+        // User logic implies we SHOULD show the specific day. 
+        // If data is missing, we show "Menu non disponible".
+
+        if (targetMeal) {
+            const dateObj = getMealDate(targetMeal);
+            const dayName = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
+
+            // Construct Label
+            // If it's a standard day: "Au menu ce Vendredi"
+            // If it's Wed/Sat/Sun: "Au menu Jeudi prochain" / "Au menu Lundi prochain"
+            homeWidgetDate.textContent = `${prefix} ${dayName}${suffix} :`;
+
+            // Update List
+            homeWidgetList.innerHTML = `
+                <ul class="list-unstyled mt-2 mb-0 small fw-bold">
+                    <li><i class="bi bi-circle-fill small me-2" style="font-size: 6px;"></i>Entrée : ${targetMeal.Entree || '-'}</li>
+                    <li><i class="bi bi-circle-fill small me-2" style="font-size: 6px;"></i>Plat : ${targetMeal.Plat || '-'}</li>
+                    <li><i class="bi bi-circle-fill small me-2" style="font-size: 6px;"></i>Accompagnement : ${targetMeal.Accompagnement || '-'}</li>
+                    <li><i class="bi bi-circle-fill small me-2" style="font-size: 6px;"></i>Dessert : ${targetMeal.Dessert || '-'}</li>
+                </ul>
+            `;
+        } else {
+            // Friendly fallback if the "Next Monday" is not in the loaded CSV (which is likely if CSV is only current week)
+            // We can just say "Menu de la semaine prochaine" and link to full menu.
+            homeWidgetList.innerHTML = '<p class="small mb-0 opacity-75">Le menu pour ce jour n\'est pas encore affiché.<br>Cliquez ci-dessous pour voir la semaine</p>';
+            homeWidgetDate.textContent = "Prochainement...";
+        }
+    }
 });
