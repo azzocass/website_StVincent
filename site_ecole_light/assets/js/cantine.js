@@ -77,10 +77,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const html = `
             <div class="mb-4 fade-in-up">
                 <span class="badge bg-royal-light text-primary mb-2 text-capitalize">${dayName}</span>
-                <ul class="list-unstyled small">
-                    <li class="mb-1"><strong class="text-secondary">Entrée :</strong> ${meal.Entree || '-'}</li>
-                    <li class="mb-1"><strong class="text-primary">Plat :</strong> ${meal.Plat || '-'} <span class="text-muted fst-italic">(${meal.Accompagnement || ''})</span></li>
-                    <li><strong class="text-success">Dessert :</strong> ${meal.Dessert || '-'}</li>
+                <ul class="list-unstyled small ps-2">
+                    <li class="mb-1"><strong class="text-dark">Entrée :</strong> ${meal.Entree || '-'}</li>
+                    <li class="mb-1"><strong class="text-dark">Plat :</strong> ${meal.Plat || '-'} <span class="text-muted fst-italic">(${meal.Accompagnement || ''})</span></li>
+                    <li><strong class="text-dark">Dessert :</strong> ${meal.Dessert || '-'}</li>
                 </ul>
             </div>
         `;
