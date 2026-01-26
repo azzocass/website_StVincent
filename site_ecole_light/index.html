@@ -140,7 +140,7 @@
                 <!-- Présentation -->
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
                     <div class="row align-items-start">
-                        <!-- Left Column: Story/Text -->
+                        <!-- Left Column: Story/Text + Info -->
                         <div class="col-lg-6">
                             <h3 class="fw-bold text-royal mb-4">Un Établissement Ouvert à Tous</h3>
                             <p>Située au cœur de Sainte Luce sur Loire, l'École Saint Vincent accueille des enfants de
@@ -148,44 +148,39 @@
                                 aussi dans une dizaine de communes voisines.</p>
                             <p>Chaque jeune accueilli, quels que soient son niveau scolaire, sa forme d'intelligence,
                                 son milieu de vie ou son histoire, est accompagné sur un chemin de réussite.</p>
-                            <p>Nous avons à cœur de proposer un cadre bienveillant et structurant, où le dialogue et la
+                            <p class="mb-4">Nous avons à cœur de proposer un cadre bienveillant et structurant, où le
+                                dialogue et la
                                 confiance permettent à chacun de grandir.</p>
+
+                            <!-- Info Block (Moved to Left) -->
+                            <div class="d-flex gap-4 bg-white p-3 rounded-4 shadow-sm border border-light w-100">
+                                <div class="text-royal">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="bi bi-geo-alt-fill fs-5 me-2 text-primary"></i>
+                                        <strong>Localisation</strong>
+                                    </div>
+                                    <span class="small d-block ps-4">Place Saint-Exupéry</span>
+                                </div>
+                                <div class="vr opacity-25"></div>
+                                <div class="text-royal">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="bi bi-clock-fill fs-5 me-2 text-primary"></i>
+                                        <strong>Horaires</strong>
+                                    </div>
+                                    <span class="small d-block ps-4">8h40 - 16h45</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Right Column: Visuals & Info -->
-                        <div class="col-lg-6 mt-4 mt-lg-0">
-                            <div class="d-flex flex-column gap-3">
-                                <!-- Image aligned with top of text -->
-                                <img src="assets/images/banner1.jpg" class="img-fluid rounded-4 shadow-sm" alt="École"
-                                    style="max-height: 250px; object-fit: cover; width: 100%;">
-
-                                <!-- Info Block (Moved from Left) -->
-                                <div
-                                    class="d-flex gap-3 justify-content-between bg-white p-3 rounded-4 shadow-sm border border-light">
-                                    <div class="d-flex align-items-center text-royal">
-                                        <i class="bi bi-geo-alt-fill fs-3 me-2 text-primary"></i>
-                                        <div>
-                                            <strong>Localisation</strong><br><span class="small">Place
-                                                Saint-Exupéry</span>
-                                        </div>
-                                    </div>
-                                    <div class="vr opacity-25"></div>
-                                    <div class="d-flex align-items-center text-royal">
-                                        <i class="bi bi-clock-fill fs-3 me-2 text-primary"></i>
-                                        <div>
-                                            <strong>Horaires</strong><br><span class="small">8h40 - 16h45</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Google Maps (Zoom Increased z=16) -->
-                                <div class="rounded-4 overflow-hidden shadow-sm">
-                                    <iframe
-                                        src="https://maps.google.com/maps?q=7G26%2B4G%20Sainte-Luce-sur-Loire&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
-                                        referrerpolicy="no-referrer-when-downgrade">
-                                    </iframe>
-                                </div>
+                        <!-- Right Column: Map Only -->
+                        <div class="col-lg-6 mt-4 mt-lg-0 pt-lg-5">
+                            <!-- Google Maps (Zoom Increased z=16) -->
+                            <div class="rounded-4 overflow-hidden shadow-sm h-100">
+                                <iframe
+                                    src="https://maps.google.com/maps?q=7G26%2B4G%20Sainte-Luce-sur-Loire&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                                    width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
                             </div>
                         </div>
                     </div>
@@ -277,6 +272,13 @@
                                             </ul>
                                         </div>
                                     </div>
+                                </div>
+                                <button class="btn btn-outline-primary rounded-pill d-block mx-auto mt-4"
+                                    data-bs-toggle="collapse" data-bs-target="#projetDetails">Lire le projet
+                                    complet</button>
+                                <div class="collapse mt-4" id="projetDetails">
+                                    <!-- ... content ... -->
+                                    <p>Détails du projet éducatif...</p>
                                 </div>
                             </div>
                         </div>
@@ -469,6 +471,39 @@
                         </div>
                     </div>
 
+                    <!-- Voir tout l'agenda Button -->
+                    <button class="btn btn-outline-primary rounded-pill w-100 mb-5" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasAgenda">
+                        <i class="bi bi-calendar-event me-2"></i>Voir tous les événements à venir
+                    </button>
+
+                    <!-- Offcanvas Agenda -->
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAgenda"
+                        aria-labelledby="offcanvasAgendaLabel">
+                        <div class="offcanvas-header bg-royal-light">
+                            <h5 class="offcanvas-title fw-bold text-royal" id="offcanvasAgendaLabel">Agenda Complet</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <!-- Full List Duplicate for Demo -->
+                            <div class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
+                                <div class="list-group-item p-3 border-0 border-bottom">
+                                    <small class="text-primary fw-bold text-uppercase">Janvier</small>
+                                    <h6 class="fw-bold mt-1">CA OGEC - 23 Jan</h6>
+                                </div>
+                                <div class="list-group-item p-3 border-0 border-bottom">
+                                    <small class="text-secondary fw-bold text-uppercase">Mars</small>
+                                    <h6 class="fw-bold mt-1">Matinée Travaux - 13 Mar</h6>
+                                </div>
+                                <div class="list-group-item p-3 border-0">
+                                    <small class="text-danger fw-bold text-uppercase">Juin</small>
+                                    <h6 class="fw-bold mt-1">Kermesse - 20 Juin</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- News Highlight -->
                     <div class="card bg-royal-light border-0 rounded-4 p-4">
                         <div class="d-flex">
@@ -614,271 +649,389 @@
                 </div>
             </div>
 
-            <!-- Teachers Maternelle -->
+            <!-- Maternelle & ASEM (Grouped by Level) -->
             <div class="mb-5">
-                <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Enseignantes
-                    Maternelle</h4>
-                <div class="row g-4">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                            <div class="me-3 d-flex justify-content-center align-items-center rounded-circle border border-2 border-primary text-primary"
-                                style="width: 50px; height: 50px;">
-                                <span class="material-icons fs-3">palette</span>
+                <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Équipe Maternelle
+                    (Enseignantes & ASEM)</h4>
+
+                <!-- Petite Section -->
+                <div class="card bg-light-fun border-0 rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold text-primary mb-3"><span class="badge bg-primary me-2">PS</span> Petite Section
+                    </h5>
+                    <div class="row g-4">
+                        <div class="col-md-6 border-end-md border-primary-subtle">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-primary me-2">palette</span>
+                                <h6 class="fw-bold text-dark m-0">Classe A</h6>
                             </div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Mme THIBAULT Virginie (PS A)</h6>
-                                <h6 class="fw-bold mb-0 mt-2">Mme BETUS Frédérique (PS B)</h6>
-                            </div>
+                            <p class="mb-1 text-royal fw-bold">Mme THIBAULT Virginie</p>
+                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
+                                ARNAUD Murielle / Mme DAYBER Anaïg</p>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                            <div class="me-3 d-flex justify-content-center align-items-center rounded-circle border border-2 border-primary text-primary"
-                                style="width: 50px; height: 50px;">
-                                <span class="material-icons fs-3">palette</span>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-primary me-2">palette</span>
+                                <h6 class="fw-bold text-dark m-0">Classe B</h6>
                             </div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Mme BOISDET Carine (MS A)</h6>
-                                <h6 class="fw-bold mb-0 mt-2">Mme GRATAS Cécile (MS B)</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                            <div class="me-3 d-flex justify-content-center align-items-center rounded-circle border border-2 border-primary text-primary"
-                                style="width: 50px; height: 50px;">
-                                <span class="material-icons fs-3">palette</span>
-                            </div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Mme MICHELLIER Laurence (GS A)</h6>
-                                <h6 class="fw-bold mb-0 mt-2">Mme EVENO Marie-Pierre (GS B)</h6>
-                            </div>
+                            <p class="mb-1 text-royal fw-bold">Mme BETUS Frédérique</p>
+                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
+                                DEBRAY Lisa</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Agents & Non-Teaching (NEW) -->
-            <div class="mb-5">
-                <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Personnels & ASEM
-                </h4>
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="card-team p-4 h-100">
-                            <h6 class="fw-bold text-royal mb-3"><i class="bi bi-heart-fill me-2 text-primary"></i>Agents
-                                Maternelle (ASEM)</h6>
-                            <ul class="list-unstyled small mb-0 row">
-                                <li class="col-6 mb-2">Mme ARNAUD / DAYBER</li>
-                                <li class="col-6 mb-2">Mme DEBRAY Lisa</li>
-                                <li class="col-6 mb-2">Mme JACQUET-VEZIER</li>
-                                <li class="col-6 mb-2">Mme BOUVET Aude</li>
-                                <li class="col-6 mb-2">Mme LOUARN Aurore</li>
-                                <li class="col-6 mb-2">Mme TASSE POULLIER</li>
-                            </ul>
+                <!-- Moyenne Section -->
+                <div class="card bg-light-fun border-0 rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold text-primary mb-3"><span class="badge bg-primary me-2">MS</span> Moyenne Section
+                    </h5>
+                    <div class="row g-4">
+                        <div class="col-md-6 border-end-md border-primary-subtle">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-primary me-2">palette</span>
+                                <h6 class="fw-bold text-dark m-0">Classe A</h6>
+                            </div>
+                            <p class="mb-1 text-royal fw-bold">Mme BOISDET Carine</p>
+                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
+                                JACQUET-VEZIER Jade</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-primary me-2">palette</span>
+                                <h6 class="fw-bold text-dark m-0">Classe B</h6>
+                            </div>
+                            <p class="mb-1 text-royal fw-bold">Mme GRATAS Cécile</p>
+                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
+                                BOUVET Aude</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card-team p-4 h-100">
-                            <h6 class="fw-bold text-royal mb-3"><i class="bi bi-people-fill me-2 text-primary"></i>Vie
-                                Scolaire & Administration</h6>
-                            <ul class="list-unstyled small mb-0">
-                                <li class="mb-2"><strong>Assistante Direction :</strong> Mme HIMBERT Gaëlle</li>
-                                <li class="mb-2"><strong>Poste Adaptation (E) :</strong> Mme CORNUAULT Carole</li>
-                                <li><strong>Restauration :</strong> M. BODAINE Sébastien (Resp.) et son équipe</li>
-                            </ul>
+                </div>
+
+                <!-- Grande Section -->
+                <div class="card bg-light-fun border-0 rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold text-primary mb-3"><span class="badge bg-primary me-2">GS</span> Grande Section
+                    </h5>
+                    <div class="row g-4">
+                        <div class="col-md-6 border-end-md border-primary-subtle">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-primary me-2">palette</span>
+                                <h6 class="fw-bold text-dark m-0">Classe A</h6>
+                            </div>
+                            <p class="mb-1 text-royal fw-bold">Mme MICHELLIER Laurence</p>
+                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
+                                LOUARN Aurore</p>
                         </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-primary me-2">palette</span>
+                                <h6 class="fw-bold text-dark m-0">Classe B</h6>
+                            </div>
+                            <p class="mb-1 text-royal fw-bold">Mme EVENO Marie-Pierre</p>
+                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
+                                TASSE POULLIER Laurence</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ASEM Polyvalentes -->
+                <div class="alert alert-light border-0 shadow-sm d-flex align-items-center rounded-4">
+                    <i class="bi bi-info-circle-fill text-info fs-4 me-3"></i>
+                    <div>
+                        <strong>ASEM Polyvalentes :</strong> Mme RETUREAU Marion & Mme FOURTET Melissa
                     </div>
                 </div>
             </div>
 
             <!-- Teachers Élémentaire -->
             <div class="mb-5">
-                <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Enseignants
-                    Élémentaire</h4>
-                <div class="row g-4">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 h-100">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="bi bi-person-video3 fs-3 text-primary me-3"></i>
-                                <h6 class="fw-bold m-0 text-primary">Cours Préparatoire (CP)</h6>
+                <!-- Teachers Élémentaire -->
+                <div class="mb-5">
+                    <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-secondary">Enseignants
+                        Élémentaire</h4>
+                    <div class="row g-4">
+                        <!-- CP -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
+                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
+                                <div>
+                                    <h6 class="fw-bold text-info mb-1">Cours Préparatoire (CP)</h6>
+                                    <p class="mb-0 small"><strong>CP A :</strong> Mme HOUSSIN Amélie</p>
+                                    <p class="mb-0 small"><strong>CP B :</strong> Mme PAGES Elodie</p>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0 ms-4 small">
-                                <li><strong>CP A :</strong> Mme HOUSSIN Amélie</li>
-                                <li><strong>CP B :</strong> Mme PAGES Elodie</li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 h-100">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="bi bi-person-video3 fs-3 text-primary me-3"></i>
-                                <h6 class="fw-bold m-0 text-primary">Cours Élémentaire 1 (CE1)</h6>
+                        <!-- CE1 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
+                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
+                                <div>
+                                    <h6 class="fw-bold text-info mb-1">Cours Élémentaire 1 (CE1)</h6>
+                                    <p class="mb-0 small"><strong>CE1 A :</strong> Mme GOEL Véronique</p>
+                                    <p class="mb-0 small"><strong>CE1 B :</strong> Mme BARBIER Stéphanie</p>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0 ms-4 small">
-                                <li><strong>CE1 A :</strong> Mme GOEL Véronique</li>
-                                <li><strong>CE1 B :</strong> Mme BARBIER Stéphanie</li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 h-100">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="bi bi-person-video3 fs-3 text-primary me-3"></i>
-                                <h6 class="fw-bold m-0 text-primary">Cours Élémentaire 2 (CE2)</h6>
+                        <!-- CE2 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
+                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
+                                <div>
+                                    <h6 class="fw-bold text-info mb-1">Cours Élémentaire 2 (CE2)</h6>
+                                    <p class="mb-0 small"><strong>CE2 A :</strong> Mme GUNNARSSON Viktoria</p>
+                                    <p class="mb-0 small"><strong>CE2 B :</strong> Mme MOISAN Marie Paule</p>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0 ms-4 small">
-                                <li><strong>CE2 A :</strong> Mme GUNNARSSON Viktoria</li>
-                                <li><strong>CE2 B :</strong> Mme MOISAN Marie Paule</li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 h-100">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="bi bi-person-video3 fs-3 text-primary me-3"></i>
-                                <h6 class="fw-bold m-0 text-primary">Cours Moyen 1 (CM1)</h6>
+                        <!-- CM1 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
+                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
+                                <div>
+                                    <h6 class="fw-bold text-info mb-1">Cours Moyen 1 (CM1)</h6>
+                                    <p class="mb-0 small"><strong>CM1 A :</strong> Mme BARONNET Anne</p>
+                                    <p class="mb-0 small"><strong>CM1 B :</strong> Mme CHAMPION Laëtitia</p>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0 ms-4 small">
-                                <li><strong>CM1 A :</strong> Mme BARONNET Anne</li>
-                                <li><strong>CM1 B :</strong> Mme CHAMPION Laëtitia</li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-team p-3 h-100">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="bi bi-person-video3 fs-3 text-primary me-3"></i>
-                                <h6 class="fw-bold m-0 text-primary">Cours Moyen 2 (CM2)</h6>
+                        <!-- CM2 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
+                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
+                                <div>
+                                    <h6 class="fw-bold text-info mb-1">Cours Moyen 2 (CM2)</h6>
+                                    <p class="mb-0 small"><strong>CM2 A :</strong> Mme JOUVE Amélie</p>
+                                    <p class="mb-0 small"><strong>CM2 B :</strong> Mme RICOT Isabelle</p>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0 ms-4 small">
-                                <li><strong>CM2 A :</strong> Mme JOUVE Amélie</li>
-                                <li><strong>CM2 B :</strong> Mme RICOT Isabelle</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Associations -->
-            <div class="row text-center mt-5">
-                <div class="col-md-6 mb-4">
-                    <div class="p-4 bg-light-fun rounded-4 h-100">
-                        <h4 class="fw-bold text-royal">O.G.E.C.</h4>
-                        <p class="text-muted small">Organisme de Gestion de l'Enseignement Catholique.<br>Gestion
-                            économique et sociale de l'école.</p>
-                        <div class="d-flex gap-2 justify-content-center">
-                            <a href="mailto:ogec@ecolesaintvincent.fr"
-                                class="btn btn-sm btn-outline-primary rounded-pill">Contacter</a>
-                            <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal"
-                                data-bs-target="#ogecModal">Plus d'infos</button>
+                <!-- Services & Support (Accordion - Admin & Services Only) -->
+                <div class="mb-5">
+                    <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Services & Supports
+                    </h4>
+
+                    <div class="accordion shadow-sm rounded-4 overflow-hidden" id="accordionTeam">
+                        <!-- 1. Administration & Gestion -->
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header" id="headingAdmin">
+                                <button class="accordion-button collapsed fw-bold text-royal bg-light-fun shadow-none"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
+                                    aria-expanded="false" aria-controls="collapseAdmin"
+                                    style="box-shadow: none !important;">
+                                    <i class="bi bi-pc-display-horizontal me-2 text-primary"></i>Administration &
+                                    Gestion
+                                </button>
+                            </h2>
+                            <div id="collapseAdmin" class="accordion-collapse collapse" aria-labelledby="headingAdmin"
+                                data-bs-parent="#accordionTeam">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-bold text-primary">Secrétariat / Direction</h6>
+                                            <p class="mb-1"><strong>Mme HIMBERT Gaëlle</strong> (Assistante Direction)
+                                            </p>
+                                            <p class="small text-muted"><i class="bi bi-envelope me-1"></i><a
+                                                    href="mailto:secretariat@ecolesaintvincent.fr"
+                                                    class="text-decoration-none text-muted">secretariat@ecolesaintvincent.fr</a>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-bold text-primary">Comptabilité / OGEC</h6>
+                                            <p class="mb-1">Gestion assurée par l'OGEC et Mme Himbert.</p>
+                                            <p class="small text-muted"><i class="bi bi-envelope me-1"></i><a
+                                                    href="mailto:comptabilite@ecolesaintvincent.fr"
+                                                    class="text-decoration-none text-muted">comptabilite@ecolesaintvincent.fr</a>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-bold text-primary">Site Web / Informatique</h6>
+                                            <p class="mb-1">Responsable Technique</p>
+                                            <p class="small text-muted"><i class="bi bi-envelope me-1"></i><a
+                                                    href="mailto:webmaster@ecolesaintvincent.fr"
+                                                    class="text-decoration-none text-muted">webmaster@ecolesaintvincent.fr</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Modal OGEC -->
-                        <div class="modal fade" id="ogecModal" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Qu'est-ce que l'OGEC ?</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body text-start">
-                                        <p>L'OGEC est une association loi 1901, initiée par l'Enseignement Catholique,
-                                            elle est au service de l'école. Elle lui donne une existence juridique,
-                                            c'est-à-dire une personnalité morale.</p>
-                                        <hr>
-                                        <h6 class="fw-bold">Ses Missions</h6>
-                                        <p class="small">Calcul et suivi du budget, tenue des comptes, détermination de
-                                            la contribution demandée aux familles, paiement des charges de
-                                            fonctionnement, assurances. En ce qui concerne la gestion des locaux,
-                                            l'O.G.E.C. veille à leur entretien, rénovation et sécurité.</p>
-                                        <p class="small">L'O.G.E.C. est l'employeur des personnels de droit privé (Chef
-                                            d'établissement, ASEM, etc.).</p>
-                                        <hr>
-                                        <h6 class="fw-bold">Ses Membres</h6>
-                                        <p class="small">Des bénévoles soucieux de la bonne marche de l'établissement :
-                                            parents d'élèves, anciens élèves, amis de l'établissement...</p>
+                        <!-- 2. Services Généraux (Entretien / Restauration) -->
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingServices">
+                                <button class="accordion-button collapsed fw-bold text-royal bg-light-fun shadow-none"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseServices"
+                                    aria-expanded="false" aria-controls="collapseServices"
+                                    style="box-shadow: none !important;">
+                                    <i class="bi bi-tools me-2 text-success"></i>Services Généraux & Restauration
+                                </button>
+                            </h2>
+                            <div id="collapseServices" class="accordion-collapse collapse"
+                                aria-labelledby="headingServices" data-bs-parent="#accordionTeam">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-bold text-success">Restauration</h6>
+                                            <p class="mb-1"><strong>M. BODAINE Sébastien</strong> (Responsable)</p>
+                                            <ul class="list-unstyled small text-muted ps-3 border-start">
+                                                <li>Mme THIAM LAMBERT Paoline</li>
+                                                <li>Mme MAYAMBA MBELU Tina</li>
+                                                <li>Mme CHAUSSE Béatrice</li>
+                                                <li>Mme DUVAL Virginie</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <h6 class="fw-bold text-success">Entretien & Maintenance</h6>
+                                            <ul class="list-unstyled small text-muted ps-3 border-start">
+                                                <li>Mme ULGER Songül</li>
+                                                <li>Mme BERTHIER Marie-Odile</li>
+                                                <li>Mme ETOURNEAU Virginie</li>
+                                                <li>Mme DOGAN Sakiné</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <div class="p-4 bg-light-fun rounded-4 h-100">
-                        <h4 class="fw-bold text-royal">A.P.E.L.</h4>
-                        <p class="text-muted small">Association des Parents d'élèves de l'Enseignement
-                            Libre.<br>Participe à l'animation et à la vie de l'école.</p>
-                        <div class="d-flex gap-2 justify-content-center">
-                            <a href="mailto:apel@ecolesaintvincent.fr"
-                                class="btn btn-sm btn-outline-primary rounded-pill">Contacter</a>
-                            <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal"
-                                data-bs-target="#apelModal">Plus d'infos</button>
-                        </div>
 
-                        <!-- Modal APEL -->
-                        <div class="modal fade" id="apelModal" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Qu'est-ce que l'APEL ?</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+
+                <!-- Associations -->
+                <div class="row text-center mt-5">
+                    <div class="col-md-6 mb-4">
+                        <div class="p-4 bg-light-fun rounded-4 h-100">
+                            <h4 class="fw-bold text-royal">O.G.E.C.</h4>
+                            <p class="text-muted small">Organisme de Gestion de l'Enseignement Catholique.<br>Gestion
+                                économique et sociale de l'école.</p>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="mailto:ogec@ecolesaintvincent.fr"
+                                    class="btn btn-sm btn-outline-primary rounded-pill">Contacter</a>
+                                <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal"
+                                    data-bs-target="#ogecModal">Plus d'infos</button>
+                            </div>
+
+                            <!-- Modal OGEC -->
+                            <div class="modal fade" id="ogecModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Qu'est-ce que l'OGEC ?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            <p>L'OGEC est une association loi 1901, initiée par l'Enseignement
+                                                Catholique,
+                                                elle est au service de l'école. Elle lui donne une existence juridique,
+                                                c'est-à-dire une personnalité morale.</p>
+                                            <hr>
+                                            <h6 class="fw-bold">Ses Missions</h6>
+                                            <p class="small">Calcul et suivi du budget, tenue des comptes, détermination
+                                                de
+                                                la contribution demandée aux familles, paiement des charges de
+                                                fonctionnement, assurances. En ce qui concerne la gestion des locaux,
+                                                l'O.G.E.C. veille à leur entretien, rénovation et sécurité.</p>
+                                            <p class="small">L'O.G.E.C. est l'employeur des personnels de droit privé
+                                                (Chef
+                                                d'établissement, ASEM, etc.).</p>
+                                            <hr>
+                                            <h6 class="fw-bold">Ses Membres</h6>
+                                            <p class="small">Des bénévoles soucieux de la bonne marche de
+                                                l'établissement :
+                                                parents d'élèves, anciens élèves, amis de l'établissement...</p>
+                                        </div>
                                     </div>
-                                    <div class="modal-body text-start">
-                                        <p>L'A.P.E.L. regroupe des parents d'élèves qui s'investissent pour faciliter la
-                                            communication entre les différents partenaires de l'école (élèves, parents,
-                                            enseignants, direction, OGEC).</p>
-                                        <hr>
-                                        <h6 class="fw-bold">Ses Missions</h6>
-                                        <p class="small">L'association participe pleinement à la vie de l'école en
-                                            développant des animations (kermesse, marché de Noël, etc.) et en soutenant
-                                            les actions des enseignants. L'organisation de la Kermesse est l'un des
-                                            temps forts majeurs de l'année.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="p-4 bg-light-fun rounded-4 h-100">
+                            <h4 class="fw-bold text-royal">A.P.E.L.</h4>
+                            <p class="text-muted small">Association des Parents d'élèves de l'Enseignement
+                                Libre.<br>Participe à l'animation et à la vie de l'école.</p>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="mailto:apel@ecolesaintvincent.fr"
+                                    class="btn btn-sm btn-outline-primary rounded-pill">Contacter</a>
+                                <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal"
+                                    data-bs-target="#apelModal">Plus d'infos</button>
+                            </div>
+
+                            <!-- Modal APEL -->
+                            <div class="modal fade" id="apelModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Qu'est-ce que l'APEL ?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            <p>L'A.P.E.L. regroupe des parents d'élèves qui s'investissent pour
+                                                faciliter la
+                                                communication entre les différents partenaires de l'école (élèves,
+                                                parents,
+                                                enseignants, direction, OGEC).</p>
+                                            <hr>
+                                            <h6 class="fw-bold">Ses Missions</h6>
+                                            <p class="small">L'association participe pleinement à la vie de l'école en
+                                                développant des animations (kermesse, marché de Noël, etc.) et en
+                                                soutenant
+                                                les actions des enseignants. L'organisation de la Kermesse est l'un des
+                                                temps forts majeurs de l'année.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
     </section>
 
     <!-- Footer -->
     <footer class="py-5 bg-footer text-white">
         <div class="container">
             <div class="row gy-4">
-                <div class="col-lg-4 text-center text-lg-start">
+                <!-- Left: School Info (Left Aligned Only) -->
+                <div class="col-lg-4 text-start">
                     <img src="assets/images/logo.png" height="50" class="mb-3 grayscale-logo" alt="Logo">
                     <h5 class="fw-bold mb-3">École Saint Vincent</h5>
                     <p class="small opacity-75">Un établissement catholique d'enseignement associé à l'État, ouvert à
                         tous.</p>
                 </div>
-                <!-- Adjusted column sizing for better alignment -->
-                <div class="col-lg-2 col-6 text-lg-center">
-                    <h6 class="fw-bold text-primary mb-3">L'École</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#presentation" class="footer-link small">Présentation</a></li>
-                        <li><a href="#presentation" class="footer-link small">Projet Éducatif</a></li>
-                        <li><a href="#intervenants" class="footer-link small">Équipe</a></li>
-                    </ul>
+
+                <!-- Middle: All Links (Left Aligned Only !important) -->
+                <div class="col-lg-4 text-start">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="fw-bold text-primary mb-3">L'École</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="#presentation" class="footer-link small">Présentation</a></li>
+                                <li><a href="#presentation" class="footer-link small">Projet Éducatif</a></li>
+                                <li><a href="#intervenants" class="footer-link small">Équipe</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <h5 class="fw-bold mb-3">Liens utiles</h5>
+                            <ul class="list-unstyled">
+                                <li><button class="btn btn-link text-decoration-none p-0 footer-link small text-white"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasCantine"
+                                        style="font-weight: 400 !important;">Cantine</button></li>
+                                <li><a href="#vie-scolaire" class="footer-link small">Agenda</a></li>
+                                <li><a href="#vie-scolaire" class="footer-link small">Périscolaire</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-6 text-lg-center">
-                    <h5 class="fw-bold mb-3">Liens utiles</h5>
-                    <ul class="list-unstyled">
-                        <!-- Removed fw-bold/opacity-75 -->
-                        <li><button class="btn btn-link text-decoration-none p-0 footer-link small text-white"
-                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasCantine">Cantine</button></li>
-                        <li><a href="#vie-scolaire" class="footer-link small">Agenda</a></li>
-                        <li><a href="#vie-scolaire" class="footer-link small">Périscolaire</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 text-center text-lg-end">
-                    <!-- Moved contact to end column for better balance, keeping it structured -->
+
+                <!-- Right: Contact (Right Aligned on PC, Center on Mobile) -->
+                <div class="col-lg-4 text-start text-lg-end">
                     <h6 class="fw-bold text-primary mb-3">Contact</h6>
-                    <div class="d-flex flex-column align-items-center align-items-lg-end">
+                    <div class="d-flex flex-column align-items-start align-items-lg-end">
                         <p class="small mb-1"><i class="bi bi-geo-alt me-2"></i> Place Saint-Exupéry<br>44980
                             Sainte-Luce-sur-Loire</p>
                         <p class="small mb-1"><i class="bi bi-telephone me-2"></i> 02 40 25 62 97</p>
