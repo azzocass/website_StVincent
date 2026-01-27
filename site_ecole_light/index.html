@@ -362,27 +362,19 @@
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-start">
-                                                <h6 class="fw-bold text-primary">Contribution des familles (10 mois)
-                                                </h6>
-                                                <ul>
-                                                    <li>Niveau A : <strong>45,00 € / mois</strong> (450€ annuel)</li>
-                                                    <li>Niveau B : <strong>48,00 € / mois</strong> (480€ annuel)</li>
-                                                </ul>
-                                                <small class="text-muted">Réduction de 50% pour le 3ème enfant.</small>
-                                                <hr>
-                                                <h6 class="fw-bold text-primary">Restauration</h6>
-                                                <ul>
-                                                    <li>Repas standard : <strong>5,20 €</strong></li>
-                                                    <li>Repas allergique : <strong>2,70 €</strong></li>
-                                                    <li>Repas tarif spécial : <strong>6,60 €</strong></li>
-                                                </ul>
-                                                <hr>
-                                                <h6 class="fw-bold text-primary">Périscolaire (Matin/Soir)</h6>
-                                                <ul>
-                                                    <li>Matin : 2,50 €</li>
-                                                    <li>Soir (par 1/4h) : 0,90 €</li>
-                                                    <li>Étude encadrée : 4,50 €</li>
-                                                </ul>
+                                                <div id="tarifs-container">
+                                                    <div class="text-center p-4">
+                                                        <div class="spinner-border text-primary" role="status"></div>
+                                                        <p class="mt-2 small text-muted">Chargement des tarifs...</p>
+                                                    </div>
+                                                </div>
+                                                <!-- Download Model Button (For Demo/Admin) -->
+                                                <div class="mt-4 pt-3 border-top text-center">
+                                                    <a href="assets/csv_templates/modele_tarifs.csv"
+                                                        class="btn btn-sm btn-outline-secondary rounded-pill" download>
+                                                        <i class="bi bi-download me-1"></i> Modèle CSV
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -437,38 +429,20 @@
                     <h3 class="fw-bold text-royal mb-4"><i class="bi bi-calendar-week me-2"></i>Agenda & Actualités</h3>
 
                     <!-- Agenda List -->
-                    <div class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
-                        <!-- Example Event -->
-                        <div class="list-group-item p-4 d-flex align-items-center border-0 border-bottom">
-                            <div class="date-box primary text-center p-2 me-4 shadow-sm" style="min-width: 70px;">
-                                <span class="d-block fw-bold h4 m-0">23</span>
-                                <span class="d-block small text-uppercase">Jan</span>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fw-bold mb-1">CA OGEC</h5>
-                                <p class="mb-0 text-muted small">Réunion du conseil d'administration.</p>
-                            </div>
+                    <!-- Agenda List -->
+                    <div id="agenda-container" class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2 small text-muted">Chargement de l'agenda...</p>
                         </div>
-                        <div class="list-group-item p-4 d-flex align-items-center border-0 border-bottom">
-                            <div class="date-box secondary text-center p-2 me-4 shadow-sm" style="min-width: 70px;">
-                                <span class="d-block fw-bold h4 m-0">13</span>
-                                <span class="d-block small text-uppercase">Mar</span>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fw-bold mb-1">Matinée Travaux</h5>
-                                <p class="mb-0 text-muted small">Participation des parents bienvenue !</p>
-                            </div>
-                        </div>
-                        <div class="list-group-item p-4 d-flex align-items-center border-0">
-                            <div class="date-box accent text-center p-2 me-4 shadow-sm" style="min-width: 70px;">
-                                <span class="d-block fw-bold h4 m-0">20</span>
-                                <span class="d-block small text-uppercase">Juin</span>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fw-bold mb-1">Kermesse de l'École</h5>
-                                <p class="mb-0 text-muted small">Fête de fin d'année.</p>
-                            </div>
-                        </div>
+                    </div>
+
+                    <!-- Download Model Button (For Demo/Admin) -->
+                    <div class="mb-4">
+                        <a href="assets/csv_templates/modele_agenda.csv"
+                            class="btn btn-sm btn-outline-secondary rounded-pill" download>
+                            <i class="bi bi-download me-1"></i> Modèle CSV
+                        </a>
                     </div>
 
                     <!-- Voir tout l'agenda Button -->
@@ -487,19 +461,9 @@
                         </div>
                         <div class="offcanvas-body">
                             <!-- Full List Duplicate for Demo -->
-                            <div class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
-                                <div class="list-group-item p-3 border-0 border-bottom">
-                                    <small class="text-primary fw-bold text-uppercase">Janvier</small>
-                                    <h6 class="fw-bold mt-1">CA OGEC - 23 Jan</h6>
-                                </div>
-                                <div class="list-group-item p-3 border-0 border-bottom">
-                                    <small class="text-secondary fw-bold text-uppercase">Mars</small>
-                                    <h6 class="fw-bold mt-1">Matinée Travaux - 13 Mar</h6>
-                                </div>
-                                <div class="list-group-item p-3 border-0">
-                                    <small class="text-danger fw-bold text-uppercase">Juin</small>
-                                    <h6 class="fw-bold mt-1">Kermesse - 20 Juin</h6>
-                                </div>
+                            <!-- Full List Duplicate for Demo -->
+                            <div id="agenda-full-container" class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
+                                <!-- Dynamic content -->
                             </div>
                         </div>
                     </div>
@@ -530,20 +494,16 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
-                            <article class="mb-5">
-                                <h6 class="fw-bold text-primary mb-2">Course Solidaire</h6>
-                                <p class="text-muted small mb-3">20 Juin 2025</p>
-                                <img src="assets/images/banner3.jpg" loading="lazy" class="img-fluid rounded-3 mb-3"
-                                    alt="Course">
-                                <p>Un grand bravo à tous nos élèves pour leur énergie lors de la course solidaire !
-                                    Grâce à vos efforts, nous avons récolté des fonds pour l'association partenaire.</p>
-                            </article>
-                            <article class="mb-5">
-                                <h6 class="fw-bold text-primary mb-2">Matinée Travaux</h6>
-                                <p class="text-muted small mb-3">13 Mars 2025</p>
-                                <p>Merci aux parents venus aider pour l'entretien des espaces verts et la peinture des
-                                    classes de maternelle.</p>
-                            </article>
+                            <div id="actu-offcanvas-container">
+                                <!-- Dynamic content -->
+                            </div>
+                            <!-- Download Model Button (For Demo/Admin) -->
+                            <div class="mt-4 pt-3 border-top text-center">
+                                <a href="assets/csv_templates/modele_actu.csv"
+                                    class="btn btn-sm btn-outline-secondary rounded-pill" download>
+                                    <i class="bi bi-download me-1"></i> Modèle CSV
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -598,6 +558,14 @@
                                     <p class="mt-2 small text-muted">Chargement du menu...</p>
                                 </div>
                             </div>
+
+                            <!-- Download Model Button (For Demo/Admin) -->
+                            <div class="mt-4 pt-3 border-top text-center">
+                                <a href="assets/csv_templates/modele_cantine.csv"
+                                    class="btn btn-sm btn-outline-secondary rounded-pill" download>
+                                    <i class="bi bi-download me-1"></i> Modèle CSV
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -651,159 +619,18 @@
 
             <!-- Maternelle & ASEM (Grouped by Level) -->
             <div class="mb-5">
-                <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Équipe Maternelle
-                    (Enseignantes & ASEM)</h4>
-
-                <!-- Petite Section -->
-                <div class="card bg-light-fun border-0 rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold text-primary mb-3"><span class="badge bg-primary me-2">PS</span> Petite Section
-                    </h5>
-                    <div class="row g-4">
-                        <div class="col-md-6 border-end-md border-primary-subtle">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons text-primary me-2">palette</span>
-                                <h6 class="fw-bold text-dark m-0">Classe A</h6>
-                            </div>
-                            <p class="mb-1 text-royal fw-bold">Mme THIBAULT Virginie</p>
-                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
-                                ARNAUD Murielle / Mme DAYBER Anaïg</p>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons text-primary me-2">palette</span>
-                                <h6 class="fw-bold text-dark m-0">Classe B</h6>
-                            </div>
-                            <p class="mb-1 text-royal fw-bold">Mme BETUS Frédérique</p>
-                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
-                                DEBRAY Lisa</p>
-                        </div>
+                <div id="team-container">
+                    <div class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-3 text-muted">Chargement de l'équipe...</p>
                     </div>
                 </div>
-
-                <!-- Moyenne Section -->
-                <div class="card bg-light-fun border-0 rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold text-primary mb-3"><span class="badge bg-primary me-2">MS</span> Moyenne Section
-                    </h5>
-                    <div class="row g-4">
-                        <div class="col-md-6 border-end-md border-primary-subtle">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons text-primary me-2">palette</span>
-                                <h6 class="fw-bold text-dark m-0">Classe A</h6>
-                            </div>
-                            <p class="mb-1 text-royal fw-bold">Mme BOISDET Carine</p>
-                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
-                                JACQUET-VEZIER Jade</p>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons text-primary me-2">palette</span>
-                                <h6 class="fw-bold text-dark m-0">Classe B</h6>
-                            </div>
-                            <p class="mb-1 text-royal fw-bold">Mme GRATAS Cécile</p>
-                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
-                                BOUVET Aude</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Grande Section -->
-                <div class="card bg-light-fun border-0 rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold text-primary mb-3"><span class="badge bg-primary me-2">GS</span> Grande Section
-                    </h5>
-                    <div class="row g-4">
-                        <div class="col-md-6 border-end-md border-primary-subtle">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons text-primary me-2">palette</span>
-                                <h6 class="fw-bold text-dark m-0">Classe A</h6>
-                            </div>
-                            <p class="mb-1 text-royal fw-bold">Mme MICHELLIER Laurence</p>
-                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
-                                LOUARN Aurore</p>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons text-primary me-2">palette</span>
-                                <h6 class="fw-bold text-dark m-0">Classe B</h6>
-                            </div>
-                            <p class="mb-1 text-royal fw-bold">Mme EVENO Marie-Pierre</p>
-                            <p class="small text-muted mb-0"><i class="bi bi-heart-fill text-info me-1"></i>ASEM : Mme
-                                TASSE POULLIER Laurence</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ASEM Polyvalentes -->
-                <div class="alert alert-light border-0 shadow-sm d-flex align-items-center rounded-4">
-                    <i class="bi bi-info-circle-fill text-info fs-4 me-3"></i>
-                    <div>
-                        <strong>ASEM Polyvalentes :</strong> Mme RETUREAU Marion & Mme FOURTET Melissa
-                    </div>
-                </div>
-            </div>
-
-            <!-- Teachers Élémentaire -->
-            <div class="mb-5">
-                <!-- Teachers Élémentaire -->
-                <div class="mb-5">
-                    <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-secondary">Enseignants
-                        Élémentaire</h4>
-                    <div class="row g-4">
-                        <!-- CP -->
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
-                                <div>
-                                    <h6 class="fw-bold text-info mb-1">Cours Préparatoire (CP)</h6>
-                                    <p class="mb-0 small"><strong>CP A :</strong> Mme HOUSSIN Amélie</p>
-                                    <p class="mb-0 small"><strong>CP B :</strong> Mme PAGES Elodie</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- CE1 -->
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
-                                <div>
-                                    <h6 class="fw-bold text-info mb-1">Cours Élémentaire 1 (CE1)</h6>
-                                    <p class="mb-0 small"><strong>CE1 A :</strong> Mme GOEL Véronique</p>
-                                    <p class="mb-0 small"><strong>CE1 B :</strong> Mme BARBIER Stéphanie</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- CE2 -->
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
-                                <div>
-                                    <h6 class="fw-bold text-info mb-1">Cours Élémentaire 2 (CE2)</h6>
-                                    <p class="mb-0 small"><strong>CE2 A :</strong> Mme GUNNARSSON Viktoria</p>
-                                    <p class="mb-0 small"><strong>CE2 B :</strong> Mme MOISAN Marie Paule</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- CM1 -->
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
-                                <div>
-                                    <h6 class="fw-bold text-info mb-1">Cours Moyen 1 (CM1)</h6>
-                                    <p class="mb-0 small"><strong>CM1 A :</strong> Mme BARONNET Anne</p>
-                                    <p class="mb-0 small"><strong>CM1 B :</strong> Mme CHAMPION Laëtitia</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- CM2 -->
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card-team p-3 d-flex align-items-center flex-row h-100">
-                                <span class="material-icons fs-3 text-info me-3 border rounded-circle p-2">school</span>
-                                <div>
-                                    <h6 class="fw-bold text-info mb-1">Cours Moyen 2 (CM2)</h6>
-                                    <p class="mb-0 small"><strong>CM2 A :</strong> Mme JOUVE Amélie</p>
-                                    <p class="mb-0 small"><strong>CM2 B :</strong> Mme RICOT Isabelle</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Download Model Button (For Demo/Admin) -->
+                <div class="mb-5 text-center">
+                    <a href="assets/csv_templates/modele_equipe.csv"
+                        class="btn btn-sm btn-outline-secondary rounded-pill" download>
+                        <i class="bi bi-download me-1"></i> Modèle CSV
+                    </a>
                 </div>
 
                 <!-- Services & Support (Accordion - Admin & Services Only) -->
@@ -1018,9 +845,7 @@
                         <div class="col-6">
                             <h5 class="fw-bold mb-3">Liens utiles</h5>
                             <ul class="list-unstyled">
-                                <li><button class="btn btn-link text-decoration-none p-0 footer-link small text-white"
-                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasCantine"
-                                        style="font-weight: 400 !important;">Cantine</button></li>
+                                <li><a href="#vie-scolaire" class="footer-link small">Cantine</a></li>
                                 <li><a href="#vie-scolaire" class="footer-link small">Agenda</a></li>
                                 <li><a href="#vie-scolaire" class="footer-link small">Périscolaire</a></li>
                             </ul>
@@ -1062,7 +887,12 @@
     </script>
     <!-- Custom Scripts -->
     <script src="assets/js/csv-loader.js"></script>
+    <script src="assets/js/csv-loader.js"></script>
     <script src="assets/js/cantine.js"></script>
+    <script src="assets/js/team.js"></script>
+    <script src="assets/js/agenda.js"></script>
+    <script src="assets/js/actu.js"></script>
+    <script src="assets/js/tarifs.js"></script>
 </body>
 
 </html>
