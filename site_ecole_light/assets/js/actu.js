@@ -4,7 +4,7 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
     // Configuration
-    const CSV_URL = 'assets/csv_templates/modele_actu.csv';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcCUH9nb_MQuxaPOsXVS65dhj4RhjSDgsIJCGbWitnBp7EdXmjDe_9WdqDQ2Fo074-q9mS08hf7Muo/pub?gid=136575323&single=true&output=csv';
 
     const container = document.getElementById('actu-offcanvas-container');
     if (!container) return; // Should allow missing containers if script is global

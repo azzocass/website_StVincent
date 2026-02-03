@@ -18,10 +18,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- AOS - Animate On Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="assets/css/style.css?v=4" rel="stylesheet">
+    <link href="assets/css/style.css?v=7" rel="stylesheet">
     <link rel="icon" href="assets/images/favicon.png" type="image/png">
 
     <!-- SEO & Open Graph -->
@@ -32,7 +34,46 @@
         content="École maternelle et élémentaire catholique. Pédagogie bienveillante, ouverte à tous. Découvrez notre projet éducatif.">
     <meta property="og:image" content="https://www.ecolesaintvincent.fr/assets/images/banner1.jpg">
 
+    <style>
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: transparent;
+            color: var(--color-primary);
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 10000;
+            border-radius: 0 0 4px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            color: #fff;
+        }
+
+        /* Hover lift effect for cards */
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+    </style>
+
+
 <body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="70">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
     <!-- Preloader -->
     <div id="loader">
         <div class="spinner"></div>
@@ -42,7 +83,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
-                <img src="assets/images/logo.png" alt="Logo École Saint Vincent" height="50"
+                <img src="assets/images/logo.webp" alt="Logo École Saint Vincent" height="50"
                     class="me-2 d-inline-block align-text-top">
                 <span class="d-none d-sm-inline">École St Vincent</span>
             </a>
@@ -51,7 +92,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Accueil</a></li>
                     <li class="nav-item"><a class="nav-link" href="#presentation">L'École</a></li>
                     <li class="nav-item"><a class="nav-link" href="#vie-scolaire">La Vie à l'École</a></li>
                     <li class="nav-item"><a class="nav-link" href="#intervenants">Les Intervenants</a></li>
@@ -66,18 +107,11 @@
 
     <!-- Hero Carousel -->
     <header id="homeCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2"></button>
-        </div>
+
         <div class="carousel-inner">
-            <!-- Organic Blob Background -->
-            <div class="blob-container d-none d-lg-block">
-                <div class="blob-shape"></div>
-            </div>
+
             <div class="carousel-item active">
-                <img src="assets/images/banner1.jpg" class="d-block w-100 placeholder-img" alt="École Saint Vincent"
+                <img src="assets/images/banner1.webp" class="d-block w-100 placeholder-img" alt="École Saint Vincent"
                     style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h1 class="display-3 fw-bold mb-3 slide-in-bottom">Bienvenue à Saint Vincent</h1>
@@ -86,7 +120,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="assets/images/banner2.jpg" loading="lazy" class="d-block w-100 placeholder-img"
+                <img src="assets/images/banner2.webp" loading="lazy" class="d-block w-100 placeholder-img"
                     alt="Apprentissage" style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="display-3 fw-bold mb-3">Construire son Histoire</h2>
@@ -94,7 +128,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="assets/images/banner3.jpg" loading="lazy" class="d-block w-100 placeholder-img"
+                <img src="assets/images/banner3.webp" loading="lazy" class="d-block w-100 placeholder-img"
                     alt="Camaraderie" style="height: 65vh; object-fit: cover; filter: brightness(0.9);">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="display-3 fw-bold mb-3">Au Cœur de Sainte-Luce</h2>
@@ -113,7 +147,7 @@
     </header>
 
     <!-- L'École Section (Tabs) -->
-    <section id="presentation" class="py-5 bg-light-fun">
+    <section id="presentation" class="py-5 bg-light-fun" data-aos="fade-up">
         <div class="container py-lg-4">
             <div class="text-center mb-5">
                 <span class="badge bg-royal-light rounded-pill px-3 py-2 fw-bold mb-2">Notre Identité</span>
@@ -141,14 +175,18 @@
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
                     <div class="row align-items-start">
                         <!-- Left Column: Story/Text + Info -->
-                        <div class="col-lg-6">
+                        <div class="col-lg-6" data-aos="fade-right">
                             <h3 class="fw-bold text-royal mb-4">Un Établissement Ouvert à Tous</h3>
-                            <p>Située au cœur de Sainte Luce sur Loire, l'École Saint Vincent accueille des enfants de
-                                maternelle et d'élémentaire. Ces enfants résident pour la plupart sur la commune mais
+                            <p>Située au cœur de Sainte Luce sur Loire, l'École Saint Vincent accueille des enfants
+                                de
+                                maternelle et d'élémentaire. Ces enfants résident pour la plupart sur la commune
+                                mais
                                 aussi dans une dizaine de communes voisines.</p>
-                            <p>Chaque jeune accueilli, quels que soient son niveau scolaire, sa forme d'intelligence,
+                            <p>Chaque jeune accueilli, quels que soient son niveau scolaire, sa forme
+                                d'intelligence,
                                 son milieu de vie ou son histoire, est accompagné sur un chemin de réussite.</p>
-                            <p class="mb-4">Nous avons à cœur de proposer un cadre bienveillant et structurant, où le
+                            <p class="mb-4">Nous avons à cœur de proposer un cadre bienveillant et structurant, où
+                                le
                                 dialogue et la
                                 confiance permettent à chacun de grandir.</p>
 
@@ -188,10 +226,11 @@
 
                 <!-- Projet Éducatif -->
                 <div class="tab-pane fade" id="pills-projet" role="tabpanel">
-                    <div class="card border-0 shadow-sm p-4 p-lg-5 rounded-4">
+                    <div class="card border-0 shadow-sm p-3 p-lg-4 rounded-4">
                         <div class="text-center mb-4">
                             <i class="bi bi-book-half display-4 text-secondary mb-3"></i>
-                            <h3 class="fw-bold text-royal">"Ensemble vivre une école de toutes les intelligences"</h3>
+                            <h3 class="fw-bold text-royal">"Ensemble vivre une école de toutes les intelligences"
+                            </h3>
                         </div>
 
                         <div class="row">
@@ -200,22 +239,28 @@
                                     histoire signe de vie"</p>
 
                                 <div class="mb-5">
-                                    <h4 class="fw-bold text-primary mb-3">Un lieu de formation intégrale de la personne
+                                    <h4 class="fw-bold text-primary mb-3">Un lieu de formation intégrale de la
+                                        personne
                                         humaine</h4>
                                     <p class="fst-italic text-muted">"Faire la vérité sur sa relation aux autres.
-                                        Apprendre à accepter l’autre dans sa différence, et voir dans cette différence
+                                        Apprendre à accepter l’autre dans sa différence, et voir dans cette
+                                        différence
                                         la source de l’enrichissement mutuel." (Jean Marie PetitClerc)</p>
-                                    <p>Notre école est avant tout un lieu de vie où tous (enfants, parents, enseignants,
+                                    <p>Notre école est avant tout un lieu de vie où tous (enfants, parents,
+                                        enseignants,
                                         personnel) prennent plaisir à venir. Elle vit au quotidien les valeurs de
                                         l'Evangile, dans le respect des convictions de chacun. Dans une confiance
                                         partagée, chacun y trouve sa place.</p>
                                 </div>
 
                                 <div class="mb-5">
-                                    <h4 class="fw-bold text-success mb-3">Un lieu d'expression et de réalisation</h4>
-                                    <p class="fst-italic text-muted">"Accueillir, ce n'est pas se mettre en avant, mais
+                                    <h4 class="fw-bold text-success mb-3">Un lieu d'expression et de réalisation
+                                    </h4>
+                                    <p class="fst-italic text-muted">"Accueillir, ce n'est pas se mettre en avant,
+                                        mais
                                         laisser l'autre s'avancer, c'est d'abord apprendre à recevoir"</p>
-                                    <p>Des temps forts et pédagogiques (échanges de services, décloisonnements, tuteurs,
+                                    <p>Des temps forts et pédagogiques (échanges de services, décloisonnements,
+                                        tuteurs,
                                         partenariats…) permettent de s’ouvrir aux autres. L'école St Vincent pose un
                                         cadre éducatif structurant pour permettre à chaque enfant de développer des
                                         compétences sociales essentielles.</p>
@@ -229,14 +274,18 @@
                                     <h4 class="fw-bold text-primary mb-3">Un lieu d'attention aux fragilités</h4>
                                     <p>Une attention particulière est portée aux enfants aux besoins éducatifs
                                         particuliers. Nous proposons à chacun de mettre en avant ses compétences, en
-                                        apportant des aides appropriées en lien avec l'enseignante spécialisée et les
+                                        apportant des aides appropriées en lien avec l'enseignante spécialisée et
+                                        les
                                         partenaires extérieurs.</p>
                                 </div>
 
                                 <div class="mb-5">
-                                    <h4 class="fw-bold text-secondary mb-3">Un lieu de formation au discernement</h4>
-                                    <p>L'équipe enseignante développe une pédagogie permettant de travailler de manière
-                                        autonome (plan de travail, exposé...). Elle maintient un degré d’exigence pour
+                                    <h4 class="fw-bold text-secondary mb-3">Un lieu de formation au discernement
+                                    </h4>
+                                    <p>L'équipe enseignante développe une pédagogie permettant de travailler de
+                                        manière
+                                        autonome (plan de travail, exposé...). Elle maintient un degré d’exigence
+                                        pour
                                         un travail personnel sérieux, tout en mettant en place une pédagogie
                                         différenciée (individuel, groupes de besoins).</p>
                                 </div>
@@ -250,9 +299,11 @@
                                                         class="bi bi-journal-check text-success me-2"></i>Livret de
                                                     réussites individuel</li>
                                                 <li class="mb-2"><i
-                                                        class="bi bi-journal-check text-success me-2"></i>Cahiers de vie
+                                                        class="bi bi-journal-check text-success me-2"></i>Cahiers de
+                                                    vie
                                                     & liaison</li>
-                                                <li><i class="bi bi-journal-check text-success me-2"></i>Diplôme de fin
+                                                <li><i class="bi bi-journal-check text-success me-2"></i>Diplôme de
+                                                    fin
                                                     de cycle I</li>
                                             </ul>
                                         </div>
@@ -295,51 +346,10 @@
                                 <h5>Règlements</h5>
                                 <p class="text-muted small">Règlement intérieur et charte de vie.</p>
                                 <button type="button" class="btn btn-outline-primary rounded-pill btn-sm mt-auto"
-                                    data-bs-toggle="modal" data-bs-target="#reglementModal">Voir les détails</button>
+                                    data-bs-toggle="modal" data-bs-target="#reglementModal">Voir les
+                                    détails</button>
 
-                                <!-- Modal Règlements -->
-                                <div class="modal fade" id="reglementModal" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Règlements</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-start">
-                                                <h6 class="fw-bold text-royal mb-3">Préambule</h6>
-                                                <p class="small">L’école Saint-Vincent est un établissement catholique
-                                                    d’enseignement lié à l’Etat par un contrat d’association. Chaque
-                                                    enfant accueilli est accompagné sur un chemin de réussite.</p>
 
-                                                <h6 class="fw-bold text-royal mt-4 mb-2">Horaires & Accès</h6>
-                                                <ul class="small">
-                                                    <li><strong>Classe :</strong> 8h50-12h00 / 13h40-16h45. (Accueil dès
-                                                        8h40).</li>
-                                                    <li><strong>Portail :</strong> Fermé après 8h50 et 13h40. Respectez
-                                                        impérativement ces horaires.</li>
-                                                    <li><strong>Accès Maternelle :</strong> Accompagnement obligatoire
-                                                        jusqu'à la classe. Poussettes à l'extérieur.</li>
-                                                </ul>
-
-                                                <h6 class="fw-bold text-royal mt-4 mb-2">Vie Scolaire</h6>
-                                                <ul class="small">
-                                                    <li><strong>Absences :</strong> Signaler avant 9h par mail.
-                                                        Justificatif écrit au retour.</li>
-                                                    <li><strong>Santé :</strong> Aucun médicament à l'école (sauf PAI).
-                                                        Maladie contagieuse = éviction.</li>
-                                                    <li><strong>Objets :</strong> Bijoux, Chewing-gums, sucettes et jeux
-                                                        d'échange interdits.</li>
-                                                </ul>
-
-                                                <h6 class="fw-bold text-royal mt-4 mb-2">Sanctions</h6>
-                                                <p class="small">En cas de manquement, des sanctions graduées sont
-                                                    prévues : de l'avertissement oral (Niveau 1) à l'exclusion
-                                                    temporaire ou définitive (Niveau 3) décidée en conseil.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -352,33 +362,7 @@
                                 <button type="button" class="btn btn-outline-primary rounded-pill btn-sm mt-auto"
                                     data-bs-toggle="modal" data-bs-target="#tarifsModal">Consulter les prix</button>
 
-                                <!-- Modal Tarifs -->
-                                <div class="modal fade" id="tarifsModal" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Tarifs 2025/2026</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-start">
-                                                <div id="tarifs-container">
-                                                    <div class="text-center p-4">
-                                                        <div class="spinner-border text-primary" role="status"></div>
-                                                        <p class="mt-2 small text-muted">Chargement des tarifs...</p>
-                                                    </div>
-                                                </div>
-                                                <!-- Download Model Button (For Demo/Admin) -->
-                                                <div class="mt-4 pt-3 border-top text-center">
-                                                    <a href="assets/csv_templates/modele_tarifs.csv"
-                                                        class="btn btn-sm btn-outline-secondary rounded-pill" download>
-                                                        <i class="bi bi-download me-1"></i> Modèle CSV
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
 
@@ -389,510 +373,427 @@
                                 <h5>Fournitures</h5>
                                 <p class="text-muted small">Matériel pour la rentrée.</p>
                                 <button type="button" class="btn btn-outline-primary rounded-pill btn-sm mt-auto"
-                                    data-bs-toggle="modal" data-bs-target="#fournituresModal">Liste du matériel</button>
+                                    data-bs-toggle="modal" data-bs-target="#fournituresModal">Liste du
+                                    matériel</button>
 
-                                <!-- Modal Fournitures -->
-                                <div class="modal fade" id="fournituresModal" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Listes de Fournitures</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-start">
-                                                <p>Les listes détaillées par classe sont disponibles en téléchargement
-                                                    sur École Directe.</p>
-                                                <ul>
-                                                    <li>Cartable sans roulettes conseillé</li>
-                                                    <li>Trousse complète (stylos, colle, ciseaux)</li>
-                                                    <li>Tenue de sport</li>
-                                                </ul>
-                                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- La Vie à l'École (Agenda & Services) -->
+        <section id="vie-scolaire" class="py-5 bg-white" data-aos="fade-up">
+            <div class="container">
+                <div class="row align-items-start">
+                    <!-- Left: Agenda & News -->
+                    <div class="col-lg-7 mb-5 mb-lg-0">
+                        <h3 class="fw-bold text-royal mb-4"><i class="bi bi-calendar-week me-2"></i>Agenda & Actualités
+                        </h3>
+
+                        <!-- Agenda List (Dynamic) -->
+                        <div id="agenda-preview">
+                            <div class="text-center p-4">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p class="mt-2 small text-muted">Chargement de l'agenda...</p>
+                            </div>
+                        </div>
+
+                        <!-- Offcanvas Agenda Moved do Body -->
+
+
+                        <!-- News Highlight (Dynamic) -->
+                        <div class="card bg-royal-light border-0 rounded-4 p-4" id="news-preview">
+                            <div class="text-center p-3">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p class="mt-2 small text-muted">Chargement des actualités...</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <!-- Right: Services (Cantine/Périscolaire) -->
+                    <div class="col-lg-5">
+                        <h3 class="fw-bold text-royal mb-4"><i class="bi bi-life-preserver me-2"></i>Services</h3>
+
+                        <!-- Cantine -->
+                        <div class="card bg-menu text-white border-0 shadow-sm rounded-4 mb-4 overflow-hidden position-relative"
+                            data-aos="fade-up">
+                            <div class="card-body p-4 position-relative z-1">
+                                <h4 class="fw-bold mb-3"><i class="bi bi-basket3-fill me-2"></i>Cantine</h4>
+                                <p class="mb-2 opacity-75">Repas préparés sur place avec des produits locaux.</p>
+                                <div class="bg-white bg-opacity-10 p-3 rounded-3 mb-3" id="cantine-home-widget">
+                                    <small class="text-uppercase fw-bold opacity-75" id="cantine-home-date">Au menu ce
+                                        ...
+                                        :</small>
+                                    <div id="cantine-home-list" class="mt-2">
+                                        <!-- Dynamic content will be injected here -->
+                                        <div class="spinner-border spinner-border-sm text-white opacity-50"
+                                            role="status">
                                         </div>
                                     </div>
                                 </div>
+                                <button class="btn btn-light text-primary fw-bold rounded-pill w-100"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasCantine">Voir le
+                                    Menu complet</button>
+                            </div>
+                            <i
+                                class="bi bi-egg-fried position-absolute bottom-0 end-0 display-1 opacity-10 me-n3 mb-n3"></i>
+                        </div>
+
+
+
+                        <!-- Périscolaire -->
+                        <div class="card border-0 shadow-sm rounded-4 p-4">
+                            <h4 class="fw-bold text-royal mb-3"><i class="bi bi-clock-history me-2"></i>Périscolaire
+                            </h4>
+                            <ul class="list-unstyled text-muted small mb-0">
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Matin :</span> <strong>7h30 - 8h40</strong>
+                                </li>
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Soir (Lun-Jeu) :</span> <strong>16h50 - 18h30</strong>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>Soir (Ven) :</span> <strong>16h50 - 18h00</strong>
+                                </li>
+                            </ul>
+                            <hr>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-telephone-fill text-secondary me-2"></i>
+                                <span class="fw-bold text-dark">06 98 37 39 05</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- La Vie à l'École (Agenda & Services) -->
-    <section id="vie-scolaire" class="py-5">
-        <div class="container">
-            <div class="row align-items-start">
-                <!-- Left: Agenda & News -->
-                <div class="col-lg-7 mb-5 mb-lg-0">
-                    <h3 class="fw-bold text-royal mb-4"><i class="bi bi-calendar-week me-2"></i>Agenda & Actualités</h3>
-
-                    <!-- Agenda List -->
-                    <!-- Agenda List -->
-                    <div id="agenda-container" class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
-                        <div class="text-center p-4">
-                            <div class="spinner-border text-primary" role="status"></div>
-                            <p class="mt-2 small text-muted">Chargement de l'agenda...</p>
-                        </div>
-                    </div>
-
-                    <!-- Download Model Button (For Demo/Admin) -->
-                    <div class="mb-4">
-                        <a href="assets/csv_templates/modele_agenda.csv"
-                            class="btn btn-sm btn-outline-secondary rounded-pill" download>
-                            <i class="bi bi-download me-1"></i> Modèle CSV
-                        </a>
-                    </div>
-
-                    <!-- Voir tout l'agenda Button -->
-                    <button class="btn btn-outline-primary rounded-pill w-100 mb-5" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasAgenda">
-                        <i class="bi bi-calendar-event me-2"></i>Voir tous les événements à venir
-                    </button>
-
-                    <!-- Offcanvas Agenda -->
-                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAgenda"
-                        aria-labelledby="offcanvasAgendaLabel">
-                        <div class="offcanvas-header bg-royal-light">
-                            <h5 class="offcanvas-title fw-bold text-royal" id="offcanvasAgendaLabel">Agenda Complet</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <!-- Full List Duplicate for Demo -->
-                            <!-- Full List Duplicate for Demo -->
-                            <div id="agenda-full-container" class="list-group shadow-sm rounded-4 overflow-hidden mb-4">
-                                <!-- Dynamic content -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- News Highlight -->
-                    <div class="card bg-royal-light border-0 rounded-4 p-4">
-                        <div class="d-flex">
-                            <div class="me-3">
-                                <i class="bi bi-newspaper fs-1 text-royal"></i>
-                            </div>
-                            <div>
-                                <h5 class="fw-bold text-royal">Dernières Actualités</h5>
-                                <p class="mb-2">Course solidaire : Un immense merci à tous pour votre participation !
-                                </p>
-                                <button class="btn btn-link small fw-bold text-decoration-none p-0"
-                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasActu">Lire la suite <i
-                                        class="bi bi-arrow-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Offcanvas Actualités -->
-                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasActu"
-                        aria-labelledby="offcanvasActuLabel">
-                        <div class="offcanvas-header bg-royal-light">
-                            <h5 class="offcanvas-title fw-bold text-royal" id="offcanvasActuLabel">Actualités</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <div id="actu-offcanvas-container">
-                                <!-- Dynamic content -->
-                            </div>
-                            <!-- Download Model Button (For Demo/Admin) -->
-                            <div class="mt-4 pt-3 border-top text-center">
-                                <a href="assets/csv_templates/modele_actu.csv"
-                                    class="btn btn-sm btn-outline-secondary rounded-pill" download>
-                                    <i class="bi bi-download me-1"></i> Modèle CSV
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Les Intervenants Section (Detailed Team) -->
+        <section id="intervenants" class="py-5 bg-white">
+            <div class="container mb-5">
+                <div class="text-center mb-5">
+                    <span class="badge bg-royal-light rounded-pill px-3 py-2 fw-bold mb-2">Communauté Éducative</span>
+                    <h2 class="display-5 font-heading text-royal">Notre Équipe</h2>
+                    <div class="sep-line mx-auto mt-3"></div>
                 </div>
 
-                <!-- Right: Services (Cantine/Périscolaire) -->
-                <div class="col-lg-5">
-                    <h3 class="fw-bold text-royal mb-4"><i class="bi bi-life-preserver me-2"></i>Services</h3>
-
-                    <!-- Cantine -->
-                    <div
-                        class="card bg-menu text-white border-0 shadow-sm rounded-4 mb-4 overflow-hidden position-relative">
-                        <div class="card-body p-4 position-relative z-1">
-                            <h4 class="fw-bold mb-3"><i class="bi bi-basket3-fill me-2"></i>Cantine</h4>
-                            <p class="mb-2 opacity-75">Repas préparés sur place avec des produits locaux.</p>
-                            <div class="bg-white bg-opacity-10 p-3 rounded-3 mb-3" id="cantine-home-widget">
-                                <small class="text-uppercase fw-bold opacity-75" id="cantine-home-date">Au menu ce ...
-                                    :</small>
-                                <div id="cantine-home-list" class="mt-2">
-                                    <!-- Dynamic content will be injected here -->
-                                    <div class="spinner-border spinner-border-sm text-white opacity-50" role="status">
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-light text-primary fw-bold rounded-pill w-100"
-                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasCantine">Voir le
-                                Menu complet</button>
-                        </div>
-                        <i
-                            class="bi bi-egg-fried position-absolute bottom-0 end-0 display-1 opacity-10 me-n3 mb-n3"></i>
-                    </div>
-
-                    <!-- Offcanvas Cantine -->
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCantine"
-                        aria-labelledby="offcanvasCantineLabel">
-                        <div class="offcanvas-header bg-primary text-white">
-                            <h5 class="offcanvas-title fw-bold" id="offcanvasCantineLabel">Menu de la Cantine</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <div class="alert alert-info mb-4">
-                                <p class="small mb-0"><strong>Note :</strong> Les repas sont préparés sur place avec des
-                                    produits frais et locaux.</p>
-                            </div>
-
-                            <h6 id="cantine-week-title" class="fw-bold text-royal border-bottom pb-2 mb-3">Semaine du
-                                ...</h6>
-
-                            <div id="cantine-content">
-                                <div class="text-center p-4">
-                                    <div class="spinner-border text-primary" role="status"></div>
-                                    <p class="mt-2 small text-muted">Chargement du menu...</p>
-                                </div>
-                            </div>
-
-                            <!-- Download Model Button (For Demo/Admin) -->
-                            <div class="mt-4 pt-3 border-top text-center">
-                                <a href="assets/csv_templates/modele_cantine.csv"
-                                    class="btn btn-sm btn-outline-secondary rounded-pill" download>
-                                    <i class="bi bi-download me-1"></i> Modèle CSV
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Périscolaire -->
-                    <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <h4 class="fw-bold text-royal mb-3"><i class="bi bi-clock-history me-2"></i>Périscolaire</h4>
-                        <ul class="list-unstyled text-muted small mb-0">
-                            <li class="mb-2 d-flex justify-content-between">
-                                <span>Matin :</span> <strong>7h30 - 8h40</strong>
-                            </li>
-                            <li class="mb-2 d-flex justify-content-between">
-                                <span>Soir (Lun-Jeu) :</span> <strong>16h50 - 18h30</strong>
-                            </li>
-                            <li class="d-flex justify-content-between">
-                                <span>Soir (Ven) :</span> <strong>16h50 - 18h00</strong>
-                            </li>
-                        </ul>
-                        <hr>
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-telephone-fill text-secondary me-2"></i>
-                            <span class="fw-bold text-dark">06 98 37 39 05</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Les Intervenants Section (Detailed Team) -->
-    <section id="intervenants" class="py-5 bg-white">
-        <div class="container mb-5">
-            <div class="text-center mb-5">
-                <span class="badge bg-royal-light rounded-pill px-3 py-2 fw-bold mb-2">Communauté Éducative</span>
-                <h2 class="display-5 font-heading text-royal">Notre Équipe</h2>
-                <div class="sep-line mx-auto mt-3"></div>
-            </div>
-
-            <!-- Management -->
-            <div class="row justify-content-center mb-5">
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <div class="avatar mx-auto mb-3 bg-white shadow-lg p-3 rounded-circle"
-                            style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-person-fill display-1 text-primary"></i>
-                        </div>
-                        <h4 class="fw-bold text-royal">M. Paul GRATAS</h4>
-                        <p class="text-primary fw-bold mb-0">Chef d'Établissement</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Maternelle & ASEM (Grouped by Level) -->
-            <div class="mb-5">
-                <div id="team-container">
+                <!-- Dynamic Team Content (populated by team.js) -->
+                <div id="team-content">
                     <div class="text-center p-5">
                         <div class="spinner-border text-primary" role="status"></div>
                         <p class="mt-3 text-muted">Chargement de l'équipe...</p>
                     </div>
                 </div>
-                <!-- Download Model Button (For Demo/Admin) -->
-                <div class="mb-5 text-center">
-                    <a href="assets/csv_templates/modele_equipe.csv"
-                        class="btn btn-sm btn-outline-secondary rounded-pill" download>
-                        <i class="bi bi-download me-1"></i> Modèle CSV
-                    </a>
-                </div>
-
-                <!-- Services & Support (Accordion - Admin & Services Only) -->
-                <div class="mb-5">
-                    <h4 class="fw-bold text-royal mb-4 ps-3 border-start border-4 border-primary">Services & Supports
-                    </h4>
-
-                    <div class="accordion shadow-sm rounded-4 overflow-hidden" id="accordionTeam">
-                        <!-- 1. Administration & Gestion -->
-                        <div class="accordion-item border-0 border-bottom">
-                            <h2 class="accordion-header" id="headingAdmin">
-                                <button class="accordion-button collapsed fw-bold text-royal bg-light-fun shadow-none"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
-                                    aria-expanded="false" aria-controls="collapseAdmin"
-                                    style="box-shadow: none !important;">
-                                    <i class="bi bi-pc-display-horizontal me-2 text-primary"></i>Administration &
-                                    Gestion
-                                </button>
-                            </h2>
-                            <div id="collapseAdmin" class="accordion-collapse collapse" aria-labelledby="headingAdmin"
-                                data-bs-parent="#accordionTeam">
-                                <div class="accordion-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <h6 class="fw-bold text-primary">Secrétariat / Direction</h6>
-                                            <p class="mb-1"><strong>Mme HIMBERT Gaëlle</strong> (Assistante Direction)
-                                            </p>
-                                            <p class="small text-muted"><i class="bi bi-envelope me-1"></i><a
-                                                    href="mailto:secretariat@ecolesaintvincent.fr"
-                                                    class="text-decoration-none text-muted">secretariat@ecolesaintvincent.fr</a>
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <h6 class="fw-bold text-primary">Comptabilité / OGEC</h6>
-                                            <p class="mb-1">Gestion assurée par l'OGEC et Mme Himbert.</p>
-                                            <p class="small text-muted"><i class="bi bi-envelope me-1"></i><a
-                                                    href="mailto:comptabilite@ecolesaintvincent.fr"
-                                                    class="text-decoration-none text-muted">comptabilite@ecolesaintvincent.fr</a>
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <h6 class="fw-bold text-primary">Site Web / Informatique</h6>
-                                            <p class="mb-1">Responsable Technique</p>
-                                            <p class="small text-muted"><i class="bi bi-envelope me-1"></i><a
-                                                    href="mailto:webmaster@ecolesaintvincent.fr"
-                                                    class="text-decoration-none text-muted">webmaster@ecolesaintvincent.fr</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 2. Services Généraux (Entretien / Restauration) -->
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header" id="headingServices">
-                                <button class="accordion-button collapsed fw-bold text-royal bg-light-fun shadow-none"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseServices"
-                                    aria-expanded="false" aria-controls="collapseServices"
-                                    style="box-shadow: none !important;">
-                                    <i class="bi bi-tools me-2 text-success"></i>Services Généraux & Restauration
-                                </button>
-                            </h2>
-                            <div id="collapseServices" class="accordion-collapse collapse"
-                                aria-labelledby="headingServices" data-bs-parent="#accordionTeam">
-                                <div class="accordion-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <h6 class="fw-bold text-success">Restauration</h6>
-                                            <p class="mb-1"><strong>M. BODAINE Sébastien</strong> (Responsable)</p>
-                                            <ul class="list-unstyled small text-muted ps-3 border-start">
-                                                <li>Mme THIAM LAMBERT Paoline</li>
-                                                <li>Mme MAYAMBA MBELU Tina</li>
-                                                <li>Mme CHAUSSE Béatrice</li>
-                                                <li>Mme DUVAL Virginie</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <h6 class="fw-bold text-success">Entretien & Maintenance</h6>
-                                            <ul class="list-unstyled small text-muted ps-3 border-start">
-                                                <li>Mme ULGER Songül</li>
-                                                <li>Mme BERTHIER Marie-Odile</li>
-                                                <li>Mme ETOURNEAU Virginie</li>
-                                                <li>Mme DOGAN Sakiné</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Associations -->
-                <div class="row text-center mt-5">
-                    <div class="col-md-6 mb-4">
-                        <div class="p-4 bg-light-fun rounded-4 h-100">
-                            <h4 class="fw-bold text-royal">O.G.E.C.</h4>
-                            <p class="text-muted small">Organisme de Gestion de l'Enseignement Catholique.<br>Gestion
-                                économique et sociale de l'école.</p>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a href="mailto:ogec@ecolesaintvincent.fr"
-                                    class="btn btn-sm btn-outline-primary rounded-pill">Contacter</a>
-                                <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal"
-                                    data-bs-target="#ogecModal">Plus d'infos</button>
-                            </div>
-
-                            <!-- Modal OGEC -->
-                            <div class="modal fade" id="ogecModal" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Qu'est-ce que l'OGEC ?</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body text-start">
-                                            <p>L'OGEC est une association loi 1901, initiée par l'Enseignement
-                                                Catholique,
-                                                elle est au service de l'école. Elle lui donne une existence juridique,
-                                                c'est-à-dire une personnalité morale.</p>
-                                            <hr>
-                                            <h6 class="fw-bold">Ses Missions</h6>
-                                            <p class="small">Calcul et suivi du budget, tenue des comptes, détermination
-                                                de
-                                                la contribution demandée aux familles, paiement des charges de
-                                                fonctionnement, assurances. En ce qui concerne la gestion des locaux,
-                                                l'O.G.E.C. veille à leur entretien, rénovation et sécurité.</p>
-                                            <p class="small">L'O.G.E.C. est l'employeur des personnels de droit privé
-                                                (Chef
-                                                d'établissement, ASEM, etc.).</p>
-                                            <hr>
-                                            <h6 class="fw-bold">Ses Membres</h6>
-                                            <p class="small">Des bénévoles soucieux de la bonne marche de
-                                                l'établissement :
-                                                parents d'élèves, anciens élèves, amis de l'établissement...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="p-4 bg-light-fun rounded-4 h-100">
-                            <h4 class="fw-bold text-royal">A.P.E.L.</h4>
-                            <p class="text-muted small">Association des Parents d'élèves de l'Enseignement
-                                Libre.<br>Participe à l'animation et à la vie de l'école.</p>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a href="mailto:apel@ecolesaintvincent.fr"
-                                    class="btn btn-sm btn-outline-primary rounded-pill">Contacter</a>
-                                <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal"
-                                    data-bs-target="#apelModal">Plus d'infos</button>
-                            </div>
-
-                            <!-- Modal APEL -->
-                            <div class="modal fade" id="apelModal" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Qu'est-ce que l'APEL ?</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body text-start">
-                                            <p>L'A.P.E.L. regroupe des parents d'élèves qui s'investissent pour
-                                                faciliter la
-                                                communication entre les différents partenaires de l'école (élèves,
-                                                parents,
-                                                enseignants, direction, OGEC).</p>
-                                            <hr>
-                                            <h6 class="fw-bold">Ses Missions</h6>
-                                            <p class="small">L'association participe pleinement à la vie de l'école en
-                                                développant des animations (kermesse, marché de Noël, etc.) et en
-                                                soutenant
-                                                les actions des enseignants. L'organisation de la Kermesse est l'un des
-                                                temps forts majeurs de l'année.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="py-5 bg-footer text-white">
-        <div class="container">
-            <div class="row gy-4">
-                <!-- Left: School Info (Left Aligned Only) -->
-                <div class="col-lg-4 text-start">
-                    <img src="assets/images/logo.png" height="50" class="mb-3 grayscale-logo" alt="Logo">
-                    <h5 class="fw-bold mb-3">École Saint Vincent</h5>
-                    <p class="small opacity-75">Un établissement catholique d'enseignement associé à l'État, ouvert à
-                        tous.</p>
-                </div>
+        <!-- Footer -->
+        <footer class="py-3 bg-footer text-white">
+            <div class="container">
+                <div class="row gy-2 align-items-start">
+                    <!-- Left: School Info -->
+                    <div class="col-lg-5 text-start">
+                        <img src="assets/images/logo.webp" height="35" class="mb-2 grayscale-logo" alt="Logo">
+                        <h5 class="fw-bold mb-2">École Saint Vincent</h5>
+                        <p class="small opacity-75 mb-0">Un établissement catholique d'enseignement associé à l'État,
+                            ouvert
+                            à tous.</p>
+                    </div>
 
-                <!-- Middle: All Links (Left Aligned Only !important) -->
-                <div class="col-lg-4 text-start">
-                    <div class="row">
-                        <div class="col-6">
-                            <h6 class="fw-bold text-primary mb-3">L'École</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#presentation" class="footer-link small">Présentation</a></li>
-                                <li><a href="#presentation" class="footer-link small">Projet Éducatif</a></li>
-                                <li><a href="#intervenants" class="footer-link small">Équipe</a></li>
-                            </ul>
+                    <!-- Middle: Links (2 columns) -->
+                    <div class="col-lg-4 text-start">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="fw-bold text-primary mb-2">L'École</h6>
+                                <ul class="list-unstyled mb-0 small">
+                                    <li><a href="#presentation" class="footer-link">Présentation</a></li>
+                                    <li><a href="#pills-projet" class="footer-link">Projet Éducatif</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="fw-bold text-primary mb-2">Infos Pratiques</h6>
+                                <ul class="list-unstyled mb-0 small">
+                                    <li><a href="#vie-scolaire" class="footer-link">Vie Scolaire</a></li>
+                                    <li><a href="#intervenants" class="footer-link">Équipe</a></li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <h5 class="fw-bold mb-3">Liens utiles</h5>
-                            <ul class="list-unstyled">
-                                <li><a href="#vie-scolaire" class="footer-link small">Cantine</a></li>
-                                <li><a href="#vie-scolaire" class="footer-link small">Agenda</a></li>
-                                <li><a href="#vie-scolaire" class="footer-link small">Périscolaire</a></li>
-                            </ul>
+                    </div>
+
+                    <!-- Right: Contact -->
+                    <div class="col-lg-3 text-start text-lg-end">
+                        <h6 class="fw-bold text-primary mb-2">Contact</h6>
+                        <div class="d-flex flex-column align-items-start align-items-lg-end">
+                            <p class="small mb-1"><i class="bi bi-geo-alt me-2"></i> Place Saint-Exupéry<br>44980
+                                Sainte-Luce-sur-Loire</p>
+                            <p class="small mb-1"><i class="bi bi-telephone me-2"></i> 02 40 25 62 97</p>
+                            <p class="small mb-0"><i class="bi bi-envelope me-2"></i> secretariat@ecolesaintvincent.fr
+                            </p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Right: Contact (Right Aligned on PC, Center on Mobile) -->
-                <div class="col-lg-4 text-start text-lg-end">
-                    <h6 class="fw-bold text-primary mb-3">Contact</h6>
-                    <div class="d-flex flex-column align-items-start align-items-lg-end">
-                        <p class="small mb-1"><i class="bi bi-geo-alt me-2"></i> Place Saint-Exupéry<br>44980
-                            Sainte-Luce-sur-Loire</p>
-                        <p class="small mb-1"><i class="bi bi-telephone me-2"></i> 02 40 25 62 97</p>
-                        <p class="small"><i class="bi bi-envelope me-2"></i> secretariat@ecolesaintvincent.fr</p>
-                    </div>
+                <hr class="opacity-25 my-2">
+                <div class="text-center small opacity-50">
+                    Copyright &copy; 2026 École Saint Vincent &middot; <a href="#"
+                        class="text-white text-decoration-none">Mentions légales</a>
                 </div>
             </div>
-            <hr class="opacity-25 my-4">
-            <div class="text-center small opacity-50">
-                Copyright &copy; 2026 École Saint Vincent &middot; <a href="#"
-                    class="text-white text-decoration-none">Mentions légales</a>
+        </footer>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Modals moved to bottom of body to fix stacking context issues -->
+        <!-- Modal Règlements -->
+        <div class="modal fade" id="reglementModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Règlements</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <h6 class="fw-bold text-royal mb-3">Préambule</h6>
+                        <p class="small">L’école Saint-Vincent est un établissement catholique d’enseignement lié à
+                            l’Etat par un contrat d’association. Chaque enfant accueilli est accompagné sur un chemin de
+                            réussite.</p>
+
+                        <h6 class="fw-bold text-royal mt-4 mb-2">Horaires & Accès</h6>
+                        <ul class="small">
+                            <li><strong>Classe :</strong> 8h50-12h00 / 13h40-16h45. (Accueil dès 8h40).</li>
+                            <li><strong>Portail :</strong> Fermé après 8h50 et 13h40. Respectez impérativement ces
+                                horaires.</li>
+                            <li><strong>Accès Maternelle :</strong> Accompagnement obligatoire jusqu'à la classe.
+                                Poussettes à l'extérieur.</li>
+                        </ul>
+
+                        <h6 class="fw-bold text-royal mt-4 mb-2">Vie Scolaire</h6>
+                        <ul class="small">
+                            <li><strong>Absences :</strong> Signaler avant 9h par mail. Justificatif écrit au retour.
+                            </li>
+                            <li><strong>Santé :</strong> Aucun médicament à l'école (sauf PAI). Maladie contagieuse =
+                                éviction.</li>
+                            <li><strong>Objets :</strong> Bijoux, Chewing-gums, sucettes et jeux d'échange interdits.
+                            </li>
+                        </ul>
+
+                        <h6 class="fw-bold text-royal mt-4 mb-2">Sanctions</h6>
+                        <p class="small">En cas de manquement, des sanctions graduées sont prévues : de l'avertissement
+                            oral (Niveau 1) à l'exclusion temporaire ou définitive (Niveau 3) décidée en conseil.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
 
-    <!-- Bootstrap JS. -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Modal Tarifs -->
+        <div class="modal fade" id="tarifsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tarifs 2025/2026</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <h6 class="fw-bold text-primary">Contribution des familles (10 mois)</h6>
+                        <ul>
+                            <li>Niveau A : <strong>45,00 € / mois</strong> (450€ annuel)</li>
+                            <li>Niveau B : <strong>48,00 € / mois</strong> (480€ annuel)</li>
+                        </ul>
+                        <small class="text-muted">Réduction de 50% pour le 3ème enfant.</small>
+                        <hr>
+                        <h6 class="fw-bold text-primary">Restauration</h6>
+                        <ul>
+                            <li>Repas standard : <strong>5,20 €</strong></li>
+                            <li>Repas allergique : <strong>2,70 €</strong></li>
+                            <li>Repas tarif spécial : <strong>6,60 €</strong></li>
+                        </ul>
+                        <hr>
+                        <h6 class="fw-bold text-primary">Périscolaire (Matin/Soir)</h6>
+                        <ul>
+                            <li>Matin : 2,50 €</li>
+                            <li>Soir (par 1/4h) : 0,90 €</li>
+                            <li>Étude encadrée : 4,50 €</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Loader Script -->
-    <script>
-        window.addEventListener('load', function () {
-            const loader = document.getElementById('loader');
-            loader.style.opacity = '0';
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 500);
-        });
-    </script>
-    <!-- Custom Scripts -->
-    <script src="assets/js/csv-loader.js"></script>
-    <script src="assets/js/csv-loader.js"></script>
-    <script src="assets/js/cantine.js"></script>
-    <script src="assets/js/team.js"></script>
-    <script src="assets/js/agenda.js"></script>
-    <script src="assets/js/actu.js"></script>
-    <script src="assets/js/tarifs.js"></script>
+        <!-- Modal Fournitures -->
+        <div class="modal fade" id="fournituresModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Listes de Fournitures</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <p>Les listes détaillées par classe sont disponibles en téléchargement sur École Directe.</p>
+                        <ul>
+                            <li>Cartable sans roulettes conseillé</li>
+                            <li>Trousse complète (stylos, colle, ciseaux)</li>
+                            <li>Tenue de sport</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loader Script -->
+        <script>
+            window.addEventListener('load', function () {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            });
+        </script>
+        <!-- Offcanvas Moved to Body Root -->
+        <!-- Offcanvas Agenda -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAgenda"
+            aria-labelledby="offcanvasAgendaLabel">
+            <div class="offcanvas-header bg-royal-light">
+                <h5 class="offcanvas-title fw-bold text-royal" id="offcanvasAgendaLabel">Agenda Complet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body" id="agenda-offcanvas-body">
+                <div class="text-center p-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 small text-muted">Chargement...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offcanvas Actualités -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasActu" aria-labelledby="offcanvasActuLabel">
+            <div class="offcanvas-header bg-royal-light">
+                <h5 class="offcanvas-title fw-bold text-royal" id="offcanvasActuLabel">Actualités</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body" id="news-offcanvas-body">
+                <div class="text-center p-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 small text-muted">Chargement...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offcanvas Cantine -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCantine"
+            aria-labelledby="offcanvasCantineLabel">
+            <div class="offcanvas-header bg-primary text-white">
+                <h5 class="offcanvas-title fw-bold" id="offcanvasCantineLabel">Menu de la Cantine</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="alert alert-info mb-4">
+                    <p class="small mb-0"><strong>Note :</strong> Les repas sont préparés sur place avec des produits
+                        frais et locaux.</p>
+                </div>
+                <h6 id="cantine-week-title" class="fw-bold text-royal border-bottom pb-2 mb-3">Semaine du ...</h6>
+                <div id="cantine-content">
+                    <div class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 small text-muted">Chargement du menu...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal OGEC (Moved from team.js) -->
+        <div class="modal fade" id="ogecModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Qu'est-ce que l'OGEC ?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <p>L'OGEC est une association loi 1901, initiée par l'Enseignement Catholique, elle est au
+                            service de l'école. Elle lui donne une existence juridique, c'est-à-dire une personnalité
+                            morale.</p>
+                        <hr>
+                        <h6 class="fw-bold">Ses Missions</h6>
+                        <p class="small">Calcul et suivi du budget, tenue des comptes, détermination de la contribution
+                            demandée aux familles, paiement des charges de fonctionnement, assurances. En ce qui
+                            concerne la gestion des locaux, l'O.G.E.C. veille à leur entretien, rénovation et sécurité.
+                        </p>
+                        <p class="small">L'O.G.E.C. est l'employeur des personnels de droit privé (Chef d'établissement,
+                            ASEM, etc.).</p>
+                        <hr>
+                        <h6 class="fw-bold">Ses Membres</h6>
+                        <p class="small">Des bénévoles soucieux de la bonne marche de l'établissement : parents
+                            d'élèves, anciens élèves, amis de l'établissement...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal APEL (Moved from team.js) -->
+        <div class="modal fade" id="apelModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Qu'est-ce que l'APEL ?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        <p>L'A.P.E.L. regroupe des parents d'élèves qui s'investissent pour faciliter la communication
+                            entre les différents partenaires de l'école (élèves, parents, enseignants, direction, OGEC).
+                        </p>
+                        <hr>
+                        <h6 class="fw-bold">Ses Missions</h6>
+                        <p class="small">L'association participe pleinement à la vie de l'école en développant des
+                            animations (kermesse, marché de Noël, etc.) et en soutenant les actions des enseignants.
+                            L'organisation de la Kermesse est l'un des temps forts majeurs de l'année.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Scripts -->
+        <script src="assets/js/csv-loader.js"></script>
+        <script src="assets/js/cantine.js"></script>
+        <script src="assets/js/news.js"></script>
+        <script src="assets/js/agenda.js"></script>
+        <script src="assets/js/tarifs.js"></script>
+        <script src="assets/js/carousel.js"></script>
+        <script src="assets/js/team.js?v=2"></script>
+
+        <!-- AOS - Animate On Scroll -->
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            // Safety Script: Remove stuck backdrops on load
+            window.addEventListener('DOMContentLoaded', () => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(b => b.remove());
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+            });
+            // AOS Init
+            AOS.init({
+                duration: 800,
+                once: false,
+                offset: 100,
+                easing: 'ease-out'
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // User Fix: Force Move Modals/Offcanvas to Body End
+                const elementsToFix = document.querySelectorAll('.modal, .offcanvas');
+                elementsToFix.forEach(element => {
+                    document.body.appendChild(element);
+                });
+            });
+        </script>
 </body>
 
 </html>

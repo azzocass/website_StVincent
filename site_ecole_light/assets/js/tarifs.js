@@ -1,68 +1,100 @@
 /**
- * Tarifs Logic
- * Loads tariffs from CSV and displays them.
+ * Dynamic Tarifs Loader
+ * Loads pricing information from CSV and displays in modal
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // Configuration
-    const CSV_URL = 'assets/csv_templates/modele_tarifs.csv';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcCUH9nb_MQuxaPOsXVS65dhj4RhjSDgsIJCGbWitnBp7EdXmjDe_9WdqDQ2Fo074-q9mS08hf7Muo/pub?gid=1223231267&single=true&output=csv';
 
-    const container = document.getElementById('tarifs-container');
-    if (!container) return;
+    const tarifsModalBody = document.querySelector('#tarifsModal .modal-body');
 
-    // 1. Fetch Data
-    const tariffs = await CsvLoader.fetchCsv(CSV_URL);
+    if (!tarifsModalBody) return;
 
-    // 2. Group by Category
-    const categories = {
-        'Contribution': [],
-        'Restauration': [],
-        'Periscolaire': []
-    };
+    try {
+        const tarifs = await CsvLoader.fetchCsv(CSV_URL);
 
-    tariffs.forEach(t => {
-        if (t.Categorie) {
-            // Fuzzy match
-            const cat = t.Categorie.toLowerCase();
-            if (cat.includes('contribution')) categories['Contribution'].push(t);
-            else if (cat.includes('restauration')) categories['Restauration'].push(t);
-            else if (cat.includes('periscolaire') || cat.includes('périscolaire')) categories['Periscolaire'].push(t);
+        if (!tarifs || tarifs.length === 0) {
+            console.warn('No tarifs data found');
+            return;
         }
-    });
 
-    // 3. Render
-    let html = '';
-
-    // Contribution
-    if (categories['Contribution'].length > 0) {
-        html += `<h6 class="fw-bold text-primary">Contribution des familles (10 mois)</h6><ul>`;
-        categories['Contribution'].forEach(t => {
-            // "Niveau A (mensuel)", "45.00 €", "450€ annuel"
-            html += `<li>${t.Libelle} : <strong>${t.Prix}</strong> ${t.Commentaire ? `(${t.Commentaire})` : ''}</li>`;
+        // Group by category
+        const byCategory = {};
+        tarifs.forEach(tarif => {
+            const cat = tarif.Categorie || 'Autre';
+            if (!byCategory[cat]) byCategory[cat] = [];
+            byCategory[cat].push(tarif);
         });
-        html += `</ul><small class="text-muted">Réduction de 50% pour le 3ème enfant.</small><hr>`;
-    }
 
-    // Restauration
-    if (categories['Restauration'].length > 0) {
-        html += `<h6 class="fw-bold text-primary">Restauration</h6><ul>`;
-        categories['Restauration'].forEach(t => {
-            html += `<li>${t.Libelle} : <strong>${t.Prix}</strong></li>`;
+        // Render tarifs
+        let html = '';
+
+        // Contribution
+        if (byCategory['Contribution']) {
+            html += `
+                <h6 class="fw-bold text-royal mb-3">Contribution Familiale</h6>
+                <ul class="list-unstyled small mb-4">
+            `;
+            byCategory['Contribution'].forEach(t => {
+                html += `<li class="mb-2"><strong>${t.Libelle} :</strong> ${t.Prix}`;
+                if (t.Commentaire) html += ` <span class="text-muted fst-italic">(${t.Commentaire})</span>`;
+                html += `</li>`;
+            });
+            html += `</ul>`;
+        }
+
+        // Restauration
+        if (byCategory['Restauration']) {
+            html += `
+                <h6 class="fw-bold text-royal mb-3 mt-4">Restauration</h6>
+                <ul class="list-unstyled small mb-4">
+            `;
+            byCategory['Restauration'].forEach(t => {
+                html += `<li class="mb-2"><strong>${t.Libelle} :</strong> ${t.Prix}`;
+                if (t.Commentaire) html += ` <span class="text-muted fst-italic">(${t.Commentaire})</span>`;
+                html += `</li>`;
+            });
+            html += `</ul>`;
+        }
+
+        // Périscolaire
+        if (byCategory['Periscolaire']) {
+            html += `
+                <h6 class="fw-bold text-royal mb-3 mt-4">Périscolaire</h6>
+                <ul class="list-unstyled small mb-4">
+            `;
+            byCategory['Periscolaire'].forEach(t => {
+                html += `<li class="mb-2"><strong>${t.Libelle} :</strong> ${t.Prix}`;
+                if (t.Commentaire) html += ` <span class="text-muted fst-italic">(${t.Commentaire})</span>`;
+                html += `</li>`;
+            });
+            html += `</ul>`;
+        }
+
+        // Other categories
+        Object.keys(byCategory).forEach(cat => {
+            if (cat !== 'Contribution' && cat !== 'Restauration' && cat !== 'Periscolaire') {
+                html += `
+                    <h6 class="fw-bold text-royal mb-3 mt-4">${cat}</h6>
+                    <ul class="list-unstyled small mb-4">
+                `;
+                byCategory[cat].forEach(t => {
+                    html += `<li class="mb-2"><strong>${t.Libelle} :</strong> ${t.Prix}`;
+                    if (t.Commentaire) html += ` <span class="text-muted fst-italic">(${t.Commentaire})</span>`;
+                    html += `</li>`;
+                });
+                html += `</ul>`;
+            }
         });
-        html += `</ul><hr>`;
-    }
 
-    // Periscolaire
-    if (categories['Periscolaire'].length > 0) {
-        html += `<h6 class="fw-bold text-primary">Périscolaire</h6><ul>`;
-        categories['Periscolaire'].forEach(t => {
-            html += `<li>${t.Libelle} : ${t.Prix} ${t.Commentaire ? `<small class="text-muted">(${t.Commentaire})</small>` : ''}</li>`;
-        });
-        html += `</ul>`;
-    }
+        html += `
+            <div class="alert alert-light border-start border-4 border-primary mt-4">
+                <small><i class="bi bi-info-circle me-2"></i>Pour toute question sur les tarifs, contactez le secrétariat.</small>
+            </div>
+        `;
 
-    if (html === '') {
-        container.innerHTML = '<p class="text-muted">Tarifs non disponibles.</p>';
-    } else {
-        container.innerHTML = html;
+        tarifsModalBody.innerHTML = html;
+
+    } catch (error) {
+        console.error('Error loading tarifs:', error);
     }
 });

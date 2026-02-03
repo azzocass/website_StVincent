@@ -69,6 +69,21 @@ h6,
     backdrop-filter: blur(10px);
     padding: 0.8rem 0;
     border-bottom: 3px solid var(--color-primary);
+    z-index: 1020;
+    /* Valeur standard, ne la monte pas trop haut */
+    /* Ensure it stays behind modals/offcanvas */
+}
+
+.navbar-brand img {
+    /* Rounded Pastille Style */
+    background: var(--color-royal);
+    border-radius: 50%;
+    padding: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 55px;
+    /* Slightly larger to fit padding */
+    width: 55px;
+    object-fit: contain;
 }
 
 .navbar-brand {
@@ -93,13 +108,13 @@ h6,
 }
 
 /* Carousel */
-/* Carousel */
 .carousel-caption {
-    background: linear-gradient(to top, rgba(0, 52, 89, 0.9) 0%, rgba(0, 52, 89, 0.6) 50%, transparent 100%);
-    backdrop-filter: none;
+    background: rgba(0, 52, 89, 0.65);
+    /* Opacity reduced to 65% */
+    backdrop-filter: blur(5px);
     border-radius: 0;
-    padding: 4rem 10% 2rem 10%;
-    /* More padding top for gradient fade */
+    padding: 1.5rem 10%;
+    /* Reduced padding height */
     bottom: 0;
     left: 0;
     right: 0;
@@ -112,14 +127,12 @@ h6,
 .carousel-caption h1,
 .carousel-caption h2 {
     color: white;
-    /* Force white on dark gradient */
     margin-bottom: 0.5rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .carousel-caption p {
     color: rgba(255, 255, 255, 0.9);
-    /* White text */
     margin-bottom: 0;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -145,6 +158,11 @@ h6,
 /* Sections */
 .bg-light-fun {
     background-color: var(--color-bg-light);
+}
+
+/* Fix Scroll Offset for Anchor Links */
+section {
+    scroll-margin-top: 100px;
 }
 
 .bg-royal-light {
@@ -290,52 +308,9 @@ h6,
     background-size: 20px 20px;
 }
 
-/* Organic Yellow Blob */
-.blob-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
-}
 
-.blob-shape {
-    position: absolute;
-    top: -10%;
-    left: -10%;
-    width: 600px;
-    height: 600px;
-    background: #FFD54F;
-    /* Yellow */
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    opacity: 0.6;
-    animation: blob-bounce 15s infinite ease-in-out;
-    filter: blur(40px);
-    z-index: 1;
-    /* slightly above background but below text if needed */
-}
 
-@keyframes blob-bounce {
 
-    0%,
-    100% {
-        transform: translate(0, 0) scale(1);
-        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    }
-
-    33% {
-        transform: translate(50px, -30px) scale(1.1);
-        border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
-    }
-
-    66% {
-        transform: translate(-20px, 20px) scale(0.9);
-        border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
-    }
-}
 
 /* Loading Spinner */
 #loader {
@@ -370,4 +345,33 @@ h6,
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* Fix Scroll Offset for Anchor Links */
+section {
+    scroll-margin-top: 100px;
+}
+
+/* Explicit Z-Index Hierarchy - User Request */
+/* On force l'offcanvas à être au-dessus de TOUT, y compris la navbar sticky */
+.offcanvas {
+    z-index: 1055 !important;
+    /* Bootstrap Navbar est à 1020, Backdrop à 1040 */
+}
+
+/* Le fond grisé doit être juste en dessous de l'offcanvas */
+.offcanvas-backdrop {
+    z-index: 1050 !important;
+}
+
+.modal {
+    z-index: 1055 !important;
+}
+
+.modal-backdrop {
+    z-index: 1050 !important;
+}
+
+.modal-dialog {
+    z-index: 1060;
 }
