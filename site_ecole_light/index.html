@@ -68,7 +68,7 @@
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
         }
     </style>
-
+</head>
 
 <body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="70">
     <!-- Skip to main content for accessibility -->
@@ -173,168 +173,301 @@
             <div class="tab-content" id="pills-tabContent">
                 <!-- Présentation -->
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
-                    <div class="row align-items-start">
-                        <!-- Left Column: Story/Text + Info -->
-                        <div class="col-lg-6" data-aos="fade-right">
-                            <h3 class="fw-bold text-royal mb-4">Un Établissement Ouvert à Tous</h3>
-                            <p>Située au cœur de Sainte Luce sur Loire, l'École Saint Vincent accueille des enfants
-                                de
-                                maternelle et d'élémentaire. Ces enfants résident pour la plupart sur la commune
-                                mais
-                                aussi dans une dizaine de communes voisines.</p>
-                            <p>Chaque jeune accueilli, quels que soient son niveau scolaire, sa forme
-                                d'intelligence,
-                                son milieu de vie ou son histoire, est accompagné sur un chemin de réussite.</p>
-                            <p class="mb-4">Nous avons à cœur de proposer un cadre bienveillant et structurant, où
-                                le
-                                dialogue et la
-                                confiance permettent à chacun de grandir.</p>
 
-                            <!-- Info Block (Moved to Left) -->
-                            <div class="d-flex gap-4 bg-white p-3 rounded-4 shadow-sm border border-light w-100">
-                                <div class="text-royal">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="bi bi-geo-alt-fill fs-5 me-2 text-primary"></i>
-                                        <strong>Localisation</strong>
-                                    </div>
-                                    <span class="small d-block ps-4">Place Saint-Exupéry</span>
+                    <!-- Layout 2 colonnes : texte gauche / map droite -->
+                    <div class="row g-4 align-items-stretch">
+
+                        <!-- COLONNE GAUCHE -->
+                        <div class="col-lg-5" data-aos="fade-right">
+
+                            <!-- Card identité de l'école -->
+                            <div class="school-identity-card mb-3">
+                                <span class="badge-esv">🏫 Établissement catholique · Contrat d'association</span>
+                                <h3>Un Établissement Ouvert à Tous</h3>
+                                <p>École maternelle et élémentaire au cœur de Sainte-Luce-sur-Loire. Chaque enfant
+                                    accompagné sur son chemin de réussite, quelles que soient ses capacités.</p>
+                            </div>
+
+                            <!-- Pills d'info rapide -->
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="info-pill"><i class="bi bi-geo-alt-fill"></i>6 Place Saint-Exupéry</span>
+                                <span class="info-pill"><i class="bi bi-clock-fill"></i>8h40 – 16h45</span>
+                                <span class="info-pill"><i class="bi bi-telephone-fill"></i>02 40 25 62 97</span>
+                            </div>
+
+                            <!-- Texte de présentation avec "Lire la suite" -->
+                            <div class="position-relative">
+                                <div class="text-truncated-content collapsed" id="pres-text">
+                                    <p>L'école Saint Vincent offre l'originalité d'un projet éducatif posant la question
+                                        du sens. Elle inscrit la prise en compte de toute la personne en reliant
+                                        l'enseignement, le fait religieux, l'éducation aux valeurs de la République et
+                                        la proposition d'un sens chrétien de l'Homme et de la vie.</p>
+                                    <p>Choisir un établissement est un choix important. En plusieurs occasions, notre
+                                        école ouvre ses portes (journée de solidarité, Marché de Noël, matinée
+                                        d'immersion pour les futurs petites sections...). Ces moments de rencontres
+                                        permettent aux familles de découvrir l'école sous un autre jour.</p>
+                                    <p>Les enseignants privilégient le suivi de chaque enfant, avec une prise en charge
+                                        spécialisée si besoin, et une relation étroite avec les familles. Des activités
+                                        sportives, culturelles et artistiques sont proposées sur l'intercours du midi.
+                                    </p>
+                                    <p>Dans l'établissement, les classes sont regroupées par cycle. Un service de
+                                        restauration, sur place, est proposé. Matin et soir, les enfants sont accueillis
+                                        dès 7h30 et jusqu'à 18h30 (sauf le vendredi 18h) à l'accueil périscolaire.</p>
                                 </div>
-                                <div class="vr opacity-25"></div>
-                                <div class="text-royal">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="bi bi-clock-fill fs-5 me-2 text-primary"></i>
-                                        <strong>Horaires</strong>
-                                    </div>
-                                    <span class="small d-block ps-4">8h40 - 16h45</span>
+                                <div class="read-more-fade" id="pres-fade">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                        onclick="expandText()">
+                                        <i class="bi bi-chevron-down me-1"></i>Lire la suite
+                                    </button>
                                 </div>
                             </div>
+
+                            <!-- Dynamic Headmaster Block (Injected by team.js) -->
+                            <div id="presentation-chef-container" class="mt-3"></div>
+
                         </div>
 
-                        <!-- Right Column: Map Only -->
-                        <div class="col-lg-6 mt-4 mt-lg-0 pt-lg-5">
-                            <!-- Google Maps (Zoom Increased z=16) -->
-                            <div class="rounded-4 overflow-hidden shadow-sm h-100">
+                        <!-- COLONNE DROITE : Map + horaires détaillés -->
+                        <div class="col-lg-7" data-aos="fade-left">
+
+                            <!-- Carte Google Maps -->
+                            <div class="rounded-4 overflow-hidden shadow-sm mb-3" style="height: 280px;">
                                 <iframe
-                                    src="https://maps.google.com/maps?q=7G26%2B4G%20Sainte-Luce-sur-Loire&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                                    width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade">
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2708.577977346856!2d-1.488358023473977!3d47.24439097115904!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4805efbd7c030f0f%3A0x6006093278564264!2s%C3%89cole%20Saint-Vincent!5e0!3m2!1sfr!2sfr!4v1706780000000!5m2!1sfr!2sfr"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    title="Localisation École Saint Vincent">
                                 </iframe>
                             </div>
+
+                            <!-- Grille horaires détaillée -->
+                            <div class="row g-2">
+                                <!-- Classe -->
+                                <div class="col-sm-4">
+                                    <div class="rounded-3 p-3 h-100"
+                                        style="background:#e0f2fe; border-left: 3px solid var(--color-primary);">
+                                        <div class="fw-bold text-royal mb-2"
+                                            style="font-size:.82rem; text-transform:uppercase; letter-spacing:.05em;"><i
+                                                class="bi bi-book me-1"></i>Classe</div>
+                                        <div style="font-size:.88rem;"><strong>8h40</strong> – 12h00</div>
+                                        <div style="font-size:.88rem;"><strong>13h40</strong> – 16h45</div>
+                                        <div class="text-muted mt-1" style="font-size:.78rem;">Accueil dès 8h40</div>
+                                    </div>
+                                </div>
+                                <!-- Périscolaire matin -->
+                                <div class="col-sm-4">
+                                    <div class="rounded-3 p-3 h-100"
+                                        style="background:#ede9fe; border-left: 3px solid var(--color-secondary);">
+                                        <div class="fw-bold text-royal mb-2"
+                                            style="font-size:.82rem; text-transform:uppercase; letter-spacing:.05em;"><i
+                                                class="bi bi-sunrise me-1"></i>Périscolaire matin</div>
+                                        <div style="font-size:.88rem;"><strong>7h30</strong> – 8h40</div>
+                                        <div class="text-muted mt-1" style="font-size:.78rem;">Lun · Mar · Jeu · Ven
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Périscolaire soir -->
+                                <div class="col-sm-4">
+                                    <div class="rounded-3 p-3 h-100"
+                                        style="background:#dcfce7; border-left: 3px solid var(--color-success);">
+                                        <div class="fw-bold text-royal mb-2"
+                                            style="font-size:.82rem; text-transform:uppercase; letter-spacing:.05em;"><i
+                                                class="bi bi-moon me-1"></i>Périscolaire soir</div>
+                                        <div style="font-size:.88rem;">Lun–Jeu : jusqu'à <strong>18h30</strong></div>
+                                        <div style="font-size:.88rem;">Ven : jusqu'à <strong>18h00</strong></div>
+                                        <div class="text-muted mt-1" style="font-size:.78rem;"><i
+                                                class="bi bi-telephone-fill me-1"></i>06 98 37 39 05</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Horaires bureau secrétariat -->
+                            <div class="d-flex align-items-center gap-3 mt-2 px-3 py-2 rounded-3"
+                                style="background: rgba(0,52,89,.05); font-size:.82rem; color: var(--color-text);">
+                                <i class="bi bi-building text-primary"></i>
+                                <span><strong>Secrétariat :</strong> Lun–Jeu 8h40–12h / 13h40–16h45 · <strong>Ven matin
+                                        uniquement</strong></span>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
-                <!-- Projet Éducatif -->
                 <div class="tab-pane fade" id="pills-projet" role="tabpanel">
-                    <div class="card border-0 shadow-sm p-3 p-lg-4 rounded-4">
-                        <div class="text-center mb-4">
-                            <i class="bi bi-book-half display-4 text-secondary mb-3"></i>
-                            <h3 class="fw-bold text-royal">"Ensemble vivre une école de toutes les intelligences"
-                            </h3>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                <p class="lead text-center fst-italic text-muted mb-5">"Construire avec chacun une
-                                    histoire signe de vie"</p>
+                    <!-- Hero citation -->
+                    <div class="projet-hero">
+                        <i class="bi bi-book-half display-5 text-primary mb-3 d-block"></i>
+                        <h3 class="fw-bold text-royal mb-1">"Ensemble vivre une école de toutes les intelligences"</h3>
+                        <p class="citation">"Construire avec chacun une histoire signe de vie"</p>
+                    </div>
 
-                                <div class="mb-5">
-                                    <h4 class="fw-bold text-primary mb-3">Un lieu de formation intégrale de la
-                                        personne
-                                        humaine</h4>
-                                    <p class="fst-italic text-muted">"Faire la vérité sur sa relation aux autres.
-                                        Apprendre à accepter l’autre dans sa différence, et voir dans cette
-                                        différence
-                                        la source de l’enrichissement mutuel." (Jean Marie PetitClerc)</p>
-                                    <p>Notre école est avant tout un lieu de vie où tous (enfants, parents,
-                                        enseignants,
+                    <!-- Accordéon thématique -->
+                    <div class="accordion edu-accordion" id="projetAccordeon">
+
+                        <!-- 1. Formation intégrale -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#acc1" aria-expanded="true">
+                                    <span class="acc-icon blue"><i class="bi bi-person-heart"></i></span>
+                                    Formation intégrale de la personne
+                                </button>
+                            </h2>
+                            <div id="acc1" class="accordion-collapse collapse show" data-bs-parent="#projetAccordeon">
+                                <div class="accordion-body">
+                                    <p class="quote">"Faire la vérité sur sa relation aux autres. Apprendre à accepter
+                                        l'autre dans sa différence, et voir dans cette différence la source de
+                                        l'enrichissement mutuel." (Jean Marie PetitClerc)</p>
+                                    <p>Notre école est avant tout un lieu de vie où tous (enfants, parents, enseignants,
                                         personnel) prennent plaisir à venir. Elle vit au quotidien les valeurs de
-                                        l'Evangile, dans le respect des convictions de chacun. Dans une confiance
+                                        l'Évangile, dans le respect des convictions de chacun. Dans une confiance
                                         partagée, chacun y trouve sa place.</p>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="mb-5">
-                                    <h4 class="fw-bold text-success mb-3">Un lieu d'expression et de réalisation
-                                    </h4>
-                                    <p class="fst-italic text-muted">"Accueillir, ce n'est pas se mettre en avant,
-                                        mais
-                                        laisser l'autre s'avancer, c'est d'abord apprendre à recevoir"</p>
-                                    <p>Des temps forts et pédagogiques (échanges de services, décloisonnements,
-                                        tuteurs,
-                                        partenariats…) permettent de s’ouvrir aux autres. L'école St Vincent pose un
+                        <!-- 2. Expression & réalisation -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#acc2">
+                                    <span class="acc-icon green"><i class="bi bi-stars"></i></span>
+                                    Expression et réalisation
+                                </button>
+                            </h2>
+                            <div id="acc2" class="accordion-collapse collapse" data-bs-parent="#projetAccordeon">
+                                <div class="accordion-body">
+                                    <p class="quote">"Accueillir, ce n'est pas se mettre en avant, mais laisser l'autre
+                                        s'avancer, c'est d'abord apprendre à recevoir"</p>
+                                    <p>Des temps forts et pédagogiques (échanges de services, décloisonnements, tuteurs,
+                                        partenariats…) permettent de s'ouvrir aux autres. L'école St Vincent pose un
                                         cadre éducatif structurant pour permettre à chaque enfant de développer des
                                         compétences sociales essentielles.</p>
-                                    <div class="alert alert-light border-start border-4 border-success shadow-sm">
+                                    <div class="alert alert-light border-start border-4 border-success shadow-sm mt-3 mb-0"
+                                        style="font-size:.9rem;">
                                         <i class="bi bi-shield-check text-success me-2"></i><strong>Engagement
                                             :</strong> L'école a signé la Charte contre le harcèlement (PHARE).
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="mb-5">
-                                    <h4 class="fw-bold text-primary mb-3">Un lieu d'attention aux fragilités</h4>
+                        <!-- 3. Attention aux fragilités -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#acc3">
+                                    <span class="acc-icon pink"><i class="bi bi-heart-pulse"></i></span>
+                                    Attention aux fragilités
+                                </button>
+                            </h2>
+                            <div id="acc3" class="accordion-collapse collapse" data-bs-parent="#projetAccordeon">
+                                <div class="accordion-body">
                                     <p>Une attention particulière est portée aux enfants aux besoins éducatifs
                                         particuliers. Nous proposons à chacun de mettre en avant ses compétences, en
-                                        apportant des aides appropriées en lien avec l'enseignante spécialisée et
-                                        les
+                                        apportant des aides appropriées en lien avec l'enseignante spécialisée et les
                                         partenaires extérieurs.</p>
-                                </div>
-
-                                <div class="mb-5">
-                                    <h4 class="fw-bold text-secondary mb-3">Un lieu de formation au discernement
-                                    </h4>
-                                    <p>L'équipe enseignante développe une pédagogie permettant de travailler de
-                                        manière
-                                        autonome (plan de travail, exposé...). Elle maintient un degré d’exigence
-                                        pour
-                                        un travail personnel sérieux, tout en mettant en place une pédagogie
-                                        différenciée (individuel, groupes de besoins).</p>
-                                </div>
-
-                                <div class="row g-4 mt-4">
-                                    <div class="col-md-6">
-                                        <div class="h-100 p-4 bg-light-fun rounded-4">
-                                            <h5 class="fw-bold text-royal mb-3">Suivi Maternelle</h5>
-                                            <ul class="list-unstyled small">
-                                                <li class="mb-2"><i
-                                                        class="bi bi-journal-check text-success me-2"></i>Livret de
-                                                    réussites individuel</li>
-                                                <li class="mb-2"><i
-                                                        class="bi bi-journal-check text-success me-2"></i>Cahiers de
-                                                    vie
-                                                    & liaison</li>
-                                                <li><i class="bi bi-journal-check text-success me-2"></i>Diplôme de
-                                                    fin
-                                                    de cycle I</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="h-100 p-4 bg-light-fun rounded-4">
-                                            <h5 class="fw-bold text-royal mb-3">Suivi Élémentaire</h5>
-                                            <ul class="list-unstyled small">
-                                                <li class="mb-2"><i
-                                                        class="bi bi-journal-richtext text-primary me-2"></i>Livret
-                                                    Scolaire Unique (LSU)</li>
-                                                <li class="mb-2"><i
-                                                        class="bi bi-journal-richtext text-primary me-2"></i>Accessible
-                                                    en ligne (Janv/Juin)</li>
-                                                <li><i class="bi bi-journal-richtext text-primary me-2"></i>Bilan
-                                                    d'année complet</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-outline-primary rounded-pill d-block mx-auto mt-4"
-                                    data-bs-toggle="collapse" data-bs-target="#projetDetails">Lire le projet
-                                    complet</button>
-                                <div class="collapse mt-4" id="projetDetails">
-                                    <!-- ... content ... -->
-                                    <p>Détails du projet éducatif...</p>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 4. Discernement & autonomie -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#acc4">
+                                    <span class="acc-icon violet"><i class="bi bi-lightbulb"></i></span>
+                                    Discernement et autonomie
+                                </button>
+                            </h2>
+                            <div id="acc4" class="accordion-collapse collapse" data-bs-parent="#projetAccordeon">
+                                <div class="accordion-body">
+                                    <p>L'équipe enseignante développe une pédagogie permettant de travailler de manière
+                                        autonome (plan de travail, exposé...). Elle maintient un degré d'exigence pour
+                                        un travail personnel sérieux, tout en mettant en place une pédagogie
+                                        différenciée (individuel, groupes de besoins). Elle développe les actions
+                                        pastorales, les activités sportives et les classes transplantées pour ouvrir
+                                        l'enfant.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Enseignement spécialisé -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#acc5">
+                                    <span class="acc-icon sky"><i class="bi bi-journal-check"></i></span>
+                                    Enseignement spécialisé &amp; PPRE
+                                </button>
+                            </h2>
+                            <div id="acc5" class="accordion-collapse collapse" data-bs-parent="#projetAccordeon">
+                                <div class="accordion-body">
+                                    <p>En lien étroit avec l'Enseignante Spécialisée, des conseils de cycles analysent
+                                        les situations des élèves pour apporter des réponses adaptées. Des
+                                        <strong>Programmes Personnalisés de Réussite Éducative (PPRE)</strong> peuvent
+                                        être proposés. Des équipes éducatives réunissent les partenaires extérieurs
+                                        (orthophoniste, psychologue...) pour un suivi cohérent.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Relations Famille-École -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#acc6">
+                                    <span class="acc-icon teal"><i class="bi bi-people-fill"></i></span>
+                                    Relations Famille-École
+                                </button>
+                            </h2>
+                            <div id="acc6" class="accordion-collapse collapse" data-bs-parent="#projetAccordeon">
+                                <div class="accordion-body">
+                                    <p>Tout au long de l'année, des rencontres sont prévues. Une communication régulière
+                                        des travaux est faite (bilans, évaluations). Les parents sont sollicités pour
+                                        participer à des activités pédagogiques (ateliers, sorties, bibliothèque) et
+                                        vivre pleinement la communauté éducative.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- fin accordéon -->
+
+                    <!-- Suivi scolaire (cartes en bas) -->
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <div class="suivi-card">
+                                <h5 class="fw-bold text-royal mb-3"><i class="bi bi-flower1 text-success me-2"></i>Suivi
+                                    Maternelle</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><i class="bi bi-check-circle-fill text-success"></i>Livret de réussites
+                                        individuel</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i>Cahiers de vie &amp; liaison
+                                    </li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i>Diplôme de fin de cycle I
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="suivi-card" style="background: linear-gradient(135deg, #f0f4ff, #e8f4ff);">
+                                <h5 class="fw-bold text-royal mb-3"><i
+                                        class="bi bi-mortarboard-fill text-primary me-2"></i>Suivi Élémentaire</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><i class="bi bi-check-circle-fill text-primary"></i>Livret Scolaire Unique (LSU)
+                                    </li>
+                                    <li><i class="bi bi-check-circle-fill text-primary"></i>Accessible en ligne
+                                        (Janv/Juin)</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary"></i>Bilan d'année complet</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
+
 
                 <!-- Infos Pratiques -->
                 <div class="tab-pane fade" id="pills-infos" role="tabpanel">
@@ -492,6 +625,25 @@
             </div>
         </section>
 
+        <!-- Bandeau Newsletter -->
+        <div class="newsletter-strip">
+            <div class="container">
+                <div class="row align-items-center gy-2">
+                    <div class="col-md-7">
+                        <h5 class="fw-bold mb-1"><i class="bi bi-envelope-heart me-2"></i>Restez connectés à la vie de
+                            l'école</h5>
+                        <p>Agenda, actualités, menus de cantine... Inscrivez-vous à notre newsletter.</p>
+                    </div>
+                    <div class="col-md-5 text-md-end">
+                        <button class="btn btn-light fw-bold rounded-pill px-4 text-royal shadow-sm"
+                            data-bs-toggle="modal" data-bs-target="#newsletterModal">
+                            <i class="bi bi-newspaper me-2"></i>S'inscrire à la newsletter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="py-3 bg-footer text-white">
             <div class="container">
@@ -508,19 +660,26 @@
                     <!-- Middle: Links (2 columns) -->
                     <div class="col-lg-4 text-start">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <h6 class="fw-bold text-primary mb-2">L'École</h6>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li><a href="#presentation" class="footer-link">Présentation</a></li>
-                                    <li><a href="#pills-projet" class="footer-link">Projet Éducatif</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-6">
-                                <h6 class="fw-bold text-primary mb-2">Infos Pratiques</h6>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li><a href="#vie-scolaire" class="footer-link">Vie Scolaire</a></li>
-                                    <li><a href="#intervenants" class="footer-link">Équipe</a></li>
-                                </ul>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <ul class="list-unstyled mb-0 small">
+                                            <li><a href="#presentation" class="footer-link footer-tab-link"
+                                                    data-tab="#pills-home-tab">Présentation</a></li>
+                                            <li><a href="#presentation" class="footer-link footer-tab-link"
+                                                    data-tab="#pills-projet-tab">Projet Éducatif</a></li>
+                                            <li><a href="#presentation" class="footer-link footer-tab-link"
+                                                    data-tab="#pills-infos-tab">Infos Pratiques</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul class="list-unstyled mb-0 small">
+                                            <li><a href="#vie-scolaire" class="footer-link">Vie Scolaire</a></li>
+                                            <li><a href="#intervenants" class="footer-link">Équipe</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -528,12 +687,15 @@
                     <!-- Right: Contact -->
                     <div class="col-lg-3 text-start text-lg-end">
                         <h6 class="fw-bold text-primary mb-2">Contact</h6>
-                        <div class="d-flex flex-column align-items-start align-items-lg-end">
-                            <p class="small mb-1"><i class="bi bi-geo-alt me-2"></i> Place Saint-Exupéry<br>44980
-                                Sainte-Luce-sur-Loire</p>
-                            <p class="small mb-1"><i class="bi bi-telephone me-2"></i> 02 40 25 62 97</p>
-                            <p class="small mb-0"><i class="bi bi-envelope me-2"></i> secretariat@ecolesaintvincent.fr
-                            </p>
+                        <p class="mb-1"><i class="bi bi-geo-alt-fill me-2 text-white-50"></i>6 Place
+                            Saint-Exupéry<br>44980
+                            Sainte-Luce-sur-Loire</p>
+                        <p class="mb-0"><i class="bi bi-telephone-fill me-2 text-white-50"></i>02 40 25 71 83</p>
+                        <p class="small mb-0"><i class="bi bi-envelope me-2"></i> secretariat@ecolesaintvincent.fr
+                        </p>
+                        <div class="mt-3">
+                            <a href="https://www.facebook.com/people/Associations-%C3%89cole-Saint-Vincent-Sainte-Luce-sur-Loire/100042707025513/#"
+                                target="_blank" class="text-white-50 me-3 fs-5"><i class="bi bi-facebook"></i></a>
                         </div>
                     </div>
                 </div>
@@ -583,8 +745,22 @@
                         </ul>
 
                         <h6 class="fw-bold text-royal mt-4 mb-2">Sanctions</h6>
-                        <p class="small">En cas de manquement, des sanctions graduées sont prévues : de l'avertissement
-                            oral (Niveau 1) à l'exclusion temporaire ou définitive (Niveau 3) décidée en conseil.</p>
+                        <p class="small">En cas de manquement, des sanctions graduées sont prévues :</p>
+                        <ul class="small">
+                            <li><strong>Cycle I (Maternelle) :</strong> Avertissement oral, Isolement momentané, Tâche
+                                d'intérêt général (dessin, excuse).</li>
+                            <li><strong>Cycle II & III :</strong>
+                                <ul>
+                                    <li>Avertissement / Contrat de comportement.</li>
+                                    <li>Tâche d'intérêt général (TIG).</li>
+                                    <li>Non-participation à une activité.</li>
+                                    <li>Retenue.</li>
+                                    <li>Exclusion temporaire (classe ou service).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Cas graves :</strong> Conseil de discipline pouvant mener à l'exclusion
+                                définitive ou au non-renouvellement.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -622,6 +798,50 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Modal Présentation Complète -->
+        <div class="modal fade" id="presentationModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-royal text-white">
+                        <h5 class="modal-title font-heading"><i class="bi bi-building me-2"></i>Présentation de l'École
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body bg-light-fun">
+                        <h6 class="text-primary fw-bold">Une école ouverte à tous</h6>
+                        <p>Située au cœur de Sainte Luce sur Loire, l'Ecole Saint Vincent accueille des enfants de
+                            maternelle et d'élémentaire. Ces enfants résident pour la plupart sur la commune mais aussi
+                            dans une dizaine de communes voisines. Chaque jeune accueilli, quels que soient son niveau
+                            scolaire, sa forme d'intelligence, son milieu de vie, son histoire, ses capacités, est
+                            accompagné sur un chemin de réussite dans sa scolarité pour être en mesure de réussir sa
+                            vie.</p>
+
+                        <hr class="text-primary my-4">
+
+                        <h6 class="text-primary fw-bold">Le sens de l'Homme</h6>
+                        <p>Elle inscrit la prise en compte de toute la personne en reliant l'enseignement, le fait
+                            religieux, l'éducation aux valeurs de la République et la proposition d'un sens chrétien de
+                            l'Homme et de la vie.</p>
+
+                        <div class="alert alert-info border-0 shadow-sm mt-4">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Les enseignants privilégient le suivi de chaque enfant, avec une prise en charge spécialisée
+                            si besoin.
+                        </div>
+
+                        <!-- Dynamic Headmaster Block (Injected by team.js) -->
+                        <div id="presentation-chef-container">
+                            <div class="text-center mt-5 mb-4">
+                                <div class="spinner-border text-primary" role="status"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
 
         <!-- Modal Fournitures -->
@@ -793,6 +1013,110 @@
                     document.body.appendChild(element);
                 });
             });
+        </script>
+        <script src="assets/js/navigation.js"></script>
+
+        <!-- Modal Newsletter -->
+        <div class="modal fade" id="newsletterModal" tabindex="-1" aria-labelledby="newsletterModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 460px;">
+                <div class="modal-content border-0 overflow-hidden shadow-lg">
+                    <!-- Header coloré -->
+                    <div class="newsletter-modal-header">
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                            data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        <h5 id="newsletterModalLabel"><i class="bi bi-envelope-heart me-2"></i>Newsletter de l'École
+                        </h5>
+                        <p>Restez informé de toutes les actualités de Saint Vincent</p>
+                    </div>
+
+                    <div class="modal-body p-4">
+                        <!-- Avantages -->
+                        <div class="mb-3">
+                            <div class="newsletter-benefit"><i class="bi bi-calendar-event"></i><span>Agenda des
+                                    événements à venir</span></div>
+                            <div class="newsletter-benefit"><i class="bi bi-megaphone"></i><span>Actualités et infos
+                                    importantes</span></div>
+                            <div class="newsletter-benefit"><i class="bi bi-cup-hot"></i><span>Menus de cantine de la
+                                    semaine</span></div>
+                        </div>
+                        <hr class="my-3">
+
+                        <!-- Formulaire -->
+                        <div id="newsletter-form">
+                            <div class="mb-3">
+                                <label for="nl-prenom" class="form-label fw-bold text-royal"
+                                    style="font-size:.88rem;">Prénom</label>
+                                <input type="text" id="nl-prenom" class="form-control form-control-newsletter"
+                                    placeholder="Votre prénom">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nl-nom" class="form-label fw-bold text-royal"
+                                    style="font-size:.88rem;">Nom</label>
+                                <input type="text" id="nl-nom" class="form-control form-control-newsletter"
+                                    placeholder="Votre nom">
+                            </div>
+                            <div class="mb-4">
+                                <label for="nl-email" class="form-label fw-bold text-royal"
+                                    style="font-size:.88rem;">Adresse e-mail <span class="text-danger">*</span></label>
+                                <input type="email" id="nl-email" class="form-control form-control-newsletter"
+                                    placeholder="vous@exemple.com" required>
+                                <div id="nl-email-error" class="text-danger mt-1"
+                                    style="font-size:.8rem; display:none;">Veuillez saisir une adresse email valide.
+                                </div>
+                            </div>
+                            <button class="btn-newsletter-submit" onclick="submitNewsletter()">
+                                <i class="bi bi-send-fill me-2"></i>S'inscrire à la newsletter
+                            </button>
+                        </div>
+
+                        <!-- Message de succès (masqué par défaut) -->
+                        <div id="newsletter-success" class="text-center py-3" style="display:none;">
+                            <div class="display-4 mb-2">✅</div>
+                            <h5 class="text-royal fw-bold">Inscription envoyée !</h5>
+                            <p class="text-muted small mb-0">Un e-mail de confirmation vous sera adressé par la
+                                direction.</p>
+                        </div>
+
+                        <p class="text-muted text-center mt-3 mb-0" style="font-size:.75rem;">
+                            <i class="bi bi-lock me-1"></i>Données utilisées uniquement pour la newsletter de l'école.
+                            Désabonnement possible à tout moment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Présentation: Expand text
+            function expandText() {
+                const t = document.getElementById('pres-text');
+                const f = document.getElementById('pres-fade');
+                t.classList.remove('collapsed');
+                t.classList.add('expanded');
+                f.classList.add('hidden');
+            }
+            // Newsletter: submit
+            function submitNewsletter() {
+                const email = document.getElementById('nl-email').value.trim();
+                const prenom = document.getElementById('nl-prenom').value.trim();
+                const nom = document.getElementById('nl-nom').value.trim();
+                const errEl = document.getElementById('nl-email-error');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    errEl.style.display = 'block';
+                    document.getElementById('nl-email').focus();
+                    return;
+                }
+                errEl.style.display = 'none';
+                const subject = encodeURIComponent('Inscription Newsletter – École Saint Vincent');
+                const body = encodeURIComponent(
+                    `Bonjour,\n\nJe souhaite m'inscrire à la newsletter de l'École Saint Vincent.\n\nPrénom : ${prenom || '(non renseigné)'}\nNom : ${nom || '(non renseigné)'}\nEmail : ${email}\n\nCordialement`
+                );
+                window.location.href = `mailto:secretariat@ecolesaintvincent.fr?subject=${subject}&body=${body}`;
+                document.getElementById('newsletter-form').style.display = 'none';
+                document.getElementById('newsletter-success').style.display = 'block';
+            }
         </script>
 </body>
 

@@ -122,15 +122,50 @@ function renderTeamSections(data) {
 
     document.getElementById('team-content').innerHTML = html;
 
+    // Presentation Chef (Dynamic)
+    if (direction.length > 0) {
+        renderPresentationChef(direction);
+    }
+
     // Refresh AOS to detect dynamically added elements
     if (typeof AOS !== 'undefined') {
         AOS.refresh();
     }
 }
 
+function renderPresentationChef(members) {
+    const container = document.getElementById('presentation-chef-container');
+    if (!container) return; // Only exists on home page
+
+    const chef = members.find(m => m.Role && m.Role.toLowerCase().includes('chef'));
+    if (!chef) {
+        container.innerHTML = ''; // Clear loader if no chef found
+        return;
+    }
+
+    // Director Card style (matches Snippet 1 design)
+    const html = `
+        <div class="director-card mt-3">
+            <div class="director-avatar"><i class="bi bi-person-fill"></i></div>
+            <div>
+                <div class="fw-bold text-royal" style="font-size:.95rem;">${chef.Nom}</div>
+                <div class="text-muted" style="font-size:.82rem;">${chef.Role}</div>
+            </div>
+            <a href="mailto:direction@ecolesaintvincent.fr" class="btn btn-sm btn-outline-primary rounded-pill ms-auto" style="font-size:.78rem; padding:.25rem .8rem;">
+                <i class="bi bi-envelope me-1"></i>Contact
+            </a>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
 function renderDirectionSection(members) {
     const chef = members.find(m => m.Role && m.Role.toLowerCase().includes('chef'));
     if (!chef) return '';
+
+    // Assuming 'Image' field exists in CSV for the image URL, otherwise use a placeholder
+    const imgUrl = chef.Image || 'https://via.placeholder.com/120x120?text=Photo'; // Placeholder if no image URL
 
     return `
         <div class="row justify-content-center mb-5">
@@ -138,7 +173,10 @@ function renderDirectionSection(members) {
                 <div class="text-center">
                     <div class="avatar mx-auto mb-3 bg-white shadow-lg p-3 rounded-circle"
                         style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
-                        <i class="bi bi-person-fill display-1 text-primary"></i>
+                        <img src="${imgUrl}" 
+                             class="card-img-top rounded-circle mx-auto d-block mt-3 shadow-sm hover-scale" 
+                             alt="${chef.Role ? chef.Role : 'Membre'} - ${chef.Nom}"
+                             style="width: 120px; height: 120px; object-fit: cover; border: 3px solid white;">
                     </div>
                     <h4 class="fw-bold text-royal">${chef.Nom}</h4>
                     <p class="text-primary fw-bold mb-0">${chef.Role || 'Chef d\'Établissement'}</p>
