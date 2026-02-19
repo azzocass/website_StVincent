@@ -23,7 +23,7 @@
     <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="assets/css/style.css?v=7" rel="stylesheet">
+    <link href="assets/css/style.css?v=8" rel="stylesheet">
     <link rel="icon" href="assets/images/favicon.png" type="image/png">
 
     <!-- SEO & Open Graph -->
@@ -178,7 +178,7 @@
                     <div class="row g-4 align-items-stretch">
 
                         <!-- COLONNE GAUCHE -->
-                        <div class="col-lg-5" data-aos="fade-right">
+                        <div class="col-lg-7" data-aos="fade-right">
 
                             <!-- Card identité de l'école -->
                             <div class="school-identity-card mb-3">
@@ -186,13 +186,6 @@
                                 <h3>Un Établissement Ouvert à Tous</h3>
                                 <p>École maternelle et élémentaire au cœur de Sainte-Luce-sur-Loire. Chaque enfant
                                     accompagné sur son chemin de réussite, quelles que soient ses capacités.</p>
-                            </div>
-
-                            <!-- Pills d'info rapide -->
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                                <span class="info-pill"><i class="bi bi-geo-alt-fill"></i>6 Place Saint-Exupéry</span>
-                                <span class="info-pill"><i class="bi bi-clock-fill"></i>8h40 – 16h45</span>
-                                <span class="info-pill"><i class="bi bi-telephone-fill"></i>02 40 25 62 97</span>
                             </div>
 
                             <!-- Texte de présentation avec "Lire la suite" -->
@@ -225,10 +218,16 @@
                             <!-- Dynamic Headmaster Block (Injected by team.js) -->
                             <div id="presentation-chef-container" class="mt-3"></div>
 
+                            <!-- CTA Nous contacter -->
+                            <a href="#vie-scolaire"
+                                class="btn btn-action rounded-pill px-4 mt-3 shadow-sm d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-chat-dots-fill"></i>Horaires & Contact
+                            </a>
+
                         </div>
 
                         <!-- COLONNE DROITE : Map + horaires détaillés -->
-                        <div class="col-lg-7" data-aos="fade-left">
+                        <div class="col-lg-5" data-aos="fade-left">
 
                             <!-- Carte Google Maps -->
                             <div class="rounded-4 overflow-hidden shadow-sm mb-3" style="height: 280px;">
@@ -240,53 +239,16 @@
                                 </iframe>
                             </div>
 
-                            <!-- Grille horaires détaillée -->
-                            <div class="row g-2">
-                                <!-- Classe -->
-                                <div class="col-sm-4">
-                                    <div class="rounded-3 p-3 h-100"
-                                        style="background:#e0f2fe; border-left: 3px solid var(--color-primary);">
-                                        <div class="fw-bold text-royal mb-2"
-                                            style="font-size:.82rem; text-transform:uppercase; letter-spacing:.05em;"><i
-                                                class="bi bi-book me-1"></i>Classe</div>
-                                        <div style="font-size:.88rem;"><strong>8h40</strong> – 12h00</div>
-                                        <div style="font-size:.88rem;"><strong>13h40</strong> – 16h45</div>
-                                        <div class="text-muted mt-1" style="font-size:.78rem;">Accueil dès 8h40</div>
-                                    </div>
+                            <!-- Adresse + itinéraire sous la map -->
+                            <div class="map-info-bar">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-geo-alt-fill text-primary"></i>
+                                    <span>6 Place Saint-Exupéry, 44980 Sainte-Luce-sur-Loire</span>
                                 </div>
-                                <!-- Périscolaire matin -->
-                                <div class="col-sm-4">
-                                    <div class="rounded-3 p-3 h-100"
-                                        style="background:#ede9fe; border-left: 3px solid var(--color-secondary);">
-                                        <div class="fw-bold text-royal mb-2"
-                                            style="font-size:.82rem; text-transform:uppercase; letter-spacing:.05em;"><i
-                                                class="bi bi-sunrise me-1"></i>Périscolaire matin</div>
-                                        <div style="font-size:.88rem;"><strong>7h30</strong> – 8h40</div>
-                                        <div class="text-muted mt-1" style="font-size:.78rem;">Lun · Mar · Jeu · Ven
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Périscolaire soir -->
-                                <div class="col-sm-4">
-                                    <div class="rounded-3 p-3 h-100"
-                                        style="background:#dcfce7; border-left: 3px solid var(--color-success);">
-                                        <div class="fw-bold text-royal mb-2"
-                                            style="font-size:.82rem; text-transform:uppercase; letter-spacing:.05em;"><i
-                                                class="bi bi-moon me-1"></i>Périscolaire soir</div>
-                                        <div style="font-size:.88rem;">Lun–Jeu : jusqu'à <strong>18h30</strong></div>
-                                        <div style="font-size:.88rem;">Ven : jusqu'à <strong>18h00</strong></div>
-                                        <div class="text-muted mt-1" style="font-size:.78rem;"><i
-                                                class="bi bi-telephone-fill me-1"></i>06 98 37 39 05</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Horaires bureau secrétariat -->
-                            <div class="d-flex align-items-center gap-3 mt-2 px-3 py-2 rounded-3"
-                                style="background: rgba(0,52,89,.05); font-size:.82rem; color: var(--color-text);">
-                                <i class="bi bi-building text-primary"></i>
-                                <span><strong>Secrétariat :</strong> Lun–Jeu 8h40–12h / 13h40–16h45 · <strong>Ven matin
-                                        uniquement</strong></span>
+                                <a href="https://www.google.com/maps/dir//École+Saint-Vincent,+6+Pl.+Saint-Exupéry,+44980+Sainte-Luce-sur-Loire"
+                                    target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="bi bi-signpost-2 me-1"></i>Itinéraire
+                                </a>
                             </div>
 
                         </div>
@@ -579,25 +541,79 @@
 
 
 
-                        <!-- Périscolaire -->
-                        <div class="card border-0 shadow-sm rounded-4 p-4">
-                            <h4 class="fw-bold text-royal mb-3"><i class="bi bi-clock-history me-2"></i>Périscolaire
-                            </h4>
-                            <ul class="list-unstyled text-muted small mb-0">
-                                <li class="mb-2 d-flex justify-content-between">
-                                    <span>Matin :</span> <strong>7h30 - 8h40</strong>
+                        <!-- Horaires & Contact (card unifiée avec tabs) -->
+                        <div class="card border-0 shadow-sm rounded-4 p-4 horaires-contact-card">
+                            <h4 class="fw-bold text-royal mb-3"><i class="bi bi-clock-history me-2"></i>Horaires &
+                                Contact</h4>
+
+                            <!-- Tabs -->
+                            <ul class="nav nav-pills nav-fill horaires-tabs mb-3" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-classe"
+                                        type="button" role="tab"><i class="bi bi-book me-1"></i>Classe</button>
                                 </li>
-                                <li class="mb-2 d-flex justify-content-between">
-                                    <span>Soir (Lun-Jeu) :</span> <strong>16h50 - 18h30</strong>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-peri"
+                                        type="button" role="tab"><i class="bi bi-sunrise me-1"></i>Périscolaire</button>
                                 </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>Soir (Ven) :</span> <strong>16h50 - 18h00</strong>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-bureau"
+                                        type="button" role="tab"><i class="bi bi-building me-1"></i>Bureau</button>
                                 </li>
                             </ul>
-                            <hr>
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-telephone-fill text-secondary me-2"></i>
-                                <span class="fw-bold text-dark">06 98 37 39 05</span>
+
+                            <div class="tab-content">
+                                <!-- Tab Classe -->
+                                <div class="tab-pane fade show active" id="tab-classe" role="tabpanel">
+                                    <div class="horaires-block blue">
+                                        <div class="horaires-row"><span>Matin</span><strong>8h40 – 12h00</strong></div>
+                                        <div class="horaires-row"><span>Après-midi</span><strong>13h40 – 16h45</strong>
+                                        </div>
+                                        <div class="horaires-note">Accueil dès 8h40 · Lun · Mar · Jeu · Ven</div>
+                                    </div>
+                                </div>
+                                <!-- Tab Périscolaire -->
+                                <div class="tab-pane fade" id="tab-peri" role="tabpanel">
+                                    <div class="horaires-block purple">
+                                        <div class="horaires-row"><span>Matin</span><strong>7h30 – 8h40</strong></div>
+                                        <div class="horaires-row"><span>Soir (Lun–Jeu)</span><strong>16h50 –
+                                                18h30</strong></div>
+                                        <div class="horaires-row"><span>Soir (Vendredi)</span><strong>16h50 –
+                                                18h00</strong></div>
+                                        <div class="horaires-note">Lun · Mar · Jeu · Ven</div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 mt-3">
+                                        <i class="bi bi-telephone-fill text-secondary"></i>
+                                        <span class="fw-bold">06 98 37 39 05</span>
+                                        <span class="peri-tooltip" tabindex="0" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Pour questions sur la garderie uniquement">
+                                            <i class="bi bi-question-circle-fill"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Tab Bureau / Secrétariat -->
+                                <div class="tab-pane fade" id="tab-bureau" role="tabpanel">
+                                    <div class="horaires-block teal">
+                                        <div class="horaires-row"><span>Lun – Jeu</span><strong>8h40 – 12h / 13h40 –
+                                                16h45</strong></div>
+                                        <div class="horaires-row"><span>Vendredi</span><strong>Matin uniquement</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-3">
+                            <!-- Adresse + téléphone -->
+                            <div class="d-flex flex-column gap-2" style="font-size:.88rem;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-geo-alt-fill text-primary"></i>
+                                    <span>6 Place Saint-Exupéry, 44980 Sainte-Luce-sur-Loire</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-telephone-fill text-primary"></i>
+                                    <span>02 40 25 62 97</span>
+                                    <span class="text-muted">· secretariat@ecolesaintvincent.fr</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1004,6 +1020,9 @@
                 offset: 100,
                 easing: 'ease-out'
             });
+            // Bootstrap Tooltips Init
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
