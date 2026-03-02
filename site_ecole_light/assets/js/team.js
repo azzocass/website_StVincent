@@ -164,19 +164,13 @@ function renderDirectionSection(members) {
     const chef = members.find(m => m.Role && m.Role.toLowerCase().includes('chef'));
     if (!chef) return '';
 
-    // Assuming 'Image' field exists in CSV for the image URL, otherwise use a placeholder
-    const imgUrl = chef.Image || 'https://via.placeholder.com/120x120?text=Photo'; // Placeholder if no image URL
-
     return `
         <div class="row justify-content-center mb-5">
             <div class="col-md-4" data-aos="zoom-in">
                 <div class="text-center">
-                    <div class="avatar mx-auto mb-3 bg-white shadow-lg p-3 rounded-circle"
+                    <div class="avatar mx-auto mb-3 bg-white shadow-lg rounded-circle"
                         style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
-                        <img src="${imgUrl}" 
-                             class="card-img-top rounded-circle mx-auto d-block mt-3 shadow-sm hover-scale" 
-                             alt="${chef.Role ? chef.Role : 'Membre'} - ${chef.Nom}"
-                             style="width: 120px; height: 120px; object-fit: cover; border: 3px solid white;">
+                        <i class="bi bi-person-fill display-1 text-primary"></i>
                     </div>
                     <h4 class="fw-bold text-royal">${chef.Nom}</h4>
                     <p class="text-primary fw-bold mb-0">${chef.Role || 'Chef d\'Établissement'}</p>

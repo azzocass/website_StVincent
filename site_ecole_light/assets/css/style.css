@@ -28,6 +28,14 @@ body {
     font-size: 1.1rem;
     color: var(--color-text);
     background-color: #f8fbff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure footer sticks to bottom with no white space */
+footer.bg-footer {
+    margin-top: auto;
 }
 
 h1,
@@ -740,9 +748,9 @@ section {
 
 /* Override des pills globaux pour les tabs horaires plus compacts */
 .horaires-tabs.nav-pills .nav-link {
-    font-size: .82rem;
-    padding: .4rem 1rem;
-    margin-right: .25rem;
+    font-size: .75rem;
+    padding: .3rem .8rem;
+    border-radius: 20px;
     border-color: #e2e8f0;
     background: #f8fafc;
     color: var(--color-text);
@@ -817,4 +825,302 @@ section {
 .peri-tooltip:hover,
 .peri-tooltip:focus {
     color: var(--color-primary);
+}
+
+/* ========================================= */
+/* CAROUSEL REFINEMENTS (Global)           */
+/* ========================================= */
+/* Light mode carousel background */
+@media (prefers-color-scheme: light) {
+    #homeCarousel .carousel-inner {
+        background-color: #ffffff;
+    }
+}
+
+.carousel-caption {
+    bottom: 5% !important;
+    padding-bottom: 0 !important;
+}
+
+.carousel-caption h1,
+.carousel-caption h2 {
+    font-size: 1.5rem !important;
+    /* ~50% reduction from display-3 */
+    margin-bottom: 0.5rem !important;
+}
+
+.carousel-caption p {
+    font-size: 1rem !important;
+    /* ~50% reduction from fs-4 */
+    margin-bottom: 0 !important;
+}
+
+/* ========================================= */
+/* MOBILE RESPONSIVENESS & MEDIA QUERIES   */
+/* ========================================= */
+
+@media (max-width: 576px) {
+
+    /* 1. Typography */
+    body {
+        font-size: 1rem;
+    }
+
+    .display-3 {
+        font-size: 2.2rem;
+    }
+
+    .display-5 {
+        font-size: 1.8rem;
+    }
+
+    /* Navbar Title - show title with truncation */
+    .navbar-brand-text {
+        font-size: 1.1rem;
+        font-weight: bold;
+        display: inline-block;
+        max-width: 160px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: 0.5rem;
+    }
+
+    /* 2. Carousel */
+    #homeCarousel .carousel-item img {
+        height: 50vh !important;
+    }
+
+    .carousel-caption {
+        bottom: 2% !important;
+        display: block !important;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .carousel-caption h1,
+    .carousel-caption h2 {
+        font-size: 1.2rem !important;
+        /* Shrunk for mobile */
+    }
+
+    .carousel-caption p {
+        font-size: 0.85rem !important;
+    }
+
+    /* 3. L'École Tabs - Horizontal scroll */
+    #pills-tab {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: center !important;
+        padding-bottom: 5px;
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    #pills-tab::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari/Edge */
+    }
+
+    .nav-pills .nav-link {
+        white-space: nowrap;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+    }
+
+    /* 4. Map Height */
+    .map-container {
+        height: 200px !important;
+    }
+
+    .map-info-bar {
+        font-size: 0.9rem;
+    }
+
+    /* 5. Section Padding */
+    .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    /* 6. Newsletter Modal Keyboard fix */
+    #newsletterModal .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    #newsletterModal .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+@media (min-width: 577px) {
+    .navbar-brand-text {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-left: 0.5rem;
+    }
+
+    .map-container {
+        height: 280px;
+    }
+}
+
+/* ========================================= */
+/* DARK THEME SUPPORT                      */
+/* ========================================= */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #e2e8f0;
+        /* Light grey for readability */
+        --color-bg-dark: #121212;
+        /* Dark grey background */
+        --color-bg-card: #1e1e1e;
+        /* Slightly lighter grey for cards/sections */
+    }
+
+    body {
+        background-color: var(--color-bg-dark);
+        color: var(--color-text);
+    }
+
+    /* Override Bootstrap light backgrounds */
+    .bg-white,
+    .bg-light,
+    .bg-footer,
+    .bg-light-fun {
+        background-color: var(--color-bg-card) !important;
+    }
+
+    /* Footer border for separation */
+    footer.bg-footer {
+        border-top: 1px solid #333;
+    }
+
+    /* Cards */
+    .card {
+        background-color: var(--color-bg-card) !important;
+        border-color: #333 !important;
+        color: var(--color-text);
+    }
+
+    /* Navbar */
+    .navbar-custom {
+        background-color: rgba(30, 30, 30, 0.98);
+        border-bottom-color: var(--color-primary);
+    }
+
+    .navbar-brand-text {
+        color: #f8fafc !important;
+    }
+
+    .navbar-toggler-icon {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    /* Headings & Text */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .text-royal,
+    .text-dark,
+    .display-3,
+    .display-5 {
+        color: #f8fafc !important;
+        /* Force light text instead of navy blue */
+    }
+
+    .text-muted {
+        color: #94a3b8 !important;
+    }
+
+    /* Carousel Background (Dark Mode) */
+    #homeCarousel .carousel-inner {
+        background-color: var(--color-bg-dark);
+    }
+
+    /* Tabs & Pills */
+    .nav-pills .nav-link:not(.active) {
+        color: var(--color-text);
+    }
+
+    .horaires-tabs.nav-pills .nav-link {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    /* Offcanvas */
+    .offcanvas {
+        background-color: var(--color-bg-card);
+        color: var(--color-text);
+    }
+
+    .offcanvas-header .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    /* Modals */
+    .modal-content {
+        background-color: var(--color-bg-card);
+        color: var(--color-text);
+        border-color: #333;
+    }
+
+    .modal-header .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    /* Forms */
+    .form-control {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    .form-control:focus {
+        background-color: #2d3748;
+        color: #fff;
+    }
+
+    /* Specific content blocks (Horaires) */
+    .horaires-block.blue {
+        background: rgba(0, 168, 232, 0.15);
+        /* Keep tint but transparent over dark */
+    }
+
+    .horaires-block.purple {
+        background: rgba(114, 9, 183, 0.15);
+    }
+
+    .horaires-block.teal {
+        background: rgba(13, 148, 136, 0.15);
+    }
+
+    /* Accordion */
+    .accordion-item {
+        background-color: var(--color-bg-card);
+        border-color: #333;
+    }
+
+    .accordion-button {
+        background-color: var(--color-bg-card);
+        color: #f8fafc;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: rgba(0, 168, 232, 0.1);
+        color: var(--color-primary);
+    }
+
+    .accordion-button::after {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
 }
