@@ -96,9 +96,13 @@
                     <li class="nav-item"><a class="nav-link" href="#presentation">L'École</a></li>
                     <li class="nav-item"><a class="nav-link" href="#vie-scolaire">La Vie à l'École</a></li>
                     <li class="nav-item"><a class="nav-link" href="#intervenants">Les Intervenants</a></li>
-                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                        <a class="btn btn-action shadow-sm rounded-pill px-4" href="https://www.ecoledirecte.com"
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0 d-flex align-items-center">
+                        <a class="btn btn-action shadow-sm rounded-pill px-4 me-2" href="https://www.ecoledirecte.com"
                             target="_blank"><i class="bi bi-lock-fill me-1"></i> École Directe</a>
+                        <button id="theme-toggle" class="btn btn-sm btn-outline-secondary rounded-circle"
+                            style="width: 38px; height: 38px;" title="Changer le thème">
+                            <i id="theme-icon" class="bi bi-moon-fill"></i>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -189,8 +193,8 @@
                             </div>
 
                             <!-- Texte de présentation avec "Lire la suite" -->
-                            <div class="position-relative">
-                                <div class="text-truncated-content collapsed" id="pres-text">
+                            <div class="card border-0 shadow-sm rounded-4 p-4 position-relative">
+                                <div class="text-truncated-content collapsed" id="pres-text" style="color: inherit;">
                                     <p>L'école Saint Vincent offre l'originalité d'un projet éducatif posant la question
                                         du sens. Elle inscrit la prise en compte de toute la personne en reliant
                                         l'enseignement, le fait religieux, l'éducation aux valeurs de la République et
@@ -992,6 +996,8 @@
     <script src="assets/js/tarifs.js"></script>
     <script src="assets/js/carousel.js"></script>
     <script src="assets/js/team.js?v=3"></script>
+    <!-- Theme Manager -->
+    <script src="assets/js/theme.js"></script>
 
     <!-- AOS - Animate On Scroll -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

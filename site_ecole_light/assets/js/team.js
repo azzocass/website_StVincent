@@ -168,8 +168,8 @@ function renderDirectionSection(members) {
         <div class="row justify-content-center mb-5">
             <div class="col-md-4" data-aos="zoom-in">
                 <div class="text-center">
-                    <div class="avatar mx-auto mb-3 bg-white shadow-lg rounded-circle"
-                        style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
+                    <div class="avatar mx-auto mb-3 shadow-lg rounded-circle"
+                        style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; background-color: var(--color-bg-card, #fff);">
                         <i class="bi bi-person-fill display-1 text-primary"></i>
                     </div>
                     <h4 class="fw-bold text-royal">${chef.Nom}</h4>

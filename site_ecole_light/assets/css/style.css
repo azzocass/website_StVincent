@@ -831,10 +831,8 @@ section {
 /* CAROUSEL REFINEMENTS (Global)           */
 /* ========================================= */
 /* Light mode carousel background */
-@media (prefers-color-scheme: light) {
-    #homeCarousel .carousel-inner {
-        background-color: #ffffff;
-    }
+[data-theme="light"] #homeCarousel .carousel-inner {
+    background-color: #ffffff;
 }
 
 .carousel-caption {
@@ -973,154 +971,404 @@ section {
 /* DARK THEME SUPPORT                      */
 /* ========================================= */
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-text: #e2e8f0;
-        /* Light grey for readability */
-        --color-bg-dark: #121212;
-        /* Dark grey background */
-        --color-bg-card: #1e1e1e;
-        /* Slightly lighter grey for cards/sections */
-    }
+[data-theme="dark"] {
+    --color-text: #f8fafc;
+    /* White for high readability */
+    --color-bg-dark: #000000;
+    /* Base dark background */
+    --color-bg-card: #282828;
+    /* Elevated card background */
+}
 
-    body {
-        background-color: var(--color-bg-dark);
-        color: var(--color-text);
-    }
+[data-theme="dark"] body {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text);
+}
 
-    /* Override Bootstrap light backgrounds */
-    .bg-white,
-    .bg-light,
-    .bg-footer,
-    .bg-light-fun {
-        background-color: var(--color-bg-card) !important;
-    }
+/* Override Bootstrap light backgrounds for site sections */
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .bg-footer {
+    background-color: var(--color-bg-dark) !important;
+}
 
-    /* Footer border for separation */
-    footer.bg-footer {
-        border-top: 1px solid #333;
-    }
+/* Background overrides for Cards and Panels */
+[data-theme="dark"] .bg-light-fun,
+[data-theme="dark"] .card.border-0 {
+    background-color: var(--color-bg-card) !important;
+}
 
-    /* Cards */
-    .card {
-        background-color: var(--color-bg-card) !important;
-        border-color: #333 !important;
-        color: var(--color-text);
-    }
+/* Footer border for separation */
+[data-theme="dark"] footer.bg-footer {
+    border-top: 1px solid #333;
+}
 
-    /* Navbar */
-    .navbar-custom {
-        background-color: rgba(30, 30, 30, 0.98);
-        border-bottom-color: var(--color-primary);
-    }
+/* Cards */
+[data-theme="dark"] .card {
+    background-color: #282828 !important;
+    border-color: #3f3f3f !important;
+    color: var(--color-text);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5) !important;
+}
 
-    .navbar-brand-text {
-        color: #f8fafc !important;
-    }
+[data-theme="dark"] .card:hover,
+[data-theme="dark"] .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6) !important;
+    border-color: #575757 !important;
+}
 
-    .navbar-toggler-icon {
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
+/* Navbar */
+[data-theme="dark"] .navbar-custom {
+    background-color: #000000;
+    border-bottom-color: var(--color-primary);
+}
 
-    /* Headings & Text */
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    .text-royal,
-    .text-dark,
-    .display-3,
-    .display-5 {
-        color: #f8fafc !important;
-        /* Force light text instead of navy blue */
-    }
+[data-theme="dark"] .navbar-brand-text {
+    color: #f8fafc !important;
+}
 
-    .text-muted {
-        color: #94a3b8 !important;
-    }
+[data-theme="dark"] .navbar-nav .nav-link {
+    color: #cbd5e1 !important;
+    /* Lighter grey for inactive links */
+}
 
-    /* Carousel Background (Dark Mode) */
-    #homeCarousel .carousel-inner {
-        background-color: var(--color-bg-dark);
-    }
+[data-theme="dark"] .navbar-nav .nav-link.active,
+[data-theme="dark"] .navbar-nav .nav-link:hover {
+    color: #38bdf8 !important;
+    /* Brighter blue for active/hover */
+}
 
-    /* Tabs & Pills */
-    .nav-pills .nav-link:not(.active) {
-        color: var(--color-text);
-    }
+[data-theme="dark"] .navbar-toggler-icon {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
 
-    .horaires-tabs.nav-pills .nav-link {
-        background-color: #2d3748;
-        border-color: #4a5568;
-        color: #e2e8f0;
-    }
+/* Headings & Text */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] .text-royal,
+[data-theme="dark"] .text-dark,
+[data-theme="dark"] .display-3,
+[data-theme="dark"] .display-5 {
+    color: #f8fafc !important;
+    /* Force light text instead of navy blue */
+}
 
-    /* Offcanvas */
-    .offcanvas {
-        background-color: var(--color-bg-card);
-        color: var(--color-text);
-    }
+[data-theme="dark"] .text-muted {
+    color: #94a3b8 !important;
+}
 
-    .offcanvas-header .btn-close {
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
+/* Carousel Background (Dark Mode) */
+[data-theme="dark"] #homeCarousel .carousel-inner {
+    background-color: var(--color-bg-dark);
+}
 
-    /* Modals */
-    .modal-content {
-        background-color: var(--color-bg-card);
-        color: var(--color-text);
-        border-color: #333;
-    }
+/* Tabs & Pills */
+[data-theme="dark"] .nav-pills .nav-link:not(.active) {
+    color: var(--color-text);
+}
 
-    .modal-header .btn-close {
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
+[data-theme="dark"] .horaires-tabs.nav-pills .nav-link {
+    background-color: var(--color-bg-dark);
+    border: 2px solid #3f3f3f;
+    color: #e0e0e0 !important;
+}
 
-    /* Forms */
-    .form-control {
-        background-color: #2d3748;
-        border-color: #4a5568;
-        color: #e2e8f0;
-    }
+[data-theme="dark"] .horaires-tabs.nav-pills .nav-link.active,
+[data-theme="dark"] .horaires-tabs.nav-pills .nav-link:hover {
+    background-color: rgba(56, 189, 248, 0.1) !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+    /* Sky-400 for glowing active states */
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
 
-    .form-control:focus {
-        background-color: #2d3748;
-        color: #fff;
-    }
+/* Offcanvas */
+[data-theme="dark"] .offcanvas {
+    background-color: var(--color-bg-card);
+    color: var(--color-text);
+}
 
-    /* Specific content blocks (Horaires) */
-    .horaires-block.blue {
-        background: rgba(0, 168, 232, 0.15);
-        /* Keep tint but transparent over dark */
-    }
+[data-theme="dark"] .offcanvas-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
 
-    .horaires-block.purple {
-        background: rgba(114, 9, 183, 0.15);
-    }
+/* Modals */
+[data-theme="dark"] .modal-content {
+    background-color: var(--color-bg-card);
+    color: var(--color-text);
+    border-color: #333;
+}
 
-    .horaires-block.teal {
-        background: rgba(13, 148, 136, 0.15);
-    }
+[data-theme="dark"] .modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
 
-    /* Accordion */
-    .accordion-item {
-        background-color: var(--color-bg-card);
-        border-color: #333;
-    }
+/* Forms */
+[data-theme="dark"] .form-control {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
 
-    .accordion-button {
-        background-color: var(--color-bg-card);
-        color: #f8fafc;
-    }
+[data-theme="dark"] .form-control:focus {
+    background-color: #2d3748;
+    color: #fff;
+}
 
-    .accordion-button:not(.collapsed) {
-        background-color: rgba(0, 168, 232, 0.1);
-        color: var(--color-primary);
-    }
+[data-theme="dark"] .form-control::placeholder {
+    color: #94a3b8;
+    /* Make placeholders visible in dark mode */
+    opacity: 1;
+}
 
-    .accordion-button::after {
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
+/* Buttons Enhancements for Dark Mode */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 168, 232, 0.3);
+    /* Glow effect for visibility */
+}
+
+/* Specific content blocks (Horaires) */
+[data-theme="dark"] .horaires-block.blue {
+    background: rgba(0, 168, 232, 0.15);
+    /* Keep tint but transparent over dark */
+}
+
+[data-theme="dark"] .horaires-block.purple {
+    background: rgba(114, 9, 183, 0.15);
+}
+
+[data-theme="dark"] .horaires-block.teal {
+    background: rgba(13, 148, 136, 0.15);
+}
+
+/* Accordion */
+[data-theme="dark"] .accordion-item {
+    background-color: var(--color-bg-card);
+    border-color: #333;
+}
+
+[data-theme="dark"] .accordion-button {
+    background-color: var(--color-bg-card);
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: rgba(0, 168, 232, 0.1);
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .accordion-button::after {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Projet Educatif / Accordion Overrides */
+[data-theme="dark"] .projet-hero {
+    background: var(--color-bg-card);
+    border: 1px solid #333;
+}
+
+[data-theme="dark"] .projet-hero .citation {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .edu-accordion .accordion-item {
+    background-color: var(--color-bg-card);
+    border-color: #333;
+}
+
+[data-theme="dark"] .edu-accordion .accordion-button {
+    background-color: var(--color-bg-card) !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .edu-accordion .accordion-button:not(.collapsed) {
+    background-color: rgba(0, 168, 232, 0.1) !important;
+    color: var(--color-primary) !important;
+}
+
+[data-theme="dark"] .edu-accordion .accordion-body {
+    background-color: var(--color-bg-card);
+    border-top-color: #333;
+}
+
+[data-theme="dark"] .edu-accordion .accordion-body p {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .edu-accordion .accordion-body .quote {
+    color: #94a3b8;
+}
+
+/* Agenda / Suivi Cards */
+[data-theme="dark"] .suivi-card {
+    background: var(--color-bg-card);
+    border: 1px solid #333;
+}
+
+/* Offcanvas general overrides */
+[data-theme="dark"] .offcanvas-header {
+    background-color: rgba(30, 30, 30, 0.98) !important;
+    border-bottom: 1px solid #333;
+}
+
+[data-theme="dark"] .offcanvas-title {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .offcanvas-body {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .offcanvas-body .text-dark {
+    color: #f8fafc !important;
+}
+
+/* Modals alerts */
+[data-theme="dark"] .alert-light {
+    background-color: var(--color-bg-card) !important;
+    border-color: #333 !important;
+    color: var(--color-text) !important;
+}
+
+/* Newsletter Modal specific */
+[data-theme="dark"] .newsletter-modal-header {
+    background: var(--color-bg-card);
+    border-bottom: 1px solid #333;
+}
+
+[data-theme="dark"] .newsletter-modal-header h5,
+[data-theme="dark"] .newsletter-modal-header p {
+    color: #f8fafc;
+}
+
+/* Final Specific Fixes from Subagent Report */
+[data-theme="dark"] .bg-menu,
+[data-theme="dark"] .card.bg-menu {
+    background-color: var(--color-bg-card) !important;
+    border: 1px solid #333 !important;
+    color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .director-card,
+[data-theme="dark"] .event-card,
+[data-theme="dark"] .suivi-card {
+    background: var(--color-bg-card) !important;
+    border: 1px solid #334155 !important;
+    color: var(--color-text) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .director-card:hover,
+[data-theme="dark"] .event-card:hover,
+[data-theme="dark"] .suivi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6) !important;
+    border-color: #475569 !important;
+}
+
+/* Make all text-muted elements (like Team member names) readable in dark mode */
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .director-card .text-muted,
+[data-theme="dark"] .event-card .text-muted {
+    color: #94a3b8 !important;
+    /* Slate-400 */
+}
+
+/* Newsletter button contrast */
+[data-theme="dark"] .newsletter-strip .btn-light {
+    background-color: var(--color-primary) !important;
+    color: #fff !important;
+    border-color: var(--color-primary) !important;
+    font-weight: bold;
+}
+
+[data-theme="dark"] .btn-action {
+    background-color: var(--color-accent);
+    /* Rose/Pink color */
+    color: #fff !important;
+    border-color: var(--color-accent);
+}
+
+[data-theme="dark"] .btn-action:hover {
+    background-color: #be123c !important;
+    /* Darker rose on hover */
+    border-color: #be123c !important;
+}
+
+/* Navbar Ecole Directe Pink Button */
+[data-theme="dark"] .navbar-nav .btn-action {
+    background-color: var(--color-accent) !important;
+    color: white !important;
+    border: none;
+}
+
+/* Agenda list groups */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--color-bg-card) !important;
+    border-color: #334155 !important;
+    color: var(--color-text) !important;
+}
+
+/* Fix generic accordion text colors for Team members */
+[data-theme="dark"] .accordion-body {
+    background-color: var(--color-bg-card) !important;
+    color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .accordion-body p,
+[data-theme="dark"] .accordion-body strong,
+[data-theme="dark"] .accordion-body li,
+[data-theme="dark"] .accordion-body h6 {
+    color: #f8fafc !important;
+}
+
+/* Ensure Horaires block text is readable */
+[data-theme="dark"] .horaires-block span {
+    color: #e0f2fe !important;
+    /* Extremely readable light blue/white */
+}
+
+[data-theme="dark"] .horaires-block strong {
+    color: #ffffff !important;
+    /* Pure white for the actual hours for maximum visibility */
+}
+
+/* Presentation Fade Effect Overwrite inside Card */
+[data-theme="dark"] .card .read-more-fade {
+    background: linear-gradient(to bottom, rgba(40, 40, 40, 0), rgba(40, 40, 40, 1));
+}
+
+[data-theme="dark"] .read-more-fade {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+/* OGEC/APEL light-fun Card Overrides */
+[data-theme="dark"] section.bg-light-fun {
+    background-color: var(--color-bg-dark) !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+[data-theme="dark"] .bg-light-fun {
+    background-color: var(--color-bg-card) !important;
+    border: 1px solid #3f3f3f !important;
+    /* Neutral grey border */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 1rem !important;
+    /* Keep rounded-4 aspect */
 }
