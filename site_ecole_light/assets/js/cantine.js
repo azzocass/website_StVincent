@@ -75,8 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = `
             <div class="alert alert-warning border-0 text-center">
                 <i class="bi bi-calendar-x display-4 text-warning mb-2"></i>
-                <p class="mb-0 fw-bold">Aucun menu trouvé pour cette semaine.</p>
-                <p class="small">Veuillez vérifier que les dates dans le fichier Excel sont correctes (JJ/MM/AAAA).</p>
+                <p class="mb-0 fw-bold">Aucun menu renseigné pour cette semaine.</p>
             </div>`;
         return;
     }
