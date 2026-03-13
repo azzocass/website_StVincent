@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Render preview (next 3 events)
         if (agendaPreview) {
-            renderAgendaPreview(futureEvents.slice(0, 3));
+            renderAgendaPreview(futureEvents.slice(0, 4));
         }
 
         // Render full agenda in offcanvas
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (events.length === 0) {
             html += '<div class="list-group-item p-3 text-center text-muted">Aucun événement à venir</div>';
         } else {
-            const colors = ['primary', 'secondary', 'accent'];
+            const colors = ['primary', 'secondary', 'accent', 'success'];
             events.forEach((event, index) => {
                 const date = parseEventDate(event.Date);
                 const month = date.toLocaleDateString('fr-FR', { month: 'short' }).toUpperCase();
@@ -59,17 +59,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const colorClass = colors[index % colors.length];
 
                 html += `
-                    <div class="list-group-item p-4 d-flex align-items-center border-0 ${index < events.length - 1 ? 'border-bottom' : ''}">
-                        <div class="date-box ${colorClass} text-center p-2 me-4 shadow-sm" style="min-width: 70px;">
-                            <span class="d-block fw-bold h4 m-0">${day}</span>
-                            <span class="d-block small text-uppercase">${month}</span>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="fw-bold mb-1">${event.Titre}</h5>
-                            <p class="mb-0 text-muted small">${event.Description}</p>
-                        </div>
+            <div class="list-group-item py-2 px-3 border-0 ${index < events.length - 1 ? 'border-bottom' : ''}">
+                
+                <div class="d-flex align-items-center">
+                    
+                    <div class="date-box ${colorClass} text-center py-1 px-2 me-3 shadow-sm rounded-3" style="min-width: 55px;">
+                        <span class="d-block fw-bold fs-5 m-0 lh-1">${day}</span>
+                        <span class="d-block text-uppercase" style="font-size: 0.75rem; font-weight: 700;">${month}</span>
                     </div>
-                `;
+                    
+                    <div class="flex-grow-1">
+                <h6 class="fw-bold mb-1 text-royal" style="font-size: 0.95rem;">${event.Titre}</h6>
+                        <p class="small text-muted mb-0 text-truncate" style="max-width: 220px;">${event.Description}</p>
+                    </div>
+                </div>
+            </div>
+        `;
             });
         }
 
@@ -95,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         // Render each month
-        const colors = ['primary', 'secondary', 'accent'];
+        const colors = ['primary', 'secondary', 'accent', 'success'];
         let colorIndex = 0;
 
         Object.keys(byMonth).forEach(month => {

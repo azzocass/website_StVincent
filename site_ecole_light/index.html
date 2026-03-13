@@ -248,6 +248,87 @@
                                 </a>
                             </div>
 
+                            <!-- Horaires & Contact (card unifiée avec tabs) -->
+                            <div class="card border-0 shadow-sm rounded-4 p-4 horaires-contact-card mt-3">
+                                <h4 class="fw-bold text-royal mb-3"><i class="bi bi-clock-history me-2"></i>Horaires &
+                                    Contact</h4>
+
+                                <!-- Tabs -->
+                                <ul class="nav nav-pills justify-content-center gap-2 horaires-tabs mb-3"
+                                    role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" data-bs-toggle="pill"
+                                            data-bs-target="#tab-classe" type="button" role="tab"><i
+                                                class="bi bi-book me-1"></i>Classe</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-peri"
+                                            type="button" role="tab"><i
+                                                class="bi bi-sunrise me-1"></i>Périscolaire</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-bureau"
+                                            type="button" role="tab"><i class="bi bi-building me-1"></i>Bureau</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <!-- Tab Classe -->
+                                    <div class="tab-pane fade show active" id="tab-classe" role="tabpanel">
+                                        <div class="horaires-block blue">
+                                            <div class="horaires-row"><span>Matin</span><strong>8h40 – 12h00</strong>
+                                            </div>
+                                            <div class="horaires-row"><span>Après-midi</span><strong>13h40 –
+                                                    16h45</strong>
+                                            </div>
+                                            <div class="horaires-note">Accueil dès 8h40 · Lun · Mar · Jeu · Ven</div>
+                                        </div>
+                                    </div>
+                                    <!-- Tab Périscolaire -->
+                                    <div class="tab-pane fade" id="tab-peri" role="tabpanel">
+                                        <div class="horaires-block purple">
+                                            <div class="horaires-row"><span>Matin</span><strong>7h30 – 8h40</strong>
+                                            </div>
+                                            <div class="horaires-row"><span>Soir (Lun–Jeu)</span><strong>16h50 –
+                                                    18h30</strong></div>
+                                            <div class="horaires-row"><span>Soir (Vendredi)</span><strong>16h50 –
+                                                    18h00</strong></div>
+                                            <div class="horaires-note">Lun · Mar · Jeu · Ven</div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 mt-3">
+                                            <i class="bi bi-telephone-fill text-secondary"></i>
+                                            <span class="fw-bold">06 98 37 39 05</span>
+                                            <span class="peri-tooltip" tabindex="0" data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                title="Pour questions sur la garderie uniquement">
+                                                <i class="bi bi-question-circle-fill"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- Tab Bureau / Secrétariat -->
+                                    <div class="tab-pane fade" id="tab-bureau" role="tabpanel">
+                                        <div class="horaires-block teal">
+                                            <div class="horaires-row"><span>Lun – Jeu</span><strong>8h40 – 12h / 13h40 –
+                                                    16h45</strong></div>
+                                            <div class="horaires-row"><span>Vendredi</span><strong>Matin
+                                                    uniquement</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="my-3">
+                                <!-- Adresse + téléphone -->
+                                <div class="d-flex flex-column gap-2" style="font-size:.88rem;">
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-telephone-fill text-primary"></i>
+                                        <span>02 40 25 62 97</span>
+                                        <span class="text-muted">· secretariat@ecolesaintvincent.fr</span>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -468,7 +549,6 @@
                                     data-bs-toggle="modal" data-bs-target="#fournituresModal">Liste du
                                     matériel</button>
 
-
                             </div>
                         </div>
                     </div>
@@ -493,9 +573,12 @@
                             <p class="mt-2 small text-muted">Chargement de l'agenda...</p>
                         </div>
                     </div>
-
-                    <!-- Offcanvas Agenda Moved do Body -->
-
+                    <div class="text-center mt-2 mb-4">
+                        <button class="btn btn-outline-primary border-2 rounded-pill fw-bold w-100 py-2 shadow-sm"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgenda">
+                            <i class="bi bi-calendar2-week me-2"></i>Voir tout l'agenda
+                        </button>
+                    </div>
 
                     <!-- News Highlight (Dynamic) -->
                     <div class="card bg-royal-light border-0 rounded-4 p-4" id="news-preview">
@@ -504,7 +587,6 @@
                             <p class="mt-2 small text-muted">Chargement des actualités...</p>
                         </div>
                     </div>
-
 
                 </div>
 
@@ -536,83 +618,6 @@
                             class="bi bi-egg-fried position-absolute bottom-0 end-0 display-1 opacity-10 me-n3 mb-n3"></i>
                     </div>
 
-
-
-                    <!-- Horaires & Contact (card unifiée avec tabs) -->
-                    <div class="card border-0 shadow-sm rounded-4 p-4 horaires-contact-card">
-                        <h4 class="fw-bold text-royal mb-3"><i class="bi bi-clock-history me-2"></i>Horaires &
-                            Contact</h4>
-
-                        <!-- Tabs -->
-                        <ul class="nav nav-pills justify-content-center gap-2 horaires-tabs mb-3" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-classe"
-                                    type="button" role="tab"><i class="bi bi-book me-1"></i>Classe</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-peri" type="button"
-                                    role="tab"><i class="bi bi-sunrise me-1"></i>Périscolaire</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-bureau"
-                                    type="button" role="tab"><i class="bi bi-building me-1"></i>Bureau</button>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <!-- Tab Classe -->
-                            <div class="tab-pane fade show active" id="tab-classe" role="tabpanel">
-                                <div class="horaires-block blue">
-                                    <div class="horaires-row"><span>Matin</span><strong>8h40 – 12h00</strong></div>
-                                    <div class="horaires-row"><span>Après-midi</span><strong>13h40 – 16h45</strong>
-                                    </div>
-                                    <div class="horaires-note">Accueil dès 8h40 · Lun · Mar · Jeu · Ven</div>
-                                </div>
-                            </div>
-                            <!-- Tab Périscolaire -->
-                            <div class="tab-pane fade" id="tab-peri" role="tabpanel">
-                                <div class="horaires-block purple">
-                                    <div class="horaires-row"><span>Matin</span><strong>7h30 – 8h40</strong></div>
-                                    <div class="horaires-row"><span>Soir (Lun–Jeu)</span><strong>16h50 –
-                                            18h30</strong></div>
-                                    <div class="horaires-row"><span>Soir (Vendredi)</span><strong>16h50 –
-                                            18h00</strong></div>
-                                    <div class="horaires-note">Lun · Mar · Jeu · Ven</div>
-                                </div>
-                                <div class="d-flex align-items-center gap-2 mt-3">
-                                    <i class="bi bi-telephone-fill text-secondary"></i>
-                                    <span class="fw-bold">06 98 37 39 05</span>
-                                    <span class="peri-tooltip" tabindex="0" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Pour questions sur la garderie uniquement">
-                                        <i class="bi bi-question-circle-fill"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Tab Bureau / Secrétariat -->
-                            <div class="tab-pane fade" id="tab-bureau" role="tabpanel">
-                                <div class="horaires-block teal">
-                                    <div class="horaires-row"><span>Lun – Jeu</span><strong>8h40 – 12h / 13h40 –
-                                            16h45</strong></div>
-                                    <div class="horaires-row"><span>Vendredi</span><strong>Matin uniquement</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-3">
-                        <!-- Adresse + téléphone -->
-                        <div class="d-flex flex-column gap-2" style="font-size:.88rem;">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-geo-alt-fill text-primary"></i>
-                                <span>6 Place Saint-Exupéry, 44980 Sainte-Luce-sur-Loire</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-telephone-fill text-primary"></i>
-                                <span>02 40 25 62 97</span>
-                                <span class="text-muted">· secretariat@ecolesaintvincent.fr</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
