@@ -54,5 +54,5 @@ document.addEventListener('DOMContentLoaded', async function () {
         carouselInner.appendChild(slideDiv);
     });
 
-    console.log(`✅ Carousel loaded with ${shuffled.length} slides (randomized)`);
+
 });
