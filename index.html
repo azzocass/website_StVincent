@@ -79,6 +79,14 @@
         <div class="spinner"></div>
     </div>
 
+    <!-- Top Banner Kermesse -->
+    <div class="alert alert-warning alert-dismissible fade show text-center rounded-0 mb-0 py-2 border-0 shadow-sm" role="alert" style="z-index: 1050; position: relative; background-color: #ffe8a1; color: #856404;">
+        <i class="bi bi-ticket-perforated-fill me-2 fs-5 align-middle"></i>
+        <strong>Kermesse de l'École !</strong> <span class="d-none d-md-inline">Inscrivez-vous dès maintenant pour tenir un stand.</span>
+        <a href="https://www.ecolesaintvincent.fr/inscr_kermesse/kermesse_inscription.php" target="_blank" class="btn btn-sm btn-dark rounded-pill ms-3 fw-bold">S'inscrire <i class="bi bi-arrow-right"></i></a>
+        <button type="button" class="btn-close pb-2" data-bs-dismiss="alert" aria-label="Close" style="padding-top: 0.6rem;"></button>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
         <div class="container">
@@ -1062,41 +1070,15 @@
                     </div>
                     <hr class="my-3">
 
-                    <!-- Formulaire -->
-                    <div id="newsletter-form">
-                        <div class="mb-3">
-                            <label for="nl-prenom" class="form-label fw-bold text-royal"
-                                style="font-size:.88rem;">Prénom</label>
-                            <input type="text" id="nl-prenom" class="form-control form-control-newsletter"
-                                placeholder="Votre prénom">
+                    <!-- Formulaire Natif -->
+                    <form name="form1" method="POST" action="https://www.ecolesaintvincent.fr/newsletter_abonnement.php">
+                        <div class="input-group my-3 shadow-sm rounded-pill overflow-hidden border border-primary border-opacity-25">
+                            <input type="email" name="emailnews" class="form-control border-0 px-4 py-3" placeholder="Votre adresse e-mail" required>
+                            <button type="submit" name="Submit" class="btn btn-royal px-4 fw-bold text-white">
+                                <i class="bi bi-send me-2"></i>S'abonner
+                            </button>
                         </div>
-                        <div class="mb-3">
-                            <label for="nl-nom" class="form-label fw-bold text-royal"
-                                style="font-size:.88rem;">Nom</label>
-                            <input type="text" id="nl-nom" class="form-control form-control-newsletter"
-                                placeholder="Votre nom">
-                        </div>
-                        <div class="mb-4">
-                            <label for="nl-email" class="form-label fw-bold text-royal"
-                                style="font-size:.88rem;">Adresse e-mail <span class="text-danger">*</span></label>
-                            <input type="email" id="nl-email" class="form-control form-control-newsletter"
-                                placeholder="vous@exemple.com" required>
-                            <div id="nl-email-error" class="text-danger mt-1" style="font-size:.8rem; display:none;">
-                                Veuillez saisir une adresse email valide.
-                            </div>
-                        </div>
-                        <button class="btn-newsletter-submit" onclick="submitNewsletter()">
-                            <i class="bi bi-send-fill me-2"></i>S'inscrire à la newsletter
-                        </button>
-                    </div>
-
-                    <!-- Message de succès (masqué par défaut) -->
-                    <div id="newsletter-success" class="text-center py-3" style="display:none;">
-                        <div class="display-4 mb-2">✅</div>
-                        <h5 class="text-royal fw-bold">Inscription envoyée !</h5>
-                        <p class="text-muted small mb-0">Un e-mail de confirmation vous sera adressé par la
-                            direction.</p>
-                    </div>
+                    </form>
 
                     <p class="text-muted text-center mt-3 mb-0" style="font-size:.75rem;">
                         <i class="bi bi-lock me-1"></i>Données utilisées uniquement pour la newsletter de l'école.
@@ -1115,27 +1097,6 @@
             t.classList.remove('collapsed');
             t.classList.add('expanded');
             f.classList.add('hidden');
-        }
-        // Newsletter: submit
-        function submitNewsletter() {
-            const email = document.getElementById('nl-email').value.trim();
-            const prenom = document.getElementById('nl-prenom').value.trim();
-            const nom = document.getElementById('nl-nom').value.trim();
-            const errEl = document.getElementById('nl-email-error');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                errEl.style.display = 'block';
-                document.getElementById('nl-email').focus();
-                return;
-            }
-            errEl.style.display = 'none';
-            const subject = encodeURIComponent('Inscription Newsletter – École Saint Vincent');
-            const body = encodeURIComponent(
-                `Bonjour,\n\nJe souhaite m'inscrire à la newsletter de l'École Saint Vincent.\n\nPrénom : ${prenom || '(non renseigné)'}\nNom : ${nom || '(non renseigné)'}\nEmail : ${email}\n\nCordialement`
-            );
-            window.location.href = `mailto:secretariat@ecolesaintvincent.fr?subject=${subject}&body=${body}`;
-            document.getElementById('newsletter-form').style.display = 'none';
-            document.getElementById('newsletter-success').style.display = 'block';
         }
     </script>
 </body>
