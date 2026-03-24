@@ -12,11 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. If no local storage, check OS preference
     if (!currentTheme) {
+        // [DESACTIVE] Détection automatique du thème de l'OS (remis en commentaire à la demande)
+        /*
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             currentTheme = 'dark';
         } else {
             currentTheme = 'light';
         }
+        */
+        
+        currentTheme = 'light'; // Forcer le thème clair par défaut
     }
 
     // Apply initial theme
@@ -31,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Listen to OS changes (only if user hasn't explicitly set a preference)
+    // [DESACTIVE] Listen to OS changes (only if user hasn't explicitly set a preference)
+    /*
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
         if (!localStorage.getItem('theme')) {
             const newTheme = e.matches ? 'dark' : 'light';
@@ -39,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentTheme = newTheme;
         }
     });
+    */
 
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);

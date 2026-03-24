@@ -16,7 +16,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = '<div class="text-center p-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 small text-muted">Chargement du menu...</p></div>';
 
     // 1. Fetch Data
-    const allMeals = await CsvLoader.fetchCsv(CSV_URL);
+    let allMeals;
+    try {
+        allMeals = await CsvLoader.fetchCsv(CSV_URL);
+    } catch (error) {
+        console.error('Error loading cantine:', error);
+        container.innerHTML = '<div class="alert alert-warning border-0 text-center"><p class="mb-0 fw-bold">Menu indisponible actuellement.</p></div>';
+        const homeList = document.getElementById('cantine-home-list');
+        if (homeList) homeList.innerHTML = '<p class="small mb-0 opacity-75">Le menu n\'est pas disponible.</p>';
+        const homeDate = document.getElementById('cantine-home-date');
+        if (homeDate) homeDate.textContent = 'Indisponible';
+        return;
+    }
 
     // 2. Filter for Current Week using the "Date" column
     const today = new Date();
@@ -77,26 +88,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <i class="bi bi-calendar-x display-4 text-warning mb-2"></i>
                 <p class="mb-0 fw-bold">Aucun menu renseigné pour cette semaine.</p>
             </div>`;
-        return;
+    } else {
+        currentWeekMeals.forEach(meal => {
+            // Parse date for display
+            const dateObj = getMealDate(meal);
+            const dayName = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
+
+            const html = `
+                <div class="mb-4 fade-in-up">
+                    <span class="badge bg-royal-light text-primary mb-2 text-capitalize">${dayName}</span>
+                    <ul class="list-unstyled small ps-2">
+                        <li class="mb-1"><strong class="text-dark">Entrée :</strong> ${meal.Entree || '-'}</li>
+                        <li class="mb-1"><strong class="text-dark">Plat :</strong> ${meal.Plat || '-'} <span class="text-muted fst-italic">(${meal.Accompagnement || ''})</span></li>
+                        <li><strong class="text-dark">Dessert :</strong> ${meal.Dessert || '-'}</li>
+                    </ul>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
     }
-
-    currentWeekMeals.forEach(meal => {
-        // Parse date for display
-        const dateObj = getMealDate(meal);
-        const dayName = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
-
-        const html = `
-            <div class="mb-4 fade-in-up">
-                <span class="badge bg-royal-light text-primary mb-2 text-capitalize">${dayName}</span>
-                <ul class="list-unstyled small ps-2">
-                    <li class="mb-1"><strong class="text-dark">Entrée :</strong> ${meal.Entree || '-'}</li>
-                    <li class="mb-1"><strong class="text-dark">Plat :</strong> ${meal.Plat || '-'} <span class="text-muted fst-italic">(${meal.Accompagnement || ''})</span></li>
-                    <li><strong class="text-dark">Dessert :</strong> ${meal.Dessert || '-'}</li>
-                </ul>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', html);
-    });
 
     // --- Dynamic Home Widget Logic ---
     const homeWidgetDate = document.getElementById('cantine-home-date');

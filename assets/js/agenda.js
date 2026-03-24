@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('Error loading agenda:', error);
+        if (agendaPreview) agendaPreview.innerHTML = '<div class="alert text-center text-muted border-0">Aucun événement ou erreur de chargement.</div>';
+        if (agendaOffcanvas) agendaOffcanvas.innerHTML = '<div class="alert text-center text-muted border-0">Erreur de chargement de l\'agenda.</div>';
     }
 
     function parseEventDate(dateStr) {
