@@ -1269,9 +1269,14 @@ section {
 
 /* --- List groups --- */
 [data-theme="dark"] .list-group-item {
+    background-color: var(--color-bg-card);
+    border-color: #3f3f3f;
+    color: var(--color-text);
+}
+
+/* Fix background on the inner cantine widget to match agenda gray instead of black */
+[data-theme="dark"] #cantine-home-widget {
     background-color: var(--color-bg-card) !important;
-    border-color: #334155 !important;
-    color: var(--color-text) !important;
 }
 
 /* --- Read-more fade effects --- */
