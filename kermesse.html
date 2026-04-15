@@ -289,12 +289,14 @@
                 </div>
 
                 <!-- Feedback global -->
-                <div id="global-feedback"></div>
+                <div id="global-feedback" class="mt-4 mb-2"></div>
 
                 <!-- Submit -->
-                <button type="submit" id="btnSubmit" class="btn-submit-kermesse mt-2">
-                    <i class="bi bi-send-fill me-2"></i>Envoyer mon inscription
-                </button>
+                <div class="position-sticky bottom-0 bg-white p-3 border-top shadow-lg z-3 text-center rounded-top mt-2" style="bottom: 0;">
+                    <button type="submit" id="btnSubmit" class="btn btn-primary fw-bold text-uppercase rounded-pill w-100 py-3 shadow-sm">
+                        <i class="bi bi-send-fill me-2"></i>Envoyer mon inscription
+                    </button>
+                </div>
 
                 <p class="text-center text-muted mt-3" style="font-size: .8rem;">
                     <i class="bi bi-shield-check me-1"></i>Vos données sont uniquement utilisées dans le cadre de
@@ -320,14 +322,14 @@
         const STANDS_INFO = {
             'Bar': { label: 'Bar', icon: '🍺' },
             'Bonbons_Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
-            'Chamboultout': { label: 'Chamboultout', icon: '🎯' },
+            'Chamboultout': { label: 'Chamboultout', icon: '🥫' },
             'Crepes': { label: 'Crêpes', icon: '🥞' },
             'Enveloppes_gagnantes': { label: 'Enveloppes gagnantes', icon: '✉️' },
             'Frites_Sandwichs': { label: 'Frites / Sandwichs', icon: '🍟' },
             'Malle_aux_tresors': { label: 'Malle aux trésors', icon: '🎁' },
             'Maquillage': { label: 'Maquillage', icon: '🎨' },
             'Peche_a_la_ligne': { label: 'Pêche à la ligne', icon: '🎣' },
-            'Peche_aux_canards': { label: 'Pêche aux canards', icon: '🦆' },
+            'Peche_aux_canards': { label: 'Pêche aux canards', icon: '🐥' },
             'Structures_gonflables': { label: 'Structures gonflables', icon: '🏰' },
             'Tir_aux_buts': { label: 'Tir aux buts', icon: '⚽' }
         };
@@ -396,30 +398,42 @@
         // ============================================================
         function genererCreneaux() {
             const container = document.getElementById('slots-container');
-            container.innerHTML = '';
+            container.innerHTML = '<div class="accordion" id="accordionSlots"></div>';
+            const accordion = container.querySelector('.accordion');
 
             creneauxList.forEach((creneau, ci) => {
+                const isOpen = ci === 0;
+                const collapseId = `collapse_${creneau}`;
+                const headerId = `heading_${creneau}`;
+
                 const section = document.createElement('div');
-                section.className = 'slot-section';
-                let html = `<h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>${formatCreneau(creneau)}</h5>`;
-                html += '<div class="row g-3">';
+                section.className = 'accordion-item border-0 shadow-sm mb-4 rounded overflow-hidden';
+                
+                let html = `
+                    <h2 class="accordion-header" id="${headerId}">
+                        <button class="accordion-button ${isOpen ? '' : 'collapsed'} fw-bold fs-5 bg-white text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
+                            <i class="bi bi-clock me-2"></i> Créneau : ${formatCreneau(creneau)}
+                        </button>
+                    </h2>
+                    <div id="${collapseId}" class="accordion-collapse collapse ${isOpen ? 'show' : ''}" data-bs-parent="#accordionSlots">
+                        <div class="accordion-body bg-light">
+                            <div class="row g-3">
+                `;
 
                 standsParCreneau[creneau].forEach((item, si) => {
                     const info = STANDS_INFO[item.standId] || { label: item.standId.replace(/_/g, ' '), icon: '✨' };
                     const isFull = item.restantes <= 0;
                     const isLow = item.restantes > 0 && item.restantes <= Math.ceil(item.max * 0.3);
                     
-                    // On utilise les classes badges Bootstrap standards pour les cartes
                     const badgeClass = isFull ? 'bg-danger' : (isLow ? 'bg-warning text-dark' : 'bg-success');
                     const badgeText = isFull ? 'Complet' : `${item.restantes} place${item.restantes > 1 ? 's' : ''}`;
                     const uid = `slot_${ci}_${si}`;
 
-                    // btn-check pour transformer le radio en bouton complet
                     html += `
                         <div class="col-6 col-md-4 col-lg-3">
                             <input type="radio" class="btn-check" name="slot_${creneau}" 
                                 id="${uid}" value="${item.standId}" ${isFull ? 'disabled' : ''}>
-                            <label class="btn btn-outline-primary w-100 h-100 text-center d-flex flex-column align-items-center justify-content-center p-3" for="${uid}">
+                            <label class="btn btn-outline-primary w-100 h-100 text-center d-flex flex-column align-items-center justify-content-center p-3 border-2" for="${uid}">
                                 <span class="fs-1 mb-2">${info.icon}</span>
                                 <span class="fw-bold mb-2" style="font-size: 0.9rem; white-space: normal;">${info.label}</span>
                                 <span class="badge ${badgeClass} mt-auto">${badgeText}</span>
@@ -427,10 +441,13 @@
                         </div>`;
                 });
 
-                html += '</div>';
-                html += `<div id="feedback_${creneau}" class="result-msg mt-3" style="display:none;"></div>`;
+                html += `
+                            </div>
+                        </div>
+                    </div>`;
+                
                 section.innerHTML = html;
-                container.appendChild(section);
+                accordion.appendChild(section);
             });
         }
 
@@ -474,9 +491,11 @@
             btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi en cours...';
 
             let successes = 0;
-            let errors = [];
+            let errors = 0;
+            let detailMessages = `<ul class="list-unstyled mb-0 mt-3 text-start">`;
 
             for (const sel of selections) {
+                const info = STANDS_INFO[sel.stand] || { label: sel.stand };
                 try {
                     const res = await fetch(URL_SCRIPT, {
                         method: 'POST',
@@ -494,50 +513,65 @@
                     try {
                         response = JSON.parse(text);
                     } catch (parseErr) {
-                        console.error('Réponse non-JSON:', text);
                         throw new Error('Réponse invalide du serveur');
                     }
-                    const feedbackEl = document.getElementById(`feedback_${sel.creneau}`);
 
                     if (response.result === 'success') {
                         successes++;
-                        feedbackEl.className = 'result-msg success';
-                        feedbackEl.style.display = 'block';
-                        feedbackEl.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i>${response.message}`;
+                        detailMessages += `<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><strong>${info.label} (${sel.creneau})</strong> : Inscription validée !</li>`;
                     } else {
-                        errors.push(sel.creneau);
-                        feedbackEl.className = 'result-msg error';
-                        feedbackEl.style.display = 'block';
-                        feedbackEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${response.message}`;
+                        errors++;
+                        detailMessages += `<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>${info.label} (${sel.creneau})</strong> : ${response.message}</li>`;
                     }
                 } catch (err) {
                     console.error('Erreur fetch:', err);
-                    errors.push(sel.creneau);
-                    const feedbackEl = document.getElementById(`feedback_${sel.creneau}`);
-                    feedbackEl.className = 'result-msg error';
-                    feedbackEl.style.display = 'block';
-                    feedbackEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>Erreur réseau. Réessayez.';
+                    errors++;
+                    detailMessages += `<li class="text-danger mb-2"><i class="bi bi-wifi-off me-2"></i><strong>${info.label} (${sel.creneau})</strong> : Erreur réseau, veuillez réessayer.</li>`;
                 }
             }
+            
+            detailMessages += `</ul>`;
 
-            if (successes > 0 && errors.length === 0) {
+            if (successes > 0 && errors === 0) {
                 showGlobalFeedback('success',
-                    `🎉 Merci ${prenom} ! Vos ${successes} inscription(s) sont confirmées. À bientôt à la kermesse !`);
+                    `<div class="fw-bold fs-5 mb-2">🎉 Merci ${prenom} !</div>
+                     Vos ${successes} inscription(s) sont confirmées. À bientôt à la kermesse !
+                     ${detailMessages}`);
             } else if (successes > 0) {
-                showGlobalFeedback('error',
-                    `${successes} inscription(s) OK, mais ${errors.length} erreur(s). Voir ci-dessus.`);
+                showGlobalFeedback('warning',
+                    `<div class="fw-bold fs-5 mb-2">⚠️ Attention ${prenom}</div>
+                     ${successes} inscription(s) validée(s), mais ${errors} ont échoué.
+                     ${detailMessages}`);
             } else {
-                showGlobalFeedback('error', 'Aucune inscription validée. Voir les messages ci-dessus.');
+                showGlobalFeedback('error', 
+                    `<div class="fw-bold fs-5 mb-2">❌ Échec de l'inscription</div>
+                     Aucune inscription n'a pu être validée.
+                     ${detailMessages}`);
             }
 
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<i class="bi bi-send-fill me-2"></i>Envoyer mon inscription';
+            
             await chargerPlaces();
+
+            // Scroll pour bien voir le feedback
+            setTimeout(() => {
+                const feedbackEl = document.getElementById('global-feedback');
+                if (feedbackEl) {
+                    const y = feedbackEl.getBoundingClientRect().top + window.scrollY - 100;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+            }, 100);
         });
 
         function showGlobalFeedback(type, msg) {
             const el = document.getElementById('global-feedback');
-            el.innerHTML = `<div class="result-msg ${type}" style="display:block">${msg}</div>`;
+            let bgClass = "bg-light border-secondary";
+            if (type === 'success') bgClass = "bg-success-subtle border-success text-success-emphasis";
+            if (type === 'error') bgClass = "bg-danger-subtle border-danger text-danger-emphasis";
+            if (type === 'warning') bgClass = "bg-warning-subtle border-warning text-warning-emphasis";
+
+            el.innerHTML = `<div class="p-4 rounded border shadow-sm ${bgClass}">${msg}</div>`;
         }
 
         // ============================================================
