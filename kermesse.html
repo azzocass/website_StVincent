@@ -302,10 +302,9 @@
                 <!-- Feedback global -->
                 <div id="global-feedback" class="mt-4 mb-2"></div>
 
-                <!-- Submit -->
-                <div class="position-sticky bottom-0 bg-white p-3 border-top shadow-lg z-3 text-center rounded-top mt-2"
-                    style="bottom: 0;">
-                    <button type="submit" id="btnSubmit" class="btn-submit-kermesse w-100 shadow-sm text-uppercase">
+                <!-- Submit (Bouton flottant sans fond) -->
+                <div class="position-sticky z-3 text-center px-3 mt-4" style="bottom: 25px;">
+                    <button type="submit" id="btnSubmit" class="btn-submit-kermesse shadow-lg text-uppercase" style="width: 100%; max-width: 500px; border-radius: 50px;">
                         <i class="bi bi-send-fill me-2"></i>Envoyer mon inscription
                     </button>
                 </div>
@@ -329,7 +328,7 @@
         // ============================================================
         // 1. CONFIGURATION
         // ============================================================
-        const URL_SCRIPT = 'hhttps://script.google.com/macros/s/AKfycbycBebDiACY1r1mqKPRkyykvtkSFSAPQ7xpvlFIJPeB00R_dTKfOPalIgNG3l6zjXeg/exec';
+        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbycBebDiACY1r1mqKPRkyykvtkSFSAPQ7xpvlFIJPeB00R_dTKfOPalIgNG3l6zjXeg/exec';
 
         const STANDS_INFO = {
             'Bar': { label: 'Bar', icon: '🍺' },
@@ -479,6 +478,25 @@
         // 3. SOUMISSION — Un POST par créneau sélectionné
         // ============================================================
         const form = document.getElementById('kermesseForm');
+        
+        // Validation dynamique lors de la frappe
+        ['nom', 'prenom', 'email', 'telephone'].forEach(id => {
+            const field = document.getElementById(id);
+            field.addEventListener('input', () => {
+                if (field.value.length > 0) {
+                    if (field.checkValidity()) {
+                        field.classList.remove('is-invalid');
+                        field.classList.add('is-valid');
+                    } else {
+                        field.classList.remove('is-valid');
+                        field.classList.add('is-invalid');
+                    }
+                } else {
+                    field.classList.remove('is-valid', 'is-invalid');
+                }
+            });
+        });
+
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
