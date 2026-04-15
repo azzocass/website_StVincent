@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="assets/css/style.css?v=8" rel="stylesheet">
     <link rel="icon" href="assets/images/favicon.png" type="image/png">
+    
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
     <!-- Google Analytics 4 — Remplacer G-XXXXXXXXXX par votre ID de mesure -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
@@ -430,8 +433,10 @@
                 let html = `
                     <h2 class="accordion-header" id="${headerId}">
                         <button class="accordion-button ${isOpen ? '' : 'collapsed'} fw-bold fs-5 bg-white text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
-                            <i class="bi bi-clock me-2"></i> ${formatCreneau(creneau)} 
-                            ${headerBadge}
+                            <div class="d-flex align-items-center w-100 pe-3">
+                                <i class="bi bi-clock me-2"></i> ${formatCreneau(creneau)} 
+                                ${headerBadge}
+                            </div>
                         </button>
                     </h2>
                     <div id="${collapseId}" class="accordion-collapse collapse ${isOpen ? 'show' : ''}" data-bs-parent="#accordionSlots">
@@ -584,11 +589,13 @@
                     `<div class="fw-bold fs-5 mb-2">🎉 Merci ${prenom} !</div>
                      Vos ${successes} inscription(s) sont confirmées. À bientôt à la kermesse !
                      ${detailMessages}`);
+                lancerConfettis();
             } else if (successes > 0) {
                 showGlobalFeedback('warning',
                     `<div class="fw-bold fs-5 mb-2">⚠️ Attention ${prenom}</div>
                      ${successes} inscription(s) validée(s), mais ${errors} ont échoué.
                      ${detailMessages}`);
+                lancerConfettis();
             } else {
                 showGlobalFeedback('error',
                     `<div class="fw-bold fs-5 mb-2">❌ Échec de l'inscription</div>
@@ -619,6 +626,34 @@
             if (type === 'warning') bgClass = "bg-warning-subtle border-warning text-warning-emphasis";
 
             el.innerHTML = `<div class="p-4 rounded border shadow-sm ${bgClass}">${msg}</div>`;
+        }
+
+        function lancerConfettis() {
+            if (typeof confetti === 'function') {
+                const duration = 2500;
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 4,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#003459', '#E84545', '#FFD166']
+                    });
+                    confetti({
+                        particleCount: 4,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#003459', '#E84545', '#FFD166']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+            }
         }
 
         // ============================================================
