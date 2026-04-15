@@ -21,7 +21,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
@@ -242,26 +242,31 @@
             </div>
 
             <!-- Formulaire -->
-            <form id="kermesseForm">
+            <form id="kermesseForm" novalidate>
 
                 <!-- Coordonnées -->
                 <div class="form-section">
                     <h4 class="fw-bold text-royal mb-4"><i class="bi bi-person-vcard me-2"></i>Vos coordonnées</h4>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="nom" class="form-label fw-bold">Nom <span
-                                    class="text-danger">*</span></label>
+                            <label for="nom" class="form-label fw-bold">Nom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control rounded-3" id="nom" name="nom" required>
+                            <div class="invalid-feedback">Veuillez renseigner votre nom.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="prenom" class="form-label fw-bold">Prénom <span
-                                    class="text-danger">*</span></label>
+                            <label for="prenom" class="form-label fw-bold">Prénom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control rounded-3" id="prenom" name="prenom" required>
+                            <div class="invalid-feedback">Veuillez renseigner votre prénom.</div>
                         </div>
-                        <div class="col-md-12">
-                            <label for="email" class="form-label fw-bold">Email <span
-                                    class="text-danger">*</span></label>
-                            <input type="email" class="form-control rounded-3" id="email" name="email" required>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control rounded-3" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                            <div class="invalid-feedback">Veuillez saisir une adresse email valide (ex: jean@mail.com).</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telephone" class="form-label fw-bold">Téléphone <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control rounded-3" id="telephone" name="telephone" required pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$">
+                            <div class="invalid-feedback">Veuillez saisir un numéro valide (ex: 0612345678).</div>
                         </div>
                     </div>
                 </div>
@@ -292,8 +297,9 @@
                 <div id="global-feedback" class="mt-4 mb-2"></div>
 
                 <!-- Submit -->
-                <div class="position-sticky bottom-0 bg-white p-3 border-top shadow-lg z-3 text-center rounded-top mt-2" style="bottom: 0;">
-                    <button type="submit" id="btnSubmit" class="btn btn-primary fw-bold text-uppercase rounded-pill w-100 py-3 shadow-sm">
+                <div class="position-sticky bottom-0 bg-white p-3 border-top shadow-lg z-3 text-center rounded-top mt-2"
+                    style="bottom: 0;">
+                    <button type="submit" id="btnSubmit" class="btn-submit-kermesse w-100 shadow-sm text-uppercase">
                         <i class="bi bi-send-fill me-2"></i>Envoyer mon inscription
                     </button>
                 </div>
@@ -322,7 +328,7 @@
         const STANDS_INFO = {
             'Bar': { label: 'Bar', icon: '🍺' },
             'Bonbons_Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
-            'Chamboultout': { label: 'Chamboultout', icon: '🥫' },
+            'Chamboultout': { label: 'Chamboultout', icon: '⚾' },
             'Crepes': { label: 'Crêpes', icon: '🥞' },
             'Enveloppes_gagnantes': { label: 'Enveloppes gagnantes', icon: '✉️' },
             'Frites_Sandwichs': { label: 'Frites / Sandwichs', icon: '🍟' },
@@ -346,7 +352,7 @@
                 const res = await fetch(URL_SCRIPT, { redirect: 'follow' });
                 const text = await res.text();
                 const data = JSON.parse(text);
-                
+
                 // Si l'Apps Script renvoie les deux (version dynamique)
                 if (data.stands) {
                     configData = data.stands;
@@ -356,7 +362,7 @@
                 }
             } catch (err) {
                 console.error('Erreur chargement Stands :', err);
-                document.getElementById('slots-container').innerHTML = 
+                document.getElementById('slots-container').innerHTML =
                     `<div class="alert alert-danger">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         Impossible de charger les créneaux. Pensez à mettre à jour votre URL et votre Google Apps Script.
@@ -374,7 +380,7 @@
                 // key = "Bar_14h-14h45" ou "Bonbons_Gateaux_14h-14h45"
                 const lastIdx = key.lastIndexOf('_');
                 if (lastIdx === -1) return;
-                
+
                 const standId = key.substring(0, lastIdx);
                 const creneau = key.substring(lastIdx + 1);
 
@@ -408,11 +414,19 @@
 
                 const section = document.createElement('div');
                 section.className = 'accordion-item border-0 shadow-sm mb-4 rounded overflow-hidden';
-                
+
+                // Pré-calculer le total des places pour ce créneau
+                let totalPlacesRestantes = 0;
+                standsParCreneau[creneau].forEach(i => { totalPlacesRestantes += Math.max(0, i.restantes); });
+                const headerBadge = totalPlacesRestantes > 0 
+                    ? `<span class="badge bg-primary text-white ms-auto me-2">${totalPlacesRestantes} dispo</span>` 
+                    : `<span class="badge bg-danger text-white ms-auto me-2">Complet</span>`;
+
                 let html = `
                     <h2 class="accordion-header" id="${headerId}">
                         <button class="accordion-button ${isOpen ? '' : 'collapsed'} fw-bold fs-5 bg-white text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
-                            <i class="bi bi-clock me-2"></i> Créneau : ${formatCreneau(creneau)}
+                            <i class="bi bi-clock me-2"></i> ${formatCreneau(creneau)} 
+                            ${headerBadge}
                         </button>
                     </h2>
                     <div id="${collapseId}" class="accordion-collapse collapse ${isOpen ? 'show' : ''}" data-bs-parent="#accordionSlots">
@@ -424,7 +438,7 @@
                     const info = STANDS_INFO[item.standId] || { label: item.standId.replace(/_/g, ' '), icon: '✨' };
                     const isFull = item.restantes <= 0;
                     const isLow = item.restantes > 0 && item.restantes <= Math.ceil(item.max * 0.3);
-                    
+
                     const badgeClass = isFull ? 'bg-danger' : (isLow ? 'bg-warning text-dark' : 'bg-success');
                     const badgeText = isFull ? 'Complet' : `${item.restantes} place${item.restantes > 1 ? 's' : ''}`;
                     const uid = `slot_${ci}_${si}`;
@@ -445,7 +459,7 @@
                             </div>
                         </div>
                     </div>`;
-                
+
                 section.innerHTML = html;
                 accordion.appendChild(section);
             });
@@ -462,15 +476,23 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                showGlobalFeedback('error', 'Veuillez corriger les champs en rouge avant d\'envoyer.');
+                // Scroll up pour voir l'erreur
+                const feedbackEl = document.getElementById('global-feedback');
+                if(feedbackEl){
+                    window.scrollTo({ top: feedbackEl.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
+                }
+                return;
+            }
+
             const nom = document.getElementById('nom').value.trim();
             const prenom = document.getElementById('prenom').value.trim();
             const email = document.getElementById('email').value.trim();
+            const telephone = document.getElementById('telephone').value.trim();
             const btnSubmit = document.getElementById('btnSubmit');
-
-            if (!nom || !prenom || !email) {
-                showGlobalFeedback('error', 'Veuillez remplir tous les champs obligatoires.');
-                return;
-            }
 
             // Collecter les sélections
             const selections = [];
@@ -504,6 +526,7 @@
                             nom: nom,
                             prenom: prenom,
                             email: email,
+                            telephone: telephone,
                             stand: sel.stand,
                             creneau: sel.creneau
                         })
@@ -529,7 +552,7 @@
                     detailMessages += `<li class="text-danger mb-2"><i class="bi bi-wifi-off me-2"></i><strong>${info.label} (${sel.creneau})</strong> : Erreur réseau, veuillez réessayer.</li>`;
                 }
             }
-            
+
             detailMessages += `</ul>`;
 
             if (successes > 0 && errors === 0) {
@@ -543,7 +566,7 @@
                      ${successes} inscription(s) validée(s), mais ${errors} ont échoué.
                      ${detailMessages}`);
             } else {
-                showGlobalFeedback('error', 
+                showGlobalFeedback('error',
                     `<div class="fw-bold fs-5 mb-2">❌ Échec de l'inscription</div>
                      Aucune inscription n'a pu être validée.
                      ${detailMessages}`);
@@ -551,7 +574,7 @@
 
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<i class="bi bi-send-fill me-2"></i>Envoyer mon inscription';
-            
+
             await chargerPlaces();
 
             // Scroll pour bien voir le feedback
