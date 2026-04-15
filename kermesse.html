@@ -313,59 +313,48 @@
     <script src="assets/js/theme.js"></script>
     <script>
         // ============================================================
-        // CONFIGURATION — Remplacer par l'URL de votre Web App déployée
+        // CONFIGURATION
         // ============================================================
         const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbwaDASuGrWihefJHSbJa0Awac1tFDrd0bnkjAMc26Qj4SA7Z03d-E8D4UbFbC1czrVu/exec';
 
-        // Données du formulaire : stands et créneaux
         const CRENEAUX = ['14h-15h', '15h-16h', '16h-17h', '17h-18h'];
         const STANDS = [
-            { id: 'Bar', label: 'Bar' },
-            { id: 'Bonbons_Gateaux', label: 'Bonbons / Gâteaux' },
-            { id: 'Chamboultout', label: 'Chamboultout' },
-            { id: 'Crepes', label: 'Crêpes' },
-            { id: 'Enveloppes_gagnantes', label: 'Enveloppes gagnantes' },
-            { id: 'Frites_Sandwichs', label: 'Frites / Sandwichs' },
-            { id: 'Malle_aux_tresors', label: 'Malle aux trésors' },
-            { id: 'Maquillage', label: 'Maquillage' },
-            { id: 'Peche_a_la_ligne', label: 'Pêche à la ligne' },
-            { id: 'Peche_aux_canards', label: 'Pêche aux canards' },
-            { id: 'Structures_gonflables', label: 'Structures gonflables' },
-            { id: 'Tir_aux_buts', label: 'Tir aux buts' }
+            { id: 'Bar', label: 'Bar', icon: '🍺' },
+            { id: 'Bonbons_Gateaux', label: 'Bonbons / Gâteaux', icon: '🍬' },
+            { id: 'Chamboultout', label: 'Chamboultout', icon: '🎯' },
+            { id: 'Crepes', label: 'Crêpes', icon: '🥞' },
+            { id: 'Enveloppes_gagnantes', label: 'Enveloppes gagnantes', icon: '✉️' },
+            { id: 'Frites_Sandwichs', label: 'Frites / Sandwichs', icon: '🍟' },
+            { id: 'Malle_aux_tresors', label: 'Malle aux trésors', icon: '🎁' },
+            { id: 'Maquillage', label: 'Maquillage', icon: '🎨' },
+            { id: 'Peche_a_la_ligne', label: 'Pêche à la ligne', icon: '🎣' },
+            { id: 'Peche_aux_canards', label: 'Pêche aux canards', icon: '🦆' },
+            { id: 'Structures_gonflables', label: 'Structures gonflables', icon: '🏰' },
+            { id: 'Tir_aux_buts', label: 'Tir aux buts', icon: '⚽' }
         ];
 
-        // Capacités max par stand (correspondant à l'onglet Config)
         const CAPACITES = {
-            'Bar': 10,
-            'Bonbons_Gateaux': 3,
-            'Chamboultout': 3,
-            'Crepes': 6,
-            'Enveloppes_gagnantes': 2,
-            'Frites_Sandwichs': 5,
-            'Malle_aux_tresors': 2,
-            'Maquillage': 8,
-            'Peche_a_la_ligne': 3,
-            'Peche_aux_canards': 4,
-            'Structures_gonflables': 4,
-            'Tir_aux_buts': 3
+            'Bar': 10, 'Bonbons_Gateaux': 3, 'Chamboultout': 3, 'Crepes': 6,
+            'Enveloppes_gagnantes': 2, 'Frites_Sandwichs': 5, 'Malle_aux_tresors': 2,
+            'Maquillage': 8, 'Peche_a_la_ligne': 3, 'Peche_aux_canards': 4,
+            'Structures_gonflables': 4, 'Tir_aux_buts': 3
         };
 
-        // État des places restantes (sera mis à jour par doGet)
         let placesRestantes = {};
 
         // ============================================================
-        // 1. CHARGEMENT INITIAL — Récupère les places via doGet
+        // 1. CHARGEMENT — Récupère les places via doGet
         // ============================================================
         async function chargerPlaces() {
             try {
-                const res = await fetch(URL_SCRIPT);
-                const data = await res.json();
+                const res = await fetch(URL_SCRIPT, { redirect: 'follow' });
+                const text = await res.text();
+                const data = JSON.parse(text);
                 if (data.places) {
                     placesRestantes = data.places;
                 }
             } catch (err) {
-                console.warn('Impossible de charger les places, utilisation des capacités par défaut.', err);
-                // Fallback : toutes les places sont disponibles
+                console.warn('Fallback: capacités par défaut.', err);
                 CRENEAUX.forEach(c => {
                     STANDS.forEach(s => {
                         placesRestantes[s.id + '_' + c] = CAPACITES[s.id];
@@ -376,7 +365,7 @@
         }
 
         // ============================================================
-        // 2. GÉNÉRATION DYNAMIQUE DES CRÉNEAUX
+        // 2. GÉNÉRATION DYNAMIQUE
         // ============================================================
         function genererCreneaux() {
             const container = document.getElementById('slots-container');
@@ -396,22 +385,21 @@
                     const isLow = restantes > 0 && restantes <= Math.ceil(max * 0.3);
                     const badgeClass = isFull ? 'full' : (isLow ? 'low' : 'available');
                     const badgeText = isFull ? 'Complet' : `${restantes} place${restantes > 1 ? 's' : ''}`;
-
                     const uid = `slot_${ci}_${si}`;
+
                     html += `
                         <div class="col-md-6">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="slot_${creneau}" 
                                     id="${uid}" value="${stand.id}" ${isFull ? 'disabled' : ''}>
                                 <label class="form-check-label" for="${uid}">
-                                    ${stand.label} <span class="places-badge ${badgeClass} ms-1">${badgeText}</span>
+                                    ${stand.icon} ${stand.label} <span class="places-badge ${badgeClass} ms-1">${badgeText}</span>
                                 </label>
                             </div>
                         </div>`;
                 });
 
                 html += '</div>';
-                // Message de retour par créneau
                 html += `<div id="feedback_${creneau}" class="result-msg"></div>`;
                 section.innerHTML = html;
                 container.appendChild(section);
@@ -453,18 +441,18 @@
                 return;
             }
 
-            // Désactiver le bouton pendant l'envoi
+            // Désactiver le bouton
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi en cours...';
 
             let successes = 0;
             let errors = [];
 
-            // Envoyer un POST par créneau sélectionné
             for (const sel of selections) {
                 try {
                     const res = await fetch(URL_SCRIPT, {
                         method: 'POST',
+                        redirect: 'follow',
                         body: JSON.stringify({
                             nom: nom,
                             prenom: prenom,
@@ -473,7 +461,14 @@
                             creneau: sel.creneau
                         })
                     });
-                    const response = await res.json();
+                    const text = await res.text();
+                    let response;
+                    try {
+                        response = JSON.parse(text);
+                    } catch (parseErr) {
+                        console.error('Réponse non-JSON:', text);
+                        throw new Error('Réponse invalide du serveur');
+                    }
                     const feedbackEl = document.getElementById(`feedback_${sel.creneau}`);
 
                     if (response.result === 'success') {
@@ -488,6 +483,7 @@
                         feedbackEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${response.message}`;
                     }
                 } catch (err) {
+                    console.error('Erreur fetch:', err);
                     errors.push(sel.creneau);
                     const feedbackEl = document.getElementById(`feedback_${sel.creneau}`);
                     feedbackEl.className = 'result-msg error';
@@ -496,21 +492,18 @@
                 }
             }
 
-            // Message global
             if (successes > 0 && errors.length === 0) {
                 showGlobalFeedback('success',
                     `🎉 Merci ${prenom} ! Vos ${successes} inscription(s) sont confirmées. À bientôt à la kermesse !`);
             } else if (successes > 0) {
                 showGlobalFeedback('error',
-                    `${successes} inscription(s) validée(s), mais ${errors.length} erreur(s). Consultez les messages ci-dessus.`);
+                    `${successes} inscription(s) OK, mais ${errors.length} erreur(s). Voir ci-dessus.`);
             } else {
-                showGlobalFeedback('error', 'Aucune inscription validée. Consultez les messages ci-dessus.');
+                showGlobalFeedback('error', 'Aucune inscription validée. Voir les messages ci-dessus.');
             }
 
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<i class="bi bi-send-fill me-2"></i>Envoyer mon inscription';
-
-            // Rafraîchir les places
             await chargerPlaces();
         });
 
@@ -520,7 +513,7 @@
         }
 
         // ============================================================
-        // 4. INIT — Charger les places au démarrage
+        // 4. INIT
         // ============================================================
         chargerPlaces();
     </script>
