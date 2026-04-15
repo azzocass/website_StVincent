@@ -254,18 +254,24 @@
                             <div class="invalid-feedback">Veuillez renseigner votre nom.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="prenom" class="form-label fw-bold">Prénom <span class="text-danger">*</span></label>
+                            <label for="prenom" class="form-label fw-bold">Prénom <span
+                                    class="text-danger">*</span></label>
                             <input type="text" class="form-control rounded-3" id="prenom" name="prenom" required>
                             <div class="invalid-feedback">Veuillez renseigner votre prénom.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="email" class="form-label fw-bold">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control rounded-3" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
-                            <div class="invalid-feedback">Veuillez saisir une adresse email valide (ex: jean@mail.com).</div>
+                            <label for="email" class="form-label fw-bold">Email <span
+                                    class="text-danger">*</span></label>
+                            <input type="email" class="form-control rounded-3" id="email" name="email" required
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                            <div class="invalid-feedback">Veuillez saisir une adresse email valide (ex: jean@mail.com).
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="telephone" class="form-label fw-bold">Téléphone <span class="text-danger">*</span></label>
-                            <input type="tel" class="form-control rounded-3" id="telephone" name="telephone" required pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$">
+                            <label for="telephone" class="form-label fw-bold">Téléphone <span
+                                    class="text-danger">*</span></label>
+                            <input type="tel" class="form-control rounded-3" id="telephone" name="telephone" required
+                                pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$">
                             <div class="invalid-feedback">Veuillez saisir un numéro valide (ex: 0612345678).</div>
                         </div>
                     </div>
@@ -323,7 +329,7 @@
         // ============================================================
         // 1. CONFIGURATION
         // ============================================================
-        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbw-SbrSvU3sHZHohaB26VUGKsJC9bNhW-cCKdcg788l31rSLdD3Mv69-GtKpCWWmefa/exec';
+        const URL_SCRIPT = 'hhttps://script.google.com/macros/s/AKfycbycBebDiACY1r1mqKPRkyykvtkSFSAPQ7xpvlFIJPeB00R_dTKfOPalIgNG3l6zjXeg/exec';
 
         const STANDS_INFO = {
             'Bar': { label: 'Bar', icon: '🍺' },
@@ -418,8 +424,8 @@
                 // Pré-calculer le total des places pour ce créneau
                 let totalPlacesRestantes = 0;
                 standsParCreneau[creneau].forEach(i => { totalPlacesRestantes += Math.max(0, i.restantes); });
-                const headerBadge = totalPlacesRestantes > 0 
-                    ? `<span class="badge bg-primary text-white ms-auto me-2">${totalPlacesRestantes} dispo</span>` 
+                const headerBadge = totalPlacesRestantes > 0
+                    ? `<span class="badge bg-primary text-white ms-auto me-2">${totalPlacesRestantes} dispo</span>`
                     : `<span class="badge bg-danger text-white ms-auto me-2">Complet</span>`;
 
                 let html = `
@@ -482,7 +488,7 @@
                 showGlobalFeedback('error', 'Veuillez corriger les champs en rouge avant d\'envoyer.');
                 // Scroll up pour voir l'erreur
                 const feedbackEl = document.getElementById('global-feedback');
-                if(feedbackEl){
+                if (feedbackEl) {
                     window.scrollTo({ top: feedbackEl.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
                 }
                 return;
