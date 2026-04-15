@@ -317,90 +317,118 @@
         // ============================================================
         const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbwaDASuGrWihefJHSbJa0Awac1tFDrd0bnkjAMc26Qj4SA7Z03d-E8D4UbFbC1czrVu/exec';
 
-        const CRENEAUX = ['14h-14h45', '14h45-15h30', '15h30-16h15', '16h15-17h', '17h-18h'];
-        const STANDS = [
-            { id: 'Bar', label: 'Bar', icon: '🍺' },
-            { id: 'Bonbons_Gateaux', label: 'Bonbons / Gâteaux', icon: '🍬' },
-            { id: 'Chamboultout', label: 'Chamboultout', icon: '🎯' },
-            { id: 'Crepes', label: 'Crêpes', icon: '🥞' },
-            { id: 'Enveloppes_gagnantes', label: 'Enveloppes gagnantes', icon: '✉️' },
-            { id: 'Frites_Sandwichs', label: 'Frites / Sandwichs', icon: '🍟' },
-            { id: 'Malle_aux_tresors', label: 'Malle aux trésors', icon: '🎁' },
-            { id: 'Maquillage', label: 'Maquillage', icon: '🎨' },
-            { id: 'Peche_a_la_ligne', label: 'Pêche à la ligne', icon: '🎣' },
-            { id: 'Peche_aux_canards', label: 'Pêche aux canards', icon: '🦆' },
-            { id: 'Structures_gonflables', label: 'Structures gonflables', icon: '🏰' },
-            { id: 'Tir_aux_buts', label: 'Tir aux buts', icon: '⚽' }
-        ];
-
-        const CAPACITES = {
-            'Bar': 10, 'Bonbons_Gateaux': 3, 'Chamboultout': 3, 'Crepes': 6,
-            'Enveloppes_gagnantes': 2, 'Frites_Sandwichs': 5, 'Malle_aux_tresors': 2,
-            'Maquillage': 8, 'Peche_a_la_ligne': 3, 'Peche_aux_canards': 4,
-            'Structures_gonflables': 4, 'Tir_aux_buts': 3
+        const STANDS_INFO = {
+            'Bar': { label: 'Bar', icon: '🍺' },
+            'Bonbons_Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
+            'Chamboultout': { label: 'Chamboultout', icon: '🎯' },
+            'Crepes': { label: 'Crêpes', icon: '🥞' },
+            'Enveloppes_gagnantes': { label: 'Enveloppes gagnantes', icon: '✉️' },
+            'Frites_Sandwichs': { label: 'Frites / Sandwichs', icon: '🍟' },
+            'Malle_aux_tresors': { label: 'Malle aux trésors', icon: '🎁' },
+            'Maquillage': { label: 'Maquillage', icon: '🎨' },
+            'Peche_a_la_ligne': { label: 'Pêche à la ligne', icon: '🎣' },
+            'Peche_aux_canards': { label: 'Pêche aux canards', icon: '🦆' },
+            'Structures_gonflables': { label: 'Structures gonflables', icon: '🏰' },
+            'Tir_aux_buts': { label: 'Tir aux buts', icon: '⚽' }
         };
 
-        let placesRestantes = {};
+        let configData = {};
+        let creneauxList = [];
+        let standsParCreneau = {};
 
         // ============================================================
-        // 1. CHARGEMENT — Récupère les places via doGet
+        // 1. CHARGEMENT — Récupère config et places via doGet
         // ============================================================
         async function chargerPlaces() {
             try {
                 const res = await fetch(URL_SCRIPT, { redirect: 'follow' });
                 const text = await res.text();
                 const data = JSON.parse(text);
-                if (data.places) {
-                    placesRestantes = data.places;
+                
+                // Si l'Apps Script renvoie les deux (version dynamique)
+                if (data.stands) {
+                    configData = data.stands;
+                    extraireDonnees(configData);
+                } else {
+                    throw new Error("L'Apps Script n'est pas à jour (data.stands manquant).");
                 }
             } catch (err) {
-                console.warn('Fallback: capacités par défaut.', err);
-                CRENEAUX.forEach(c => {
-                    STANDS.forEach(s => {
-                        placesRestantes[s.id + '_' + c] = CAPACITES[s.id];
-                    });
-                });
+                console.error('Erreur chargement Stands :', err);
+                document.getElementById('slots-container').innerHTML = 
+                    `<div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Impossible de charger les créneaux. Pensez à mettre à jour votre URL et votre Google Apps Script.
+                    </div>`;
+                return; // On arrête là, sans config on ne peut rien afficher
             }
             genererCreneaux();
         }
 
+        function extraireDonnees(data) {
+            const setCreneaux = new Set();
+            standsParCreneau = {};
+
+            Object.keys(data).forEach(key => {
+                // key = "Bar_14h-14h45" ou "Bonbons_Gateaux_14h-14h45"
+                const lastIdx = key.lastIndexOf('_');
+                if (lastIdx === -1) return;
+                
+                const standId = key.substring(0, lastIdx);
+                const creneau = key.substring(lastIdx + 1);
+
+                setCreneaux.add(creneau);
+
+                if (!standsParCreneau[creneau]) standsParCreneau[creneau] = [];
+                standsParCreneau[creneau].push({
+                    key: key,
+                    standId: standId,
+                    restantes: data[key].restantes,
+                    max: data[key].max
+                });
+            });
+
+            // Tri alphabétique (fonctionne bien pour 14h, 15h...)
+            creneauxList = Array.from(setCreneaux).sort();
+        }
+
         // ============================================================
-        // 2. GÉNÉRATION DYNAMIQUE
+        // 2. GÉNÉRATION DYNAMIQUE (UI CARTES SÉLECTIONNABLES)
         // ============================================================
         function genererCreneaux() {
             const container = document.getElementById('slots-container');
             container.innerHTML = '';
 
-            CRENEAUX.forEach((creneau, ci) => {
+            creneauxList.forEach((creneau, ci) => {
                 const section = document.createElement('div');
                 section.className = 'slot-section';
                 let html = `<h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>${formatCreneau(creneau)}</h5>`;
-                html += '<div class="row g-2">';
+                html += '<div class="row g-3">';
 
-                STANDS.forEach((stand, si) => {
-                    const key = stand.id + '_' + creneau;
-                    const restantes = placesRestantes[key] !== undefined ? placesRestantes[key] : CAPACITES[stand.id];
-                    const max = CAPACITES[stand.id];
-                    const isFull = restantes <= 0;
-                    const isLow = restantes > 0 && restantes <= Math.ceil(max * 0.3);
-                    const badgeClass = isFull ? 'full' : (isLow ? 'low' : 'available');
-                    const badgeText = isFull ? 'Complet' : `${restantes} place${restantes > 1 ? 's' : ''}`;
+                standsParCreneau[creneau].forEach((item, si) => {
+                    const info = STANDS_INFO[item.standId] || { label: item.standId.replace(/_/g, ' '), icon: '✨' };
+                    const isFull = item.restantes <= 0;
+                    const isLow = item.restantes > 0 && item.restantes <= Math.ceil(item.max * 0.3);
+                    
+                    // On utilise les classes badges Bootstrap standards pour les cartes
+                    const badgeClass = isFull ? 'bg-danger' : (isLow ? 'bg-warning text-dark' : 'bg-success');
+                    const badgeText = isFull ? 'Complet' : `${item.restantes} place${item.restantes > 1 ? 's' : ''}`;
                     const uid = `slot_${ci}_${si}`;
 
+                    // btn-check pour transformer le radio en bouton complet
                     html += `
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_${creneau}" 
-                                    id="${uid}" value="${stand.id}" ${isFull ? 'disabled' : ''}>
-                                <label class="form-check-label" for="${uid}">
-                                    ${stand.icon} ${stand.label} <span class="places-badge ${badgeClass} ms-1">${badgeText}</span>
-                                </label>
-                            </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <input type="radio" class="btn-check" name="slot_${creneau}" 
+                                id="${uid}" value="${item.standId}" ${isFull ? 'disabled' : ''}>
+                            <label class="btn btn-outline-primary w-100 h-100 text-center d-flex flex-column align-items-center justify-content-center p-3" for="${uid}">
+                                <span class="fs-1 mb-2">${info.icon}</span>
+                                <span class="fw-bold mb-2" style="font-size: 0.9rem; white-space: normal;">${info.label}</span>
+                                <span class="badge ${badgeClass} mt-auto">${badgeText}</span>
+                            </label>
                         </div>`;
                 });
 
                 html += '</div>';
-                html += `<div id="feedback_${creneau}" class="result-msg"></div>`;
+                html += `<div id="feedback_${creneau}" class="result-msg mt-3" style="display:none;"></div>`;
                 section.innerHTML = html;
                 container.appendChild(section);
             });
@@ -429,7 +457,7 @@
 
             // Collecter les sélections
             const selections = [];
-            CRENEAUX.forEach(creneau => {
+            creneauxList.forEach(creneau => {
                 const selected = document.querySelector(`input[name="slot_${creneau}"]:checked`);
                 if (selected) {
                     selections.push({ stand: selected.value, creneau: creneau });
