@@ -44,11 +44,24 @@
 
         .places-badge {
             font-size: .75rem;
-            background: #e0f2fe;
-            color: var(--color-primary-dark);
             border-radius: 50px;
             padding: .15rem .6rem;
             font-weight: 600;
+        }
+
+        .places-badge.available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .places-badge.low {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .places-badge.full {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .btn-submit-kermesse {
@@ -69,6 +82,12 @@
             opacity: .9;
             transform: translateY(-2px);
             color: white;
+        }
+
+        .btn-submit-kermesse:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .hero-kermesse {
@@ -113,6 +132,33 @@
             font-size: .9rem;
         }
 
+        /* Feedback messages */
+        .result-msg {
+            border-radius: 12px;
+            padding: .75rem 1rem;
+            margin-top: .5rem;
+            font-size: .9rem;
+            display: none;
+        }
+
+        .result-msg.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .result-msg.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Stand complet */
+        .form-check-input:disabled+.form-check-label {
+            opacity: .45;
+            text-decoration: line-through;
+        }
+
         /* Dark mode */
         [data-theme="dark"] .form-section {
             background: var(--color-bg-card) !important;
@@ -128,11 +174,6 @@
             background: var(--color-bg-card) !important;
             background-image: none !important;
             border: 1px solid #3f3f3f;
-        }
-
-        [data-theme="dark"] .places-badge {
-            background: #1e293b;
-            color: #38bdf8;
         }
 
         [data-theme="dark"] .form-control,
@@ -180,7 +221,7 @@
                 </div>
                 <p class="mt-4 mb-0" style="font-size: .9rem; color: rgba(255,255,255,.7);">
                     Merci pour votre implication ! Un seul stand par créneau vous sera attribué.<br>
-                    Les stands sont automatiquement retirés lorsqu'ils sont complets.
+                    Les stands complets sont automatiquement grisés.
                 </p>
                 <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
                     <a href="https://www.ecolesaintvincent.fr/inscr_kermesse/kermesse_inscription.php" target="_blank"
@@ -191,503 +232,57 @@
             </div>
 
             <!-- Formulaire -->
-            <form id="kermesseForm" action="https://docs.google.com/forms/d/e/VOTRE_ID/formResponse" method="POST">
+            <form id="kermesseForm">
 
                 <!-- Coordonnées -->
                 <div class="form-section">
                     <h4 class="fw-bold text-royal mb-4"><i class="bi bi-person-vcard me-2"></i>Vos coordonnées</h4>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="nomAine" class="form-label fw-bold">Nom de l'aîné(e) <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control rounded-3" id="nomAine" name="nomAine" required
-                                placeholder="ex : Dupont Lucas">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="prenom" class="form-label fw-bold">Prénom <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control rounded-3" id="prenom" name="prenom" required>
-                        </div>
-                        <div class="col-md-3">
                             <label for="nom" class="form-label fw-bold">Nom <span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control rounded-3" id="nom" name="nom" required>
                         </div>
                         <div class="col-md-6">
+                            <label for="prenom" class="form-label fw-bold">Prénom <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control rounded-3" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="col-md-12">
                             <label for="email" class="form-label fw-bold">Email <span
                                     class="text-danger">*</span></label>
                             <input type="email" class="form-control rounded-3" id="email" name="email" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="tel" class="form-label fw-bold">Téléphone <span
-                                    class="text-danger">*</span></label>
-                            <input type="tel" class="form-control rounded-3" id="tel" name="tel" required>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Créneaux horaires -->
+                <!-- Créneaux (générés dynamiquement par JS) -->
                 <h4 class="fw-bold text-royal mb-3 mt-4"><i class="bi bi-clock-history me-2"></i>Choix des stands par
                     créneau</h4>
                 <p class="text-muted mb-4" style="font-size:.9rem;">
-                    Pour chaque créneau, choisissez <strong>un seul stand</strong>. Vous pouvez aussi sélectionner "Non
-                    disponible".
-                    Les places restantes sont indiquées à titre indicatif.
+                    Pour chaque créneau, choisissez <strong>un seul stand</strong>. Vous pouvez ne rien sélectionner
+                    si vous n'êtes pas disponible. Les stands complets sont barrés.
                 </p>
 
-                <!-- Créneau 14h-15h -->
-                <div class="slot-section">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>14h00 – 15h00</h5>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_none"
-                                    value="Non disponible" checked>
-                                <label class="form-check-label text-muted" for="slot14_none">Non disponible pour ce
-                                    créneau</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_bar"
-                                    value="Bar">
-                                <label class="form-check-label" for="slot14_bar">Bar <span
-                                        class="places-badge ms-1">10 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_bonbons"
-                                    value="Bonbons/Gâteaux">
-                                <label class="form-check-label" for="slot14_bonbons">Bonbons/Gâteaux <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_chamboultout"
-                                    value="Chamboultout">
-                                <label class="form-check-label" for="slot14_chamboultout">Chamboultout <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_crepes"
-                                    value="Crêpes">
-                                <label class="form-check-label" for="slot14_crepes">Crêpes <span
-                                        class="places-badge ms-1">6 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_enveloppes"
-                                    value="Enveloppes gagnantes">
-                                <label class="form-check-label" for="slot14_enveloppes">Enveloppes gagnantes <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_frites"
-                                    value="Frites/Sandwichs">
-                                <label class="form-check-label" for="slot14_frites">Frites/Sandwichs <span
-                                        class="places-badge ms-1">5 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_malle"
-                                    value="Malle aux trésors">
-                                <label class="form-check-label" for="slot14_malle">Malle aux trésors <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_maquillage"
-                                    value="Maquillage">
-                                <label class="form-check-label" for="slot14_maquillage">Maquillage <span
-                                        class="places-badge ms-1">8 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_peche_ligne"
-                                    value="Pêche à la ligne">
-                                <label class="form-check-label" for="slot14_peche_ligne">Pêche à la ligne <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_peche_canards"
-                                    value="Pêche aux canards">
-                                <label class="form-check-label" for="slot14_peche_canards">Pêche aux canards <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_gonflables"
-                                    value="Structures gonflables">
-                                <label class="form-check-label" for="slot14_gonflables">Structures gonflables <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_14h" id="slot14_tir"
-                                    value="Tir aux buts">
-                                <label class="form-check-label" for="slot14_tir">Tir aux buts <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Créneau 15h-16h -->
-                <div class="slot-section">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>15h00 – 16h00</h5>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_none"
-                                    value="Non disponible" checked>
-                                <label class="form-check-label text-muted" for="slot15_none">Non disponible pour ce
-                                    créneau</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_bar"
-                                    value="Bar">
-                                <label class="form-check-label" for="slot15_bar">Bar <span
-                                        class="places-badge ms-1">10 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_bonbons"
-                                    value="Bonbons/Gâteaux">
-                                <label class="form-check-label" for="slot15_bonbons">Bonbons/Gâteaux <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_chamboultout"
-                                    value="Chamboultout">
-                                <label class="form-check-label" for="slot15_chamboultout">Chamboultout <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_crepes"
-                                    value="Crêpes">
-                                <label class="form-check-label" for="slot15_crepes">Crêpes <span
-                                        class="places-badge ms-1">6 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_enveloppes"
-                                    value="Enveloppes gagnantes">
-                                <label class="form-check-label" for="slot15_enveloppes">Enveloppes gagnantes <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_frites"
-                                    value="Frites/Sandwichs">
-                                <label class="form-check-label" for="slot15_frites">Frites/Sandwichs <span
-                                        class="places-badge ms-1">5 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_malle"
-                                    value="Malle aux trésors">
-                                <label class="form-check-label" for="slot15_malle">Malle aux trésors <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_maquillage"
-                                    value="Maquillage">
-                                <label class="form-check-label" for="slot15_maquillage">Maquillage <span
-                                        class="places-badge ms-1">8 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_peche_ligne"
-                                    value="Pêche à la ligne">
-                                <label class="form-check-label" for="slot15_peche_ligne">Pêche à la ligne <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_peche_canards"
-                                    value="Pêche aux canards">
-                                <label class="form-check-label" for="slot15_peche_canards">Pêche aux canards <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_gonflables"
-                                    value="Structures gonflables">
-                                <label class="form-check-label" for="slot15_gonflables">Structures gonflables <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_15h" id="slot15_tir"
-                                    value="Tir aux buts">
-                                <label class="form-check-label" for="slot15_tir">Tir aux buts <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Créneau 16h-17h -->
-                <div class="slot-section">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>16h00 – 17h00</h5>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_none"
-                                    value="Non disponible" checked>
-                                <label class="form-check-label text-muted" for="slot16_none">Non disponible pour ce
-                                    créneau</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_bar"
-                                    value="Bar">
-                                <label class="form-check-label" for="slot16_bar">Bar <span
-                                        class="places-badge ms-1">10 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_bonbons"
-                                    value="Bonbons/Gâteaux">
-                                <label class="form-check-label" for="slot16_bonbons">Bonbons/Gâteaux <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_chamboultout"
-                                    value="Chamboultout">
-                                <label class="form-check-label" for="slot16_chamboultout">Chamboultout <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_crepes"
-                                    value="Crêpes">
-                                <label class="form-check-label" for="slot16_crepes">Crêpes <span
-                                        class="places-badge ms-1">6 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_enveloppes"
-                                    value="Enveloppes gagnantes">
-                                <label class="form-check-label" for="slot16_enveloppes">Enveloppes gagnantes <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_frites"
-                                    value="Frites/Sandwichs">
-                                <label class="form-check-label" for="slot16_frites">Frites/Sandwichs <span
-                                        class="places-badge ms-1">5 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_malle"
-                                    value="Malle aux trésors">
-                                <label class="form-check-label" for="slot16_malle">Malle aux trésors <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_maquillage"
-                                    value="Maquillage">
-                                <label class="form-check-label" for="slot16_maquillage">Maquillage <span
-                                        class="places-badge ms-1">8 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_peche_ligne"
-                                    value="Pêche à la ligne">
-                                <label class="form-check-label" for="slot16_peche_ligne">Pêche à la ligne <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_peche_canards"
-                                    value="Pêche aux canards">
-                                <label class="form-check-label" for="slot16_peche_canards">Pêche aux canards <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_gonflables"
-                                    value="Structures gonflables">
-                                <label class="form-check-label" for="slot16_gonflables">Structures gonflables <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot16_tir"
-                                    value="Tir aux buts">
-                                <label class="form-check-label" for="slot16_tir">Tir aux buts <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Créneau 17h-18h -->
-                <div class="slot-section">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>17h00 – 18h00</h5>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_none"
-                                    value="Non disponible" checked>
-                                <label class="form-check-label text-muted" for="slot17_none">Non disponible pour ce
-                                    créneau</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_bar"
-                                    value="Bar">
-                                <label class="form-check-label" for="slot17_bar">Bar <span
-                                        class="places-badge ms-1">10 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_bonbons"
-                                    value="Bonbons/Gâteaux">
-                                <label class="form-check-label" for="slot17_bonbons">Bonbons/Gâteaux <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_chamboultout"
-                                    value="Chamboultout">
-                                <label class="form-check-label" for="slot17_chamboultout">Chamboultout <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_16h" id="slot17_crepes"
-                                    value="Crêpes">
-                                <label class="form-check-label" for="slot17_crepes">Crêpes <span
-                                        class="places-badge ms-1">6 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_enveloppes"
-                                    value="Enveloppes gagnantes">
-                                <label class="form-check-label" for="slot17_enveloppes">Enveloppes gagnantes <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_frites"
-                                    value="Frites/Sandwichs">
-                                <label class="form-check-label" for="slot17_frites">Frites/Sandwichs <span
-                                        class="places-badge ms-1">5 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_malle"
-                                    value="Malle aux trésors">
-                                <label class="form-check-label" for="slot17_malle">Malle aux trésors <span
-                                        class="places-badge ms-1">2 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_maquillage"
-                                    value="Maquillage">
-                                <label class="form-check-label" for="slot17_maquillage">Maquillage <span
-                                        class="places-badge ms-1">8 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_peche_ligne"
-                                    value="Pêche à la ligne">
-                                <label class="form-check-label" for="slot17_peche_ligne">Pêche à la ligne <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_peche_canards"
-                                    value="Pêche aux canards">
-                                <label class="form-check-label" for="slot17_peche_canards">Pêche aux canards <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_gonflables"
-                                    value="Structures gonflables">
-                                <label class="form-check-label" for="slot17_gonflables">Structures gonflables <span
-                                        class="places-badge ms-1">4 places</span></label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="slot_17h" id="slot17_tir"
-                                    value="Tir aux buts">
-                                <label class="form-check-label" for="slot17_tir">Tir aux buts <span
-                                        class="places-badge ms-1">3 places</span></label>
-                            </div>
-                        </div>
+                <div id="slots-container">
+                    <div class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 small text-muted">Chargement des places disponibles...</p>
                     </div>
                 </div>
 
                 <!-- Commentaire -->
-                <div class="form-section">
+                <div class="form-section mt-4">
                     <label for="commentaire" class="form-label fw-bold">Un commentaire ? (optionnel)</label>
                     <textarea class="form-control rounded-3" id="commentaire" name="commentaire" rows="3"
                         placeholder="ex : J'aimerais être avec Mme Dupont si possible"></textarea>
                 </div>
 
+                <!-- Feedback global -->
+                <div id="global-feedback"></div>
+
                 <!-- Submit -->
-                <button type="submit" class="btn-submit-kermesse mt-2">
+                <button type="submit" id="btnSubmit" class="btn-submit-kermesse mt-2">
                     <i class="bi bi-send-fill me-2"></i>Envoyer mon inscription
                 </button>
 
@@ -707,36 +302,217 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/theme.js"></script>
     <script>
-        // Soumission vers Google Sheets via Apps Script
-        const form = document.getElementById('kermesseForm');
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const data = new FormData(form);
-            const payload = {};
-            data.forEach((v, k) => payload[k] = v);
+        // ============================================================
+        // CONFIGURATION — Remplacer par l'URL de votre Web App déployée
+        // ============================================================
+        const URL_SCRIPT = 'VOTRE_GOOGLE_APPS_SCRIPT_URL';
 
-            // Remplacer cette URL par celle de votre Google Apps Script (Web App déployée)
-            const GOOGLE_SCRIPT_URL = 'VOTRE_GOOGLE_APPS_SCRIPT_URL';
+        // Données du formulaire : stands et créneaux
+        const CRENEAUX = ['14h-15h', '15h-16h', '16h-17h', '17h-18h'];
+        const STANDS = [
+            { id: 'Bar', label: 'Bar' },
+            { id: 'Bonbons_Gateaux', label: 'Bonbons / Gâteaux' },
+            { id: 'Chamboultout', label: 'Chamboultout' },
+            { id: 'Crepes', label: 'Crêpes' },
+            { id: 'Enveloppes_gagnantes', label: 'Enveloppes gagnantes' },
+            { id: 'Frites_Sandwichs', label: 'Frites / Sandwichs' },
+            { id: 'Malle_aux_tresors', label: 'Malle aux trésors' },
+            { id: 'Maquillage', label: 'Maquillage' },
+            { id: 'Peche_a_la_ligne', label: 'Pêche à la ligne' },
+            { id: 'Peche_aux_canards', label: 'Pêche aux canards' },
+            { id: 'Structures_gonflables', label: 'Structures gonflables' },
+            { id: 'Tir_aux_buts', label: 'Tir aux buts' }
+        ];
 
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                form.innerHTML = `
-                    <div class="text-center py-5">
-                        <i class="bi bi-check-circle-fill text-success display-1 mb-3 d-block"></i>
-                        <h3 class="fw-bold text-royal">Merci pour votre inscription !</h3>
-                        <p class="text-muted">Votre choix a bien été enregistré. À bientôt à la kermesse ! 🎉</p>
-                        <a href="index.html" class="btn btn-royal rounded-pill px-4 mt-3">
-                            <i class="bi bi-house me-2"></i>Retour au site
-                        </a>
-                    </div>`;
-            }).catch(() => {
-                alert('Une erreur est survenue. Veuillez réessayer.');
+        // Capacités max par stand (correspondant à l'onglet Config)
+        const CAPACITES = {
+            'Bar': 10,
+            'Bonbons_Gateaux': 3,
+            'Chamboultout': 3,
+            'Crepes': 6,
+            'Enveloppes_gagnantes': 2,
+            'Frites_Sandwichs': 5,
+            'Malle_aux_tresors': 2,
+            'Maquillage': 8,
+            'Peche_a_la_ligne': 3,
+            'Peche_aux_canards': 4,
+            'Structures_gonflables': 4,
+            'Tir_aux_buts': 3
+        };
+
+        // État des places restantes (sera mis à jour par doGet)
+        let placesRestantes = {};
+
+        // ============================================================
+        // 1. CHARGEMENT INITIAL — Récupère les places via doGet
+        // ============================================================
+        async function chargerPlaces() {
+            try {
+                const res = await fetch(URL_SCRIPT);
+                const data = await res.json();
+                if (data.places) {
+                    placesRestantes = data.places;
+                }
+            } catch (err) {
+                console.warn('Impossible de charger les places, utilisation des capacités par défaut.', err);
+                // Fallback : toutes les places sont disponibles
+                CRENEAUX.forEach(c => {
+                    STANDS.forEach(s => {
+                        placesRestantes[s.id + '_' + c] = CAPACITES[s.id];
+                    });
+                });
+            }
+            genererCreneaux();
+        }
+
+        // ============================================================
+        // 2. GÉNÉRATION DYNAMIQUE DES CRÉNEAUX
+        // ============================================================
+        function genererCreneaux() {
+            const container = document.getElementById('slots-container');
+            container.innerHTML = '';
+
+            CRENEAUX.forEach((creneau, ci) => {
+                const section = document.createElement('div');
+                section.className = 'slot-section';
+                let html = `<h5 class="fw-bold mb-3"><i class="bi bi-clock text-primary me-2"></i>${formatCreneau(creneau)}</h5>`;
+                html += '<div class="row g-2">';
+
+                STANDS.forEach((stand, si) => {
+                    const key = stand.id + '_' + creneau;
+                    const restantes = placesRestantes[key] !== undefined ? placesRestantes[key] : CAPACITES[stand.id];
+                    const max = CAPACITES[stand.id];
+                    const isFull = restantes <= 0;
+                    const isLow = restantes > 0 && restantes <= Math.ceil(max * 0.3);
+                    const badgeClass = isFull ? 'full' : (isLow ? 'low' : 'available');
+                    const badgeText = isFull ? 'Complet' : `${restantes} place${restantes > 1 ? 's' : ''}`;
+
+                    const uid = `slot_${ci}_${si}`;
+                    html += `
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="slot_${creneau}" 
+                                    id="${uid}" value="${stand.id}" ${isFull ? 'disabled' : ''}>
+                                <label class="form-check-label" for="${uid}">
+                                    ${stand.label} <span class="places-badge ${badgeClass} ms-1">${badgeText}</span>
+                                </label>
+                            </div>
+                        </div>`;
+                });
+
+                html += '</div>';
+                // Message de retour par créneau
+                html += `<div id="feedback_${creneau}" class="result-msg"></div>`;
+                section.innerHTML = html;
+                container.appendChild(section);
             });
+        }
+
+        function formatCreneau(c) {
+            return c.replace('-', ' – ').replace(/h/g, 'h');
+        }
+
+        // ============================================================
+        // 3. SOUMISSION — Un POST par créneau sélectionné
+        // ============================================================
+        const form = document.getElementById('kermesseForm');
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const nom = document.getElementById('nom').value.trim();
+            const prenom = document.getElementById('prenom').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const btnSubmit = document.getElementById('btnSubmit');
+
+            if (!nom || !prenom || !email) {
+                showGlobalFeedback('error', 'Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+
+            // Collecter les sélections
+            const selections = [];
+            CRENEAUX.forEach(creneau => {
+                const selected = document.querySelector(`input[name="slot_${creneau}"]:checked`);
+                if (selected) {
+                    selections.push({ stand: selected.value, creneau: creneau });
+                }
+            });
+
+            if (selections.length === 0) {
+                showGlobalFeedback('error', 'Veuillez sélectionner au moins un stand sur un créneau.');
+                return;
+            }
+
+            // Désactiver le bouton pendant l'envoi
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi en cours...';
+
+            let successes = 0;
+            let errors = [];
+
+            // Envoyer un POST par créneau sélectionné
+            for (const sel of selections) {
+                try {
+                    const res = await fetch(URL_SCRIPT, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            nom: nom,
+                            prenom: prenom,
+                            email: email,
+                            stand: sel.stand,
+                            creneau: sel.creneau
+                        })
+                    });
+                    const response = await res.json();
+                    const feedbackEl = document.getElementById(`feedback_${sel.creneau}`);
+
+                    if (response.result === 'success') {
+                        successes++;
+                        feedbackEl.className = 'result-msg success';
+                        feedbackEl.style.display = 'block';
+                        feedbackEl.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i>${response.message}`;
+                    } else {
+                        errors.push(sel.creneau);
+                        feedbackEl.className = 'result-msg error';
+                        feedbackEl.style.display = 'block';
+                        feedbackEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${response.message}`;
+                    }
+                } catch (err) {
+                    errors.push(sel.creneau);
+                    const feedbackEl = document.getElementById(`feedback_${sel.creneau}`);
+                    feedbackEl.className = 'result-msg error';
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>Erreur réseau. Réessayez.';
+                }
+            }
+
+            // Message global
+            if (successes > 0 && errors.length === 0) {
+                showGlobalFeedback('success',
+                    `🎉 Merci ${prenom} ! Vos ${successes} inscription(s) sont confirmées. À bientôt à la kermesse !`);
+            } else if (successes > 0) {
+                showGlobalFeedback('error',
+                    `${successes} inscription(s) validée(s), mais ${errors.length} erreur(s). Consultez les messages ci-dessus.`);
+            } else {
+                showGlobalFeedback('error', 'Aucune inscription validée. Consultez les messages ci-dessus.');
+            }
+
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<i class="bi bi-send-fill me-2"></i>Envoyer mon inscription';
+
+            // Rafraîchir les places
+            await chargerPlaces();
         });
+
+        function showGlobalFeedback(type, msg) {
+            const el = document.getElementById('global-feedback');
+            el.innerHTML = `<div class="result-msg ${type}" style="display:block">${msg}</div>`;
+        }
+
+        // ============================================================
+        // 4. INIT — Charger les places au démarrage
+        // ============================================================
+        chargerPlaces();
     </script>
 </body>
 
