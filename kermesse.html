@@ -145,6 +145,13 @@
             font-size: .9rem;
         }
 
+        .custom-switch-lg .form-check-input {
+            width: 3rem;
+            height: 1.5rem;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
         /* Feedback messages */
         .result-msg {
             border-radius: 12px;
@@ -277,6 +284,23 @@
                                 pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$">
                             <div class="invalid-feedback">Veuillez saisir un numéro valide (ex: 0612345678).</div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Montage / Démontage -->
+                <div class="form-section mt-4 mb-4">
+                    <h4 class="fw-bold text-royal mb-4"><i class="bi bi-hammer me-2"></i>Aide logistique</h4>
+                    <div class="form-check form-switch custom-switch-lg mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="montageVen">
+                        <label class="form-check-label fw-bold opacity-75" for="montageVen" style="cursor:pointer">Je veux participer au montage du vendredi à partir de 16h sur le domaine.</label>
+                    </div>
+                    <div class="form-check form-switch custom-switch-lg mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="montageSam">
+                        <label class="form-check-label fw-bold opacity-75" for="montageSam" style="cursor:pointer">Je veux participer au montage du samedi matin.</label>
+                    </div>
+                    <div class="form-check form-switch custom-switch-lg mb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="demontageSam">
+                        <label class="form-check-label fw-bold opacity-75" for="demontageSam" style="cursor:pointer">Je veux participer au démontage du samedi soir.</label>
                     </div>
                 </div>
 
@@ -522,19 +546,31 @@
             const prenom = document.getElementById('prenom').value.trim();
             const email = document.getElementById('email').value.trim();
             const telephone = document.getElementById('telephone').value.trim();
+            const commentaire = document.getElementById('commentaire').value.trim();
             const btnSubmit = document.getElementById('btnSubmit');
 
-            // Collecter les sélections
+            // Collecter les sélections de stands
             const selections = [];
             creneauxList.forEach(creneau => {
-                const selected = document.querySelector(`input[name="slot_${creneau}"]:checked`);
-                if (selected) {
-                    selections.push({ stand: selected.value, creneau: creneau });
+                const checked = document.querySelector(`input[name="stand_${creneau}"]:checked`);
+                if (checked && checked.value !== 'Aucun') {
+                    selections.push({ stand: checked.value, creneau: creneau });
                 }
             });
 
+            // Collecter Montage / Démontage
+            if (document.getElementById('montageVen').checked) {
+                selections.push({ stand: 'Montage', creneau: 'Vendredi_16h' });
+            }
+            if (document.getElementById('montageSam').checked) {
+                selections.push({ stand: 'Montage', creneau: 'Samedi_Matin' });
+            }
+            if (document.getElementById('demontageSam').checked) {
+                selections.push({ stand: 'Demontage', creneau: 'Samedi_Soir' });
+            }
+
             if (selections.length === 0) {
-                showGlobalFeedback('error', 'Veuillez sélectionner au moins un stand sur un créneau.');
+                showGlobalFeedback('error', 'Veuillez choisir au moins un stand ou une option de montage.');
                 return;
             }
 
@@ -557,6 +593,7 @@
                             prenom: prenom,
                             email: email,
                             telephone: telephone,
+                            commentaire: commentaire, // Transmettre le commentaire
                             stand: sel.stand,
                             creneau: sel.creneau
                         })

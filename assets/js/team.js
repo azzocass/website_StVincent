@@ -151,9 +151,9 @@ function renderPresentationChef(members) {
                 <div class="fw-bold text-royal" style="font-size:.95rem;">${chef.Nom}</div>
                 <div class="text-muted" style="font-size:.82rem;">${chef.Role}</div>
             </div>
-            <a href="mailto:direction@ecolesaintvincent.fr" class="btn btn-sm btn-outline-primary rounded-pill ms-auto" style="font-size:.78rem; padding:.25rem .8rem;">
-                <i class="bi bi-envelope me-1"></i>Contact
-            </a>
+            <button data-bs-toggle="modal" data-bs-target="#contactModal" onclick="document.getElementById('contactSujet').value = 'direction';" class="btn btn-sm btn-outline-primary rounded-pill ms-auto" style="font-size:.78rem; padding:.25rem .8rem;">
+                <i class="bi bi-envelope me-1"></i>Prendre RDV
+            </button>
         </div>
     `;
 
@@ -493,9 +493,9 @@ function renderAssociationsCondensed(members) {
                     <h4 class="fw-bold text-royal">O.G.E.C.</h4>
                     <p class="text-muted small">Organisme de Gestion de l'Enseignement Catholique.<br>Gestion économique et sociale de l'école.</p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <a href="mailto:ogec@ecolesaintvincent.fr" class="btn btn-sm btn-outline-primary rounded-pill">
-                            <i class="bi bi-envelope me-1"></i>Contacter
-                        </a>
+                        <button data-bs-toggle="modal" data-bs-target="#contactModal" onclick="document.getElementById('contactSujet').value = 'ogec';" class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="bi bi-envelope me-1"></i>Contacter l'OGEC
+                        </button>
                         <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal" data-bs-target="#ogecModal">Plus d'infos</button>
                     </div>
 
@@ -511,9 +511,9 @@ function renderAssociationsCondensed(members) {
                     <h4 class="fw-bold text-royal">A.P.E.L.</h4>
                     <p class="text-muted small">Association des Parents d'élèves de l'Enseignement Libre.<br>Participe à l'animation et à la vie de l'école.</p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <a href="mailto:apel@ecolesaintvincent.fr" class="btn btn-sm btn-outline-primary rounded-pill">
-                            <i class="bi bi-envelope me-1"></i>Contacter
-                        </a>
+                        <button data-bs-toggle="modal" data-bs-target="#contactModal" onclick="document.getElementById('contactSujet').value = 'apel';" class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="bi bi-envelope me-1"></i>Contacter l'APEL
+                        </button>
                         <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal" data-bs-target="#apelModal">Plus d'infos</button>
                     </div>
 
