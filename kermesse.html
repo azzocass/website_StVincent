@@ -243,12 +243,6 @@
                     Merci pour votre implication ! Un seul stand par créneau vous sera attribué.<br>
                     Les stands complets sont automatiquement grisés.
                 </p>
-                <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
-                    <a href="https://www.ecolesaintvincent.fr/inscr_kermesse/kermesse_inscription.php" target="_blank"
-                        class="btn btn-light text-dark fw-bold rounded-pill px-4 py-2">
-                        <i class="bi bi-box-arrow-up-right me-2"></i>Inscription officielle (ancien site)
-                    </a>
-                </div>
             </div>
 
             <!-- Formulaire -->
@@ -549,12 +543,13 @@
             const commentaire = document.getElementById('commentaire').value.trim();
             const btnSubmit = document.getElementById('btnSubmit');
 
-            // Collecter les sélections de stands
+            // Collecter les sélections de stands (depuis tous les accordion-body)
             const selections = [];
-            creneauxList.forEach(creneau => {
-                const checked = document.querySelector(`input[name="slot_${creneau}"]:checked`);
-                if (checked && checked.value !== 'Aucun') {
-                    selections.push({ stand: checked.value, creneau: creneau });
+            const allCheckedRadios = form.querySelectorAll('input[type="radio"].btn-check:checked');
+            allCheckedRadios.forEach(radio => {
+                const creneau = radio.name.replace('slot_', '');
+                if (radio.value && radio.value !== 'Aucun') {
+                    selections.push({ stand: radio.value, creneau: creneau });
                 }
             });
 
