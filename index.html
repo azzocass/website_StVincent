@@ -344,7 +344,7 @@
                                     </div>
                                     <div class="mt-2">
                                         <button class="btn btn-outline-primary btn-sm rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#contactModal">
-                                            <i class="bi bi-envelope me-2"></i>Placer une demande (Contact)
+                                            <i class="bi bi-envelope me-2"></i>Contactez-nous
                                         </button>
                                     </div>
                                 </div>
@@ -1052,25 +1052,32 @@
                         </div>
                         <div class="mb-3">
                             <label for="contactEmail" class="form-label fw-bold small text-royal">Votre Email (pour vous répondre) <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control border-0 shadow-sm" id="contactEmail" placeholder="nom@exemple.com" required>
+                            <input type="email" class="form-control border-0 shadow-sm" id="contactEmail" placeholder="nom@exemple.com" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                            <div class="invalid-feedback">Veuillez saisir une adresse email valide (ex: jean@mail.com).</div>
                         </div>
                         <div class="mb-3">
-                            <label for="contactSujet" class="form-label fw-bold small text-royal">Sujet / Destinataire <span class="text-danger">*</span></label>
+                            <label for="contactSujet" class="form-label fw-bold small text-royal">Destinataire (Service) <span class="text-danger">*</span></label>
                             <select class="form-select border-0 shadow-sm" id="contactSujet" required>
-                                <option value="secretariat" selected>Secrétariat (Information générale)</option>
-                                <option value="direction">Direction (Prise de RDV Chef d'établissement)</option>
+                                <option value="secretariat" selected>Secrétariat</option>
+                                <option value="direction">Direction</option>
                                 <option value="compta">Comptabilité</option>
-                                <option value="apel">APEL (Association des Parents d'Élèves)</option>
-                                <option value="ogec">OGEC (Gestion financière et immobilière)</option>
+                                <option value="apel">APEL</option>
+                                <option value="ogec">OGEC</option>
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactObjet" class="form-label fw-bold small text-royal">Objet <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control border-0 shadow-sm" id="contactObjet" required>
+                            <div class="invalid-feedback">Veuillez renseigner un objet.</div>
                         </div>
                         <div class="mb-4">
                             <label for="contactMessage" class="form-label fw-bold small text-royal">Votre message <span class="text-danger">*</span></label>
                             <textarea class="form-control border-0 shadow-sm" id="contactMessage" rows="5" required></textarea>
+                            <div class="invalid-feedback">Veuillez taper votre message.</div>
                         </div>
                         <div class="text-end">
                             <button type="button" class="btn btn-light fw-bold me-2" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-primary fw-bold text-uppercase px-4 rounded-pill shadow-sm"><i class="bi bi-send-fill me-2"></i>Envoyer</button>
+                            <button type="submit" class="btn btn-primary fw-bold text-uppercase px-4 rounded-pill shadow-sm"><i class="bi bi-send-fill me-2"></i>Envoyer le message</button>
                         </div>
                     </form>
                 </div>
@@ -1082,6 +1089,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('contactFormGlobal');
             if(form) {
+                // Validation dynamique email
+                const emailInput = document.getElementById('contactEmail');
+                emailInput.addEventListener('input', () => {
+                    if (emailInput.value.length > 0) {
+                        if (emailInput.checkValidity()) {
+                            emailInput.classList.remove('is-invalid');
+                            emailInput.classList.add('is-valid');
+                        } else {
+                            emailInput.classList.remove('is-valid');
+                            emailInput.classList.add('is-invalid');
+                        }
+                    } else {
+                        emailInput.classList.remove('is-valid', 'is-invalid');
+                    }
+                });
+
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
                     if (!form.checkValidity()) {
@@ -1096,13 +1119,13 @@
                         'direction': 'direction@ecolesaintvincent.fr'
                     };
                     const type = document.getElementById('contactSujet').value;
-                    const typeText = document.getElementById('contactSujet').options[document.getElementById('contactSujet').selectedIndex].text;
                     const to = subjectMap[type] || subjectMap['secretariat'];
                     const name = document.getElementById('contactNom').value;
                     const email = document.getElementById('contactEmail').value;
+                    const objetCustom = document.getElementById('contactObjet').value;
                     const message = document.getElementById('contactMessage').value;
                     
-                    const subject = encodeURIComponent(`Contact via Site Web : ${typeText}`);
+                    const subject = encodeURIComponent(`${objetCustom}`);
                     const body = encodeURIComponent(`De : ${name} (${email})\n\nMessage :\n${message}`);
                     
                     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
