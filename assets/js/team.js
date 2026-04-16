@@ -493,10 +493,7 @@ function renderAssociationsCondensed(members) {
                     <h4 class="fw-bold text-royal">O.G.E.C.</h4>
                     <p class="text-muted small">Organisme de Gestion de l'Enseignement Catholique.<br>Gestion économique et sociale de l'école.</p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <button data-bs-toggle="modal" data-bs-target="#contactModal" onclick="document.getElementById('contactSujet').value = 'ogec';" class="btn btn-sm btn-outline-primary rounded-pill">
-                            <i class="bi bi-envelope me-1"></i>Contacter l'OGEC
-                        </button>
-                        <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal" data-bs-target="#ogecModal">Plus d'infos</button>
+                        <button class="btn btn-sm btn-action rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ogecModal">Plus d'infos</button>
                     </div>
 
 
@@ -511,10 +508,7 @@ function renderAssociationsCondensed(members) {
                     <h4 class="fw-bold text-royal">A.P.E.L.</h4>
                     <p class="text-muted small">Association des Parents d'élèves de l'Enseignement Libre.<br>Participe à l'animation et à la vie de l'école.</p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <button data-bs-toggle="modal" data-bs-target="#contactModal" onclick="document.getElementById('contactSujet').value = 'apel';" class="btn btn-sm btn-outline-primary rounded-pill">
-                            <i class="bi bi-envelope me-1"></i>Contacter l'APEL
-                        </button>
-                        <button class="btn btn-sm btn-action rounded-pill" data-bs-toggle="modal" data-bs-target="#apelModal">Plus d'infos</button>
+                        <button class="btn btn-sm btn-action rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#apelModal">Plus d'infos</button>
                     </div>
 
 
