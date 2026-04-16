@@ -587,7 +587,7 @@
                             nom: nom,
                             prenom: prenom,
                             email: email,
-                            telephone: telephone,
+                            telephone: "'" + telephone, // Force format texte avec une apostrophe pour garder le 0 initial
                             commentaire: commentaire, // Transmettre le commentaire
                             stand: sel.stand,
                             creneau: sel.creneau
