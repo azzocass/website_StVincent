@@ -552,7 +552,7 @@
             // Collecter les sélections de stands
             const selections = [];
             creneauxList.forEach(creneau => {
-                const checked = document.querySelector(`input[name="stand_${creneau}"]:checked`);
+                const checked = document.querySelector(`input[name="slot_${creneau}"]:checked`);
                 if (checked && checked.value !== 'Aucun') {
                     selections.push({ stand: checked.value, creneau: creneau });
                 }

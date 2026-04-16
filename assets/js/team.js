@@ -530,7 +530,6 @@ function renderMemberList(members, colorClass) {
                 <h6 class="fw-bold text-${colorClass}">${m.Classe || m.Role || 'Membre'}</h6>
                 <p class="mb-1"><strong>${m.Nom}</strong></p>
                 ${m.Role && m.Classe ? `<p class="small text-muted">${m.Role}</p>` : ''}
-                ${m.Email ? `<p class="small text-muted"><i class="bi bi-envelope me-1"></i><a href="mailto:${m.Email}" class="text-decoration-none text-muted">Contact</a></p>` : ''}
             </div>
         `;
     });
