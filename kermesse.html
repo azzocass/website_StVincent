@@ -339,6 +339,23 @@
                     l'organisation de la kermesse.
                 </p>
             </form>
+
+            <!-- Section Recherche -->
+            <div class="form-section mt-5 border-top pt-5">
+                <h4 class="fw-bold text-royal mb-3"><i class="bi bi-search me-2"></i>Déjà inscrit ?</h4>
+                <p class="text-muted small mb-4">Entrez votre email pour retrouver vos créneaux et stands réservés.</p>
+                <div class="row g-2">
+                    <div class="col-sm-8">
+                        <input type="email" id="lookupEmail" class="form-control rounded-3" placeholder="votre@email.com">
+                    </div>
+                    <div class="col-sm-4">
+                        <button onclick="chargerMesInscriptions()" class="btn btn-outline-primary w-100 rounded-pill fw-bold">
+                            <i class="bi bi-eye me-1"></i>Vérifier
+                        </button>
+                    </div>
+                </div>
+                <div id="lookup-results" class="mt-4"></div>
+            </div>
         </div>
     </main>
 
@@ -574,69 +591,57 @@
 
             // Désactiver le bouton
             btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi en cours...';
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Validation en cours...';
 
-            let successes = 0;
-            let errors = 0;
-            let detailMessages = `<ul class="list-unstyled mb-0 mt-3 text-start">`;
+            try {
+                const res = await fetch(URL_SCRIPT, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify({
+                        nom: nom,
+                        prenom: prenom,
+                        email: email,
+                        telephone: "'" + telephone,
+                        commentaire: commentaire,
+                        selections: selections // Envoi groupé (BATCH)
+                    })
+                });
+                
+                const text = await res.text();
+                const response = JSON.parse(text);
 
-            for (const sel of selections) {
-                const info = STANDS_INFO[sel.stand] || { label: sel.stand };
-                try {
-                    const res = await fetch(URL_SCRIPT, {
-                        method: 'POST',
-                        redirect: 'follow',
-                        body: JSON.stringify({
-                            nom: nom,
-                            prenom: prenom,
-                            email: email,
-                            telephone: "'" + telephone, // Force format texte avec une apostrophe pour garder le 0 initial
-                            commentaire: commentaire, // Transmettre le commentaire
-                            stand: sel.stand,
-                            creneau: sel.creneau
-                        })
+                if (response.result === 'success') {
+                    let successes = 0;
+                    let errors = 0;
+                    let detailHtml = '<ul class="list-unstyled mb-0 mt-3 text-start">';
+                    
+                    response.details.forEach(d => {
+                        const info = STANDS_INFO[d.stand] || { label: d.stand };
+                        if (d.result === 'success') {
+                            successes++;
+                            detailHtml += `<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><strong>${info.label} (${d.creneau})</strong></li>`;
+                        } else {
+                            errors++;
+                            detailHtml += `<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>${info.label} (${d.creneau})</strong> : ${d.message}</li>`;
+                        }
                     });
-                    const text = await res.text();
-                    let response;
-                    try {
-                        response = JSON.parse(text);
-                    } catch (parseErr) {
-                        throw new Error('Réponse invalide du serveur');
-                    }
+                    detailHtml += '</ul>';
 
-                    if (response.result === 'success') {
-                        successes++;
-                        detailMessages += `<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><strong>${info.label} (${sel.creneau})</strong> : Inscription validée !</li>`;
+                    if (errors === 0) {
+                        showGlobalFeedback('success', `🎉 🎉 🎉<br><strong>Génial ${prenom} !</strong> Vos ${successes} inscriptions sont confirmées. Un email avec récapitulatif a été envoyé.<br>${detailHtml}`);
+                        lancerConfettis();
+                    } else if (successes > 0) {
+                        showGlobalFeedback('warning', `<strong>${successes} inscriptions OK / ${errors} échec(s)</strong><br>${detailHtml}`);
+                        lancerConfettis();
                     } else {
-                        errors++;
-                        detailMessages += `<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>${info.label} (${sel.creneau})</strong> : ${response.message}</li>`;
+                        showGlobalFeedback('error', `Aucune inscription n'a pu être validée.<br>${detailHtml}`);
                     }
-                } catch (err) {
-                    console.error('Erreur fetch:', err);
-                    errors++;
-                    detailMessages += `<li class="text-danger mb-2"><i class="bi bi-wifi-off me-2"></i><strong>${info.label} (${sel.creneau})</strong> : Erreur réseau, veuillez réessayer.</li>`;
+                } else {
+                    showGlobalFeedback('error', 'Erreur serveur : ' + response.message);
                 }
-            }
-
-            detailMessages += `</ul>`;
-
-            if (successes > 0 && errors === 0) {
-                showGlobalFeedback('success',
-                    `<div class="fw-bold fs-5 mb-2">🎉 Merci ${prenom} !</div>
-                     Vos ${successes} inscription(s) sont confirmées. À bientôt à la kermesse !
-                     ${detailMessages}`);
-                lancerConfettis();
-            } else if (successes > 0) {
-                showGlobalFeedback('warning',
-                    `<div class="fw-bold fs-5 mb-2">⚠️ Attention ${prenom}</div>
-                     ${successes} inscription(s) validée(s), mais ${errors} ont échoué.
-                     ${detailMessages}`);
-                lancerConfettis();
-            } else {
-                showGlobalFeedback('error',
-                    `<div class="fw-bold fs-5 mb-2">❌ Échec de l'inscription</div>
-                     Aucune inscription n'a pu être validée.
-                     ${detailMessages}`);
+            } catch (err) {
+                console.error('Erreur submit:', err);
+                showGlobalFeedback('error', 'Erreur réseau, veuillez vérifier votre connexion.');
             }
 
             btnSubmit.disabled = false;
@@ -666,29 +671,53 @@
 
         function lancerConfettis() {
             if (typeof confetti === 'function') {
-                const duration = 2500;
-                const end = Date.now() + duration;
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#003459', '#E84545', '#FFD166']
+                });
+            }
+        }
 
-                (function frame() {
-                    confetti({
-                        particleCount: 4,
-                        angle: 60,
-                        spread: 55,
-                        origin: { x: 0 },
-                        colors: ['#003459', '#E84545', '#FFD166']
-                    });
-                    confetti({
-                        particleCount: 4,
-                        angle: 120,
-                        spread: 55,
-                        origin: { x: 1 },
-                        colors: ['#003459', '#E84545', '#FFD166']
-                    });
+        async function chargerMesInscriptions() {
+            const email = document.getElementById('lookupEmail').value.trim();
+            const resDiv = document.getElementById('lookup-results');
+            
+            if (!email || !email.includes('@')) {
+                resDiv.innerHTML = '<div class="alert alert-warning py-2 small">Veuillez saisir un email valide.</div>';
+                return;
+            }
 
-                    if (Date.now() < end) {
-                        requestAnimationFrame(frame);
-                    }
-                }());
+            resDiv.innerHTML = '<div class="text-center p-3 small"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Recherche...</div>';
+            
+            try {
+                const res = await fetch(`${URL_SCRIPT}?email=${encodeURIComponent(email)}`, { redirect: 'follow' });
+                const data = await res.json();
+
+                if (data.result === 'success' && data.inscriptions.length > 0) {
+                    let html = '<div class="card border-0 shadow-sm"><div class="list-group list-group-flush">';
+                    data.inscriptions.forEach(ins => {
+                        const info = STANDS_INFO[ins.stand] || { label: ins.stand, icon: '✨' };
+                        html += `
+                            <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="fs-4 me-3">${info.icon}</span>
+                                    <div>
+                                        <div class="fw-bold text-royal">${info.label}</div>
+                                        <div class="small text-muted">${ins.creneau}</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success-subtle text-success rounded-pill px-3">Confirmé</span>
+                            </div>`;
+                    });
+                    html += '</div></div>';
+                    resDiv.innerHTML = html;
+                } else {
+                    resDiv.innerHTML = '<div class="alert alert-info py-2 small">Aucune inscription trouvée pour cet email.</div>';
+                }
+            } catch (err) {
+                resDiv.innerHTML = '<div class="alert alert-danger py-2 small">Erreur lors de la recherche. Réessayez plus tard.</div>';
             }
         }
 
