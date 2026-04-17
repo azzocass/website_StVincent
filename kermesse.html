@@ -628,7 +628,7 @@
                     detailHtml += '</ul>';
 
                     if (errors === 0) {
-                        showGlobalFeedback('success', `🎉 🎉 🎉<br><strong>Génial ${prenom} !</strong> Vos ${successes} inscriptions sont confirmées. Un email avec récapitulatif a été envoyé.<br>${detailHtml}`);
+                        showGlobalFeedback('success', `🎉 🎉 🎉<br><strong>Génial ${prenom} !</strong> Vos ${successes} inscriptions sont confirmées. Merci pour votre aide !<br>${detailHtml}`);
                         lancerConfettis();
                     } else if (successes > 0) {
                         showGlobalFeedback('warning', `<strong>${successes} inscriptions OK / ${errors} échec(s)</strong><br>${detailHtml}`);
