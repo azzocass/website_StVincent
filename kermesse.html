@@ -376,17 +376,18 @@
 
         const STANDS_INFO = {
             'Bar': { label: 'Bar', icon: '🍺' },
-            'Bonbons_Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
-            'Chamboultout': { label: 'Chamboultout', icon: '⚾' },
+            'Bonbons/Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
+            'Chamboule tout / Jeux en bois': { label: 'Chamboule tout / Jeux en bois', icon: '⚾' },
             'Crepes': { label: 'Crêpes', icon: '🥞' },
-            'Enveloppes_gagnantes': { label: 'Enveloppes gagnantes', icon: '✉️' },
-            'Frites_Sandwichs': { label: 'Frites / Sandwichs', icon: '🍟' },
-            'Malle_aux_tresors': { label: 'Malle aux trésors', icon: '🎁' },
+            'Enveloppes gagnantes': { label: 'Enveloppes gagnantes', icon: '✉️' },
+            'Frites/Sandwichs': { label: 'Frites / Sandwichs', icon: '🍟' },
+            'Malle aux tresors': { label: 'Malle aux trésors', icon: '🎁' },
             'Maquillage': { label: 'Maquillage', icon: '🎨' },
-            'Peche_a_la_ligne': { label: 'Pêche à la ligne', icon: '🎣' },
-            'Peche_aux_canards': { label: 'Pêche aux canards', icon: '🐥' },
-            'Structures_gonflables': { label: 'Structures gonflables', icon: '🏰' },
-            'Tir_aux_buts': { label: 'Tir aux buts', icon: '⚽' }
+            'Peche aux canards': { label: 'Pêche aux canards', icon: '🐥' },
+            'Tatouage': { label: 'Tatouage', icon: '🖌️' },
+            'Structures gonflables': { label: 'Structures gonflables', icon: '🏰' },
+            'Tir au but': { label: 'Tir au but', icon: '⚽' },
+            'Granites / Glaces': { label: 'Granités / Glaces', icon: '🍧' }
         };
 
         let configData = {};
@@ -486,7 +487,11 @@
                 `;
 
                 standsParCreneau[creneau].forEach((item, si) => {
-                    const info = STANDS_INFO[item.standId] || { label: item.standId.replace(/_/g, ' '), icon: '✨' };
+                    // DEBUG : à supprimer une fois le problème résolu
+                    if (!STANDS_INFO[item.standId]) {
+                        console.warn('❌ MISMATCH standId:', JSON.stringify(item.standId), '| length:', item.standId.length, '| charCodes:', [...item.standId].map(c => c.charCodeAt(0)));
+                    }
+                    const info = STANDS_INFO[item.standId] || STANDS_INFO[item.standId.trim()] || { label: item.standId, icon: '✨' };
                     const isFull = item.restantes <= 0;
                     const isLow = item.restantes > 0 && item.restantes <= Math.ceil(item.max * 0.3);
 
