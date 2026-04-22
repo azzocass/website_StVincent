@@ -267,7 +267,7 @@
                             <label for="email" class="form-label fw-bold">Email <span
                                     class="text-danger">*</span></label>
                             <input type="email" class="form-control rounded-3" id="email" name="email" required
-                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                                pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$">
                             <div class="invalid-feedback">Veuillez saisir une adresse email valide (ex: jean@mail.com).
                             </div>
                         </div>
@@ -275,7 +275,7 @@
                             <label for="telephone" class="form-label fw-bold">Téléphone <span
                                     class="text-danger">*</span></label>
                             <input type="tel" class="form-control rounded-3" id="telephone" name="telephone" required
-                                pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$">
+                                pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.\-]*\d{2}){4}$">
                             <div class="invalid-feedback">Veuillez saisir un numéro valide (ex: 0612345678).</div>
                         </div>
                     </div>
@@ -384,11 +384,21 @@
             'Malle aux tresors': { label: 'Malle aux trésors', icon: '🎁' },
             'Maquillage': { label: 'Maquillage', icon: '🎨' },
             'Peche aux canards': { label: 'Pêche aux canards', icon: '🐥' },
-            'Tatouage': { label: 'Tatouage', icon: '🖌️' },
+            'Tatouage': { label: 'Tatouage', icon: '🖌' },
             'Structures gonflables': { label: 'Structures gonflables', icon: '🏰' },
             'Tir au but': { label: 'Tir au but', icon: '⚽' },
             'Granites / Glaces': { label: 'Granités / Glaces', icon: '🍧' }
         };
+
+        // Lookup robuste : insensible aux espaces/casse parasites
+        function getStandInfo(standId) {
+            if (STANDS_INFO[standId]) return STANDS_INFO[standId];
+            const norm = standId.trim().toLowerCase();
+            for (const [key, val] of Object.entries(STANDS_INFO)) {
+                if (key.trim().toLowerCase() === norm) return val;
+            }
+            return { label: standId, icon: '✨' };
+        }
 
         let configData = {};
         let creneauxList = [];
@@ -487,11 +497,7 @@
                 `;
 
                 standsParCreneau[creneau].forEach((item, si) => {
-                    // DEBUG : à supprimer une fois le problème résolu
-                    if (!STANDS_INFO[item.standId]) {
-                        console.warn('❌ MISMATCH standId:', JSON.stringify(item.standId), '| length:', item.standId.length, '| charCodes:', [...item.standId].map(c => c.charCodeAt(0)));
-                    }
-                    const info = STANDS_INFO[item.standId] || STANDS_INFO[item.standId.trim()] || { label: item.standId, icon: '✨' };
+                    const info = getStandInfo(item.standId);
                     const isFull = item.restantes <= 0;
                     const isLow = item.restantes > 0 && item.restantes <= Math.ceil(item.max * 0.3);
 
