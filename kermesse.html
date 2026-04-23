@@ -568,11 +568,6 @@
                 e.stopPropagation();
                 form.classList.add('was-validated');
                 showGlobalFeedback('error', 'Veuillez corriger les champs en rouge avant d\'envoyer.');
-                // Scroll up pour voir l'erreur
-                const feedbackEl = document.getElementById('global-feedback');
-                if (feedbackEl) {
-                    window.scrollTo({ top: feedbackEl.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
-                }
                 return;
             }
 
