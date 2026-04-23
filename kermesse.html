@@ -693,15 +693,6 @@
             document.getElementById('demontageSam').checked = false;
 
             await chargerPlaces();
-
-            // Scroll pour bien voir le feedback
-            setTimeout(() => {
-                const feedbackEl = document.getElementById('global-feedback');
-                if (feedbackEl) {
-                    const y = feedbackEl.getBoundingClientRect().top + window.scrollY - 100;
-                    window.scrollTo({ top: y, behavior: 'smooth' });
-                }
-            }, 100);
         });
 
         function showGlobalFeedback(type, msg) {
