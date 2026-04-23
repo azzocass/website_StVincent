@@ -248,6 +248,11 @@
             <!-- Formulaire -->
             <form id="kermesseForm" novalidate>
 
+                <!-- Honey pot anti-bot (invisible pour les humains) -->
+                <div style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true">
+                    <input type="text" name="website" id="honeypot" tabindex="-1" autocomplete="off">
+                </div>
+
                 <!-- Coordonnées -->
                 <div class="form-section">
                     <h4 class="fw-bold text-royal mb-4"><i class="bi bi-person-vcard me-2"></i>Vos coordonnées</h4>
@@ -372,22 +377,24 @@
         // ============================================================
         // 1. CONFIGURATION
         // ============================================================
-        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbwfaVrykCSInVp9lsYB2Cf6G_fmRix45F7yMb9tpFzWfeGY8E4bfJQdbnBtrW_LIF2X/exec';
+        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbxTNDpS8sV0MxnhUkNRPcc4RjUN6mvmQ8TS-8KUBkOjtVm_FGDdKCt6tZcfpU1f-Mm9/exec';
 
         const STANDS_INFO = {
             'Bar': { label: 'Bar', icon: '🍺' },
-            'Bonbons/Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
+            'Bonbons/Gateaux': { label: 'Bonbons/Gâteaux', icon: '🍬' },
             'Chamboule tout / Jeux en bois': { label: 'Chamboule tout / Jeux en bois', icon: '⚾' },
             'Crepes': { label: 'Crêpes', icon: '🥞' },
             'Enveloppes gagnantes': { label: 'Enveloppes gagnantes', icon: '✉️' },
-            'Frites/Sandwichs': { label: 'Frites / Sandwichs', icon: '🍟' },
+            'Frites/Sandwichs': { label: 'Frites/Sandwichs', icon: '🍟' },
             'Malle aux tresors': { label: 'Malle aux trésors', icon: '🎁' },
             'Maquillage': { label: 'Maquillage', icon: '🎨' },
             'Peche aux canards': { label: 'Pêche aux canards', icon: '🐥' },
             'Tatouage': { label: 'Tatouage', icon: '🖌' },
             'Structures gonflables': { label: 'Structures gonflables', icon: '🏰' },
             'Tir au but': { label: 'Tir au but', icon: '⚽' },
-            'Granites / Glaces': { label: 'Granités / Glaces', icon: '🍧' }
+            'Granites / Glaces': { label: 'Granités / Glaces', icon: '🍧' },
+            'Montage': { label: 'Montage', icon: '🛠️' },
+            'Demontage': { label: 'Démontage', icon: '🧹' }
         };
 
         // Lookup robuste : insensible aux espaces/casse parasites
@@ -576,6 +583,13 @@
             const commentaire = document.getElementById('commentaire').value.trim();
             const btnSubmit = document.getElementById('btnSubmit');
 
+            // Anti-bot : si le honey pot est rempli, on simule un succès silencieux
+            const honeypot = document.getElementById('honeypot').value;
+            if (honeypot) {
+                showGlobalFeedback('success', '🎉 Inscription enregistrée. Merci !');
+                return;
+            }
+
             // Collecter les sélections de stands (depuis tous les accordion-body)
             const selections = [];
             const allCheckedRadios = form.querySelectorAll('input[type="radio"].btn-check:checked');
@@ -606,6 +620,15 @@
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Validation en cours...';
 
+            // Scroll direct vers la zone de retour
+            const feedbackEl = document.getElementById('global-feedback');
+            if (feedbackEl) {
+                // On vide le contenu précédent au cas où
+                feedbackEl.innerHTML = '';
+                const y = feedbackEl.getBoundingClientRect().top + window.scrollY - 100;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+
             try {
                 const res = await fetch(URL_SCRIPT, {
                     method: 'POST',
@@ -630,18 +653,22 @@
 
                     response.details.forEach(d => {
                         const info = STANDS_INFO[d.stand] || { label: d.stand };
+                        const creneauPropre = d.creneau.replace(/_/g, ' '); // Enlève les underscores
                         if (d.result === 'success') {
                             successes++;
-                            detailHtml += `<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><strong>${info.label} (${d.creneau})</strong></li>`;
+                            detailHtml += `<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><strong>${info.label} (${creneauPropre})</strong></li>`;
                         } else {
                             errors++;
-                            detailHtml += `<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>${info.label} (${d.creneau})</strong> : ${d.message}</li>`;
+                            detailHtml += `<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>${info.label} (${creneauPropre})</strong> : ${d.message}</li>`;
                         }
                     });
                     detailHtml += '</ul>';
 
                     if (errors === 0) {
-                        showGlobalFeedback('success', `🎉 🎉 🎉<br><strong>Génial ${prenom} !</strong> Vos ${successes} inscriptions sont confirmées. Merci pour votre aide !<br>${detailHtml}`);
+                        const msgInscr = successes === 1
+                            ? `Votre inscription est confirmée`
+                            : `Vos ${successes} inscriptions sont confirmées`;
+                        showGlobalFeedback('success', `🎉 <br><strong>Génial ${prenom} !</strong> ${msgInscr}. Merci pour votre aide !<br>${detailHtml}`);
                         lancerConfettis();
                     } else if (successes > 0) {
                         showGlobalFeedback('warning', `<strong>${successes} inscriptions OK / ${errors} échec(s)</strong><br>${detailHtml}`);
@@ -659,6 +686,11 @@
 
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<i class="bi bi-send-fill me-2"></i>Envoyer mon inscription';
+
+            // Reset les checkboxes montage/démontage
+            document.getElementById('montageVen').checked = false;
+            document.getElementById('montageSam').checked = false;
+            document.getElementById('demontageSam').checked = false;
 
             await chargerPlaces();
 
