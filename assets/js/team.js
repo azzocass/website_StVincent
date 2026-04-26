@@ -151,9 +151,11 @@ function renderPresentationChef(members) {
                 <div class="fw-bold text-royal" style="font-size:.95rem;">${chef.Nom}</div>
                 <div class="text-muted" style="font-size:.82rem;">${chef.Role}</div>
             </div>
+            <!-- Formulaire désactivé temporairement 
             <button data-bs-toggle="modal" data-bs-target="#contactModal" onclick="document.getElementById('contactSujet').value = 'direction';" class="btn btn-sm btn-outline-primary rounded-pill ms-auto" style="font-size:.78rem; padding:.25rem .8rem;">
                 <i class="bi bi-envelope me-1"></i>Prendre RDV
             </button>
+            -->
         </div>
     `;
 
