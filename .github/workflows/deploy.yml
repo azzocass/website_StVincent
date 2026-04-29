@@ -1,15 +1,16 @@
 name: Deploy to OVH
 
 on:
-  push:
-    branches:
-      - main
-      - master # In case the main branch is named master
+  # Déploiement MANUEL uniquement depuis l'onglet Actions sur GitHub.com
+  # Changer en "push: branches: [main]" quand prêt pour le déploiement automatique
+  workflow_dispatch:
 
 jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v4
