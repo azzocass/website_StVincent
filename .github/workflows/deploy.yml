@@ -15,14 +15,15 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v4
     
-    - name: 📂 Sync files to OVH
+    - name: 📂 Sync files to OVH via SFTP
       uses: SamKirkland/FTP-Deploy-Action@v4.4.0
       with:
         dry-run: true
-        port: 22
+        protocol: sftp
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
+        port: 22
         server-dir: /home/ecolesaiqo/www/
         exclude: |
           **/.git*
