@@ -16,10 +16,16 @@ jobs:
       uses: actions/checkout@v4
     
     - name: 📂 Sync files to OVH
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
       with:
+        dry-run: true
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        # Si le site n'est pas à la racine du FTP OVH (ex: dans un dossier www), on peut l'indiquer ici :
-        # server-dir: /www/
+        server-dir: /home/ecolesaiqo/www/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/.github
+          **/.github/**
+
