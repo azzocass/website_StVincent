@@ -19,11 +19,10 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.4.0
       with:
         dry-run: true
-        protocol: ftps
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        port: 22
+        port: 21
         server-dir: /home/ecolesaiqo/www/
         exclude: |
           **/.git*
