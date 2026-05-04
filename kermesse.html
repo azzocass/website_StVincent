@@ -397,10 +397,13 @@
             opacity: 0;
             pointer-events: none;
         }
-        /* Mobile: icon only + shift up to avoid sticky submit button */
+        /* Shifted up when the sticky submit button is visible */
+        #fabContact.fab-shifted {
+            bottom: 95px;
+        }
+        /* Small screens: icon only to save horizontal space */
         @media (max-width: 767px) {
             #fabContact {
-                bottom: 95px; /* above the sticky submit button */
                 right: 16px;
                 padding: 0.85rem;
             }
@@ -415,17 +418,38 @@
         <span class="fab-label">Une question ? Contactez l'équipe</span>
     </a>
     <script>
-        // Hide FAB when footer is visible
+        // Smart FAB positioning: hide on footer, shift up when submit button is sticky-visible
         (function() {
             const fab = document.getElementById('fabContact');
             const footer = document.querySelector('footer');
-            if (!fab || !footer) return;
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    fab.classList.toggle('fab-hidden', entry.isIntersecting);
-                });
-            }, { threshold: 0.1 });
-            observer.observe(footer);
+            const form = document.getElementById('kermesseForm');
+            if (!fab) return;
+
+            let footerVisible = false;
+            let formVisible = false;
+
+            function updateFab() {
+                // Hide completely when footer is visible
+                fab.classList.toggle('fab-hidden', footerVisible);
+                // Shift up when form is visible (sticky submit button is showing)
+                fab.classList.toggle('fab-shifted', formVisible && !footerVisible);
+            }
+
+            // Watch footer
+            if (footer) {
+                new IntersectionObserver(entries => {
+                    footerVisible = entries[0].isIntersecting;
+                    updateFab();
+                }, { threshold: 0.05 }).observe(footer);
+            }
+
+            // Watch form (the sticky submit button appears when the form is in view)
+            if (form) {
+                new IntersectionObserver(entries => {
+                    formVisible = entries[0].isIntersecting;
+                    updateFab();
+                }, { threshold: 0.05 }).observe(form);
+            }
         })();
     </script>
 
