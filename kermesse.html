@@ -367,13 +367,12 @@
     </main>
 
     <!-- Floating Action Button - Contact -->
-    <a href="mailto:c.communication@ecolesaintvincent.fr" id="fabContact"
-        title="Une question ? Contactez l'équipe"
-        style="
+    <style>
+        #fabContact {
             position: fixed;
             bottom: 28px;
             right: 28px;
-            z-index: 9999;
+            z-index: 1040;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -386,15 +385,49 @@
             font-family: var(--font-heading);
             font-weight: 700;
             font-size: 0.9rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, bottom 0.3s;
             white-space: nowrap;
-        "
-        onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,52,89,0.45)'"
-        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(0,52,89,0.35)'"
-    >
+        }
+        #fabContact:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0,52,89,0.45);
+            color: white;
+        }
+        #fabContact.fab-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* Mobile: icon only + shift up to avoid sticky submit button */
+        @media (max-width: 767px) {
+            #fabContact {
+                bottom: 95px; /* above the sticky submit button */
+                right: 16px;
+                padding: 0.85rem;
+            }
+            #fabContact .fab-label {
+                display: none;
+            }
+        }
+    </style>
+    <a href="mailto:c.communication@ecolesaintvincent.fr" id="fabContact"
+        title="Une question ? Contactez l'équipe">
         <i class="bi bi-envelope-fill" style="font-size:1.1rem;"></i>
-        <span>Une question ? Contactez l'équipe</span>
+        <span class="fab-label">Une question ? Contactez l'équipe</span>
     </a>
+    <script>
+        // Hide FAB when footer is visible
+        (function() {
+            const fab = document.getElementById('fabContact');
+            const footer = document.querySelector('footer');
+            if (!fab || !footer) return;
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    fab.classList.toggle('fab-hidden', entry.isIntersecting);
+                });
+            }, { threshold: 0.1 });
+            observer.observe(footer);
+        })();
+    </script>
 
     <!-- Footer léger -->
     <footer class="bg-footer text-center py-4 mt-5">

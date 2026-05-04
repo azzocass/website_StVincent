@@ -86,11 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        html += `
-            <div class="alert alert-light border-start border-4 border-primary mt-4">
-                <small><i class="bi bi-info-circle me-2"></i>Pour toute question sur les tarifs, contactez le secrétariat.</small>
-            </div>
-        `;
+
 
         tarifsModalBody.innerHTML = html;
 
