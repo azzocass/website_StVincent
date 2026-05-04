@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     today.setHours(0, 0, 0, 0);
 
     // Determine "Effective Date" for display
-    // If it's Saturday (6) or Sunday (0), we want to show the NEXT week.
     let effectiveDate = new Date(today);
     const dayOfWeek = today.getDay(); // 0-6
 
@@ -47,37 +46,137 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Find Monday of the "Effective Week"
     const eDay = effectiveDate.getDay();
-    // eDay should be 1 (Monday) if we just jumped, but rely on standard math:
     const diff = effectiveDate.getDate() - eDay + (eDay === 0 ? -6 : 1);
-    const monday = new Date(effectiveDate.setDate(diff));
+    let monday = new Date(effectiveDate.setDate(diff));
     monday.setHours(0, 0, 0, 0);
 
-    // Friday
-    const friday = new Date(monday);
+    let friday = new Date(monday);
     friday.setDate(monday.getDate() + 4);
-
-    // Update Title
-    if (weekTitle) {
-        const options = { day: 'numeric', month: 'long' };
-        weekTitle.textContent = `Semaine du ${monday.toLocaleDateString('fr-FR', options)} au ${friday.toLocaleDateString('fr-FR', options)}`;
-    }
 
     // Helper to get Date from meal object (robust fallback)
     const getMealDate = (meal) => {
-        // Try exact key "Date"
         if (meal.Date) return CsvLoader.parseDate(meal.Date);
-        // Fallback: Try the first key in the object (usually the Date column, even if header is messy)
         const keys = Object.keys(meal);
         if (keys.length > 0) return CsvLoader.parseDate(meal[keys[0]]);
         return null;
     };
 
+    // French Holiday Calculation
+    function getEasterSunday(year) {
+        const f = Math.floor, G = year % 19, C = f(year / 100),
+            H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30,
+            I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11)),
+            J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7,
+            L = I - J, month = 3 + f((L + 40) / 44), day = L + 28 - 31 * f(month / 4);
+        return new Date(year, month - 1, day);
+    }
+
+    function isHoliday(meal, dateObj) {
+        // Check if secretary explicitly wrote "férié" or "ferie"
+        const text = ((meal.Entree || '') + ' ' + (meal.Plat || '')).toLowerCase();
+        if (text.includes('férié') || text.includes('ferie')) return true;
+
+        if (!dateObj) return false;
+        const d = dateObj.getDate(), m = dateObj.getMonth() + 1, y = dateObj.getFullYear();
+
+        // Fixed holidays
+        if ((d===1 && m===1) || (d===1 && m===5) || (d===8 && m===5) || 
+            (d===14 && m===7) || (d===15 && m===8) || (d===1 && m===11) || 
+            (d===11 && m===11) || (d===25 && m===12)) return true;
+
+        // Dynamic holidays (Easter Monday, Ascension, Pentecost)
+        const easter = getEasterSunday(y);
+        
+        const easterMonday = new Date(easter); easterMonday.setDate(easter.getDate() + 1);
+        if (d === easterMonday.getDate() && m === easterMonday.getMonth() + 1) return true;
+
+        const ascension = new Date(easter); ascension.setDate(easter.getDate() + 39);
+        if (d === ascension.getDate() && m === ascension.getMonth() + 1) return true;
+
+        const pentecote = new Date(easter); pentecote.setDate(easter.getDate() + 50);
+        if (d === pentecote.getDate() && m === pentecote.getMonth() + 1) return true;
+
+        return false;
+    }
+
+    // Helper: get meals for a given Monday-Friday range
+    function getMealsForWeek(mon, fri) {
+        return allMeals.filter(meal => {
+            const mealDate = getMealDate(meal);
+            if (!mealDate) return false;
+            return mealDate >= mon && mealDate <= fri;
+        });
+    }
+
     // Filter meals falling between Monday and Friday (inclusive)
-    const currentWeekMeals = allMeals.filter(meal => {
-        const mealDate = getMealDate(meal);
-        if (!mealDate) return false;
-        return mealDate >= monday && mealDate <= friday;
-    });
+    let currentWeekMeals = getMealsForWeek(monday, friday);
+
+    // If current week has no meals, find the next week that does
+    if (currentWeekMeals.length === 0) {
+        const futureMeals = allMeals.filter(meal => getMealDate(meal) >= monday);
+        if (futureMeals.length > 0) {
+            futureMeals.sort((a, b) => getMealDate(a) - getMealDate(b));
+            const nextMealDate = new Date(getMealDate(futureMeals[0]));
+            
+            const nmDay = nextMealDate.getDay();
+            const nmDiff = nextMealDate.getDate() - nmDay + (nmDay === 0 ? -6 : 1);
+            monday = new Date(nextMealDate);
+            monday.setDate(nmDiff);
+            monday.setHours(0, 0, 0, 0);
+            
+            friday = new Date(monday);
+            friday.setDate(monday.getDate() + 4);
+            
+            currentWeekMeals = getMealsForWeek(monday, friday);
+        }
+    }
+
+    // Also check for next week's meals
+    const nextMonday = new Date(monday);
+    nextMonday.setDate(monday.getDate() + 7);
+    const nextFriday = new Date(nextMonday);
+    nextFriday.setDate(nextMonday.getDate() + 4);
+    const nextWeekMeals = getMealsForWeek(nextMonday, nextFriday);
+
+    // Update Title now that Monday/Friday are final
+    if (weekTitle) {
+        const options = { day: 'numeric', month: 'long' };
+        if (nextWeekMeals.length > 0) {
+            weekTitle.textContent = `Semaines du ${monday.toLocaleDateString('fr-FR', options)} au ${nextFriday.toLocaleDateString('fr-FR', options)}`;
+        } else {
+            weekTitle.textContent = `Semaine du ${monday.toLocaleDateString('fr-FR', options)} au ${friday.toLocaleDateString('fr-FR', options)}`;
+        }
+    }
+
+    // Helper: render a list of meals into a container
+    function renderMeals(meals, targetEl) {
+        meals.forEach(meal => {
+            const dateObj = getMealDate(meal);
+            const dayName = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
+            
+            if (isHoliday(meal, dateObj)) {
+                targetEl.insertAdjacentHTML('beforeend', `
+                    <div class="mb-4 fade-in-up">
+                        <span class="badge bg-royal-light text-primary mb-2 text-capitalize">${dayName}</span>
+                        <div class="alert alert-light border-0 py-2 mt-1">
+                            <i class="bi bi-calendar2-x me-2 text-muted"></i><span class="text-muted fst-italic">Jour férié (pas de cantine)</span>
+                        </div>
+                    </div>
+                `);
+            } else {
+                targetEl.insertAdjacentHTML('beforeend', `
+                    <div class="mb-4 fade-in-up">
+                        <span class="badge bg-royal-light text-primary mb-2 text-capitalize">${dayName}</span>
+                        <ul class="list-unstyled small ps-2">
+                            <li class="mb-1"><strong class="text-dark">Entrée :</strong> ${meal.Entree || '-'}</li>
+                            <li class="mb-1"><strong class="text-dark">Plat :</strong> ${meal.Plat || '-'} <span class="text-muted fst-italic">(${meal.Accompagnement || ''})</span></li>
+                            <li><strong class="text-dark">Dessert :</strong> ${meal.Dessert || '-'}</li>
+                        </ul>
+                    </div>
+                `);
+            }
+        });
+    }
 
     // 3. Render
     container.innerHTML = '';
@@ -86,26 +185,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = `
             <div class="alert alert-warning border-0 text-center">
                 <i class="bi bi-calendar-x display-4 text-warning mb-2"></i>
-                <p class="mb-0 fw-bold">Aucun menu renseigné pour cette semaine.</p>
+                <p class="mb-0 fw-bold">Aucun menu renseigné à venir.</p>
             </div>`;
     } else {
-        currentWeekMeals.forEach(meal => {
-            // Parse date for display
-            const dateObj = getMealDate(meal);
-            const dayName = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
+        // Current week header
+        const optW = { day: 'numeric', month: 'long' };
+        container.insertAdjacentHTML('beforeend', `
+            <h6 class="fw-bold text-royal mb-3"><i class="bi bi-calendar-week me-2"></i>Semaine du ${monday.toLocaleDateString('fr-FR', optW)} au ${friday.toLocaleDateString('fr-FR', optW)}</h6>
+        `);
+        renderMeals(currentWeekMeals, container);
 
-            const html = `
-                <div class="mb-4 fade-in-up">
-                    <span class="badge bg-royal-light text-primary mb-2 text-capitalize">${dayName}</span>
-                    <ul class="list-unstyled small ps-2">
-                        <li class="mb-1"><strong class="text-dark">Entrée :</strong> ${meal.Entree || '-'}</li>
-                        <li class="mb-1"><strong class="text-dark">Plat :</strong> ${meal.Plat || '-'} <span class="text-muted fst-italic">(${meal.Accompagnement || ''})</span></li>
-                        <li><strong class="text-dark">Dessert :</strong> ${meal.Dessert || '-'}</li>
-                    </ul>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
-        });
+        // Next week (if available)
+        if (nextWeekMeals.length > 0) {
+            container.insertAdjacentHTML('beforeend', `
+                <hr class="my-4">
+                <h6 class="fw-bold text-royal mb-3"><i class="bi bi-calendar-week me-2"></i>Semaine du ${nextMonday.toLocaleDateString('fr-FR', optW)} au ${nextFriday.toLocaleDateString('fr-FR', optW)}</h6>
+            `);
+            renderMeals(nextWeekMeals, container);
+        }
     }
 
     // --- Dynamic Home Widget Logic ---
@@ -114,54 +211,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (homeWidgetDate && homeWidgetList) {
         const now = new Date();
-        const currentDay = now.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+        now.setHours(0, 0, 0, 0);
 
-        // Calculate Target Date based on rules
-        let targetDate = new Date(now);
-        let prefix = "Au menu ce";
-        let suffix = "";
+        let targetMeal = null;
+        let targetDateObj = null;
 
-        if (currentDay === 3) {
-            // Wednesday -> Show Thursday
-            targetDate.setDate(now.getDate() + 1);
-            prefix = "Au menu";
-            suffix = " prochain";
-        } else if (currentDay === 6) {
-            // Saturday -> Show Monday
-            targetDate.setDate(now.getDate() + 2);
-            prefix = "Au menu";
-            suffix = " prochain";
-        } else if (currentDay === 0) {
-            // Sunday -> Show Monday
-            targetDate.setDate(now.getDate() + 1);
-            prefix = "Au menu";
-            suffix = " prochain";
+        // Sort all meals to find the next valid one chronologically
+        const sortedMeals = [...allMeals].sort((a, b) => getMealDate(a) - getMealDate(b));
+
+        for (const m of sortedMeals) {
+            const d = getMealDate(m);
+            if (!d || d < now) continue;
+
+            // If we are looking at TODAY, and it's already past 14:00 (2 PM), 
+            // skip to the next day's menu.
+            if (d.getTime() === now.getTime() && new Date().getHours() >= 14) continue;
+
+            // Skip holidays
+            if (isHoliday(m, d)) continue;
+
+            // Skip days with no actual food (just empty rows)
+            if (!m.Entree && !m.Plat) continue;
+
+            targetMeal = m;
+            targetDateObj = d;
+            break;
         }
 
-        // Reset time for comparison
-        targetDate.setHours(0, 0, 0, 0);
+        if (targetMeal && targetDateObj) {
+            const dayName = targetDateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
+            
+            let prefix = "Au menu";
+            let suffix = "";
+            const isToday = targetDateObj.getTime() === now.getTime();
+            
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            const isTomorrow = targetDateObj.getTime() === tomorrow.getTime();
 
-        // Find meal matching targetDate
-        let targetMeal = allMeals.find(m => {
-            const d = getMealDate(m);
-            return d && d.getDate() === targetDate.getDate() && d.getMonth() === targetDate.getMonth();
-        });
+            if (isToday) {
+                prefix = "Au menu ce";
+                suffix = " (Aujourd'hui)";
+            } else if (isTomorrow) {
+                prefix = "Au menu ce";
+                suffix = " (Demain)";
+            } else {
+                prefix = "Au menu";
+                suffix = " prochain";
+            }
 
-        // Fallback: If target meal not found (e.g. next week Monday not in current CSV), 
-        // try to show *any* meal from the list to avoid empty box? 
-        // User logic implies we SHOULD show the specific day. 
-        // If data is missing, we show "Menu non disponible".
-
-        if (targetMeal) {
-            const dateObj = getMealDate(targetMeal);
-            const dayName = dateObj.toLocaleDateString('fr-FR', { weekday: 'long' });
-
-            // Construct Label
-            // If it's a standard day: "Au menu ce Vendredi"
-            // If it's Wed/Sat/Sun: "Au menu Jeudi prochain" / "Au menu Lundi prochain"
             homeWidgetDate.textContent = `${prefix} ${dayName}${suffix} :`;
 
-            // Update List
             homeWidgetList.innerHTML = `
                 <ul class="list-unstyled mt-2 mb-0 small fw-bold">
                     <li><i class="bi bi-circle-fill small me-2" style="font-size: 6px;"></i>Entrée : ${targetMeal.Entree || '-'}</li>
@@ -171,9 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </ul>
             `;
         } else {
-            // Friendly fallback if the "Next Monday" is not in the loaded CSV (which is likely if CSV is only current week)
-            // We can just say "Menu de la semaine prochaine" and link to full menu.
-            homeWidgetList.innerHTML = '<p class="small mb-0 opacity-75">Le menu pour ce jour n\'est pas encore affiché.<br>Cliquez ci-dessous pour voir la semaine</p>';
+            homeWidgetList.innerHTML = '<p class="small mb-0 opacity-75">Le menu pour les prochains jours n\'est pas encore disponible.<br>Cliquez ci-dessous pour voir la semaine</p>';
             homeWidgetDate.textContent = "Prochainement...";
         }
     }
