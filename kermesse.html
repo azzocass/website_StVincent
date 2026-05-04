@@ -752,9 +752,11 @@
                             : `Vos ${successes} inscriptions sont confirmées`;
                         showGlobalFeedback('success', `🎉 <br><strong>Génial ${prenom} !</strong> ${msgInscr}. Merci pour votre aide !<br>${detailHtml}`);
                         lancerConfettis();
+                        if (typeof gtag === 'function') gtag('event', 'kermesse_submit_success', { inscriptions: successes });
                     } else if (successes > 0) {
                         showGlobalFeedback('warning', `<strong>${successes} inscriptions OK / ${errors} échec(s)</strong><br>${detailHtml}`);
                         lancerConfettis();
+                        if (typeof gtag === 'function') gtag('event', 'kermesse_submit_success', { inscriptions: successes });
                     } else {
                         showGlobalFeedback('error', `Aucune inscription n'a pu être validée.<br>${detailHtml}`);
                     }
@@ -844,6 +846,9 @@
         // ============================================================
         chargerPlaces();
     </script>
+
+    <!-- Analytics Event Tracking -->
+    <script src="assets/js/analytics.js" defer></script>
 </body>
 
 </html>
