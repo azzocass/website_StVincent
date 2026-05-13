@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             L = I - J, month = 3 + f((L + 40) / 44), day = L + 28 - 31 * f(month / 4);
         return new Date(year, month - 1, day);
     }
-/
+
     function isHoliday(meal, dateObj) {
         // Check if secretary explicitly wrote "férié" or "ferie"
         const text = ((meal.Entree || '') + ' ' + (meal.Plat || '')).toLowerCase();
