@@ -948,8 +948,8 @@ section {
 
     .nav-pills .nav-link {
         white-space: nowrap;
-        font-size: 0.95rem;
-        padding: 0.5rem 1rem;
+        font-size: 0.82rem;
+        padding: 0.4rem 0.6rem;
     }
 
     /* 4. Map Height */
