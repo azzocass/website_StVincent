@@ -54,20 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mélanger les images pour ne pas avoir toujours le même ordre
     const shuffledImages = shuffleArray(imageFiles);
-    
-    // Mélanger les textes pour les assigner aléatoirement
-    const shuffledTexts = shuffleArray(texts);
 
     let html = '';
-    
-    // On limite à 5-6 images maximum par chargement de page pour que ce soit fluide
-    const imagesToDisplay = shuffledImages.slice(0, 6);
 
-    imagesToDisplay.forEach((imgFile, index) => {
+    shuffledImages.forEach((imgFile, index) => {
         const isActive = index === 0 ? 'active' : '';
         
-        // On récupère un texte aléatoire, ou rien s'il n'y a plus de textes dispos
-        const text = shuffledTexts[index] || null;
+        // On récupère le texte dans l'ordre de la liste, en bouclant (modulo) s'il y a plus d'images que de textes
+        const text = texts[index % texts.length];
         
         const captionHtml = text ? `
             <div class="carousel-caption text-start">
