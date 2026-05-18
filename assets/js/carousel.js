@@ -1,58 +1,89 @@
-/**
- * Carousel Loader - Loads images from assets/images folder
- * Excludes: favicon.png, logo.webp
- */
+// ==========================================
+// CONFIGURATION DU CARROUSEL
+// ==========================================
 
-document.addEventListener('DOMContentLoaded', async function () {
-    const carouselInner = document.querySelector('#homeCarousel .carousel-inner');
-    if (!carouselInner) return;
+// 1. Liste des images disponibles dans le dossier assets/images/carousel/
+// Ajoute simplement le nom de ton fichier ici quand tu en ajoutes un nouveau !
+const imageFiles = [
+    'DSC06043.webp',
+    'DSC06044.webp',
+    'DSC06073.webp',
+    'DSC06075.webp',
+    'DSC06082.webp',
+    'DSC06091.webp',
+    'banner1.webp',
+    'banner2.webp',
+    'banner3.webp',
+    '20202021top01.webp',
+    '20202021top11.webp',
+    '20202021top12.webp',
+    '20202021top20.webp',
+    'top_2022_01.webp',
+    'top_2022_02.webp',
+    'top_2022_04.webp',
+    'top_2022_05.webp'
+];
 
-    // List of images to use for carousel (all WebP except logo)
-    const carouselImages = [
-        { image: 'banner1.webp', title: 'Bienvenue à Saint Vincent', subtitle: 'Une école ouverte à tous', order: 1 },
-        { image: 'banner2.webp', title: 'Construire son Histoire', subtitle: 'Apprendre et grandir ensemble', order: 2 },
-        { image: 'banner3.webp', title: 'Au Cœur de Sainte-Luce', subtitle: 'Une communauté éducative engagée', order: 3 },
-        { image: '20202021top01.webp', title: 'Nos Élèves', subtitle: 'Des moments de joie et d\'apprentissage', order: 4 },
-        { image: '20202021top11.webp', title: 'Vie Scolaire', subtitle: 'Activités et découvertes', order: 5 },
-        { image: '20202021top12.webp', title: 'Ensemble', subtitle: 'Partager et créer', order: 6 },
-        { image: '20202021top19.webp', title: 'Créativité', subtitle: 'Développer tous les talents', order: 7 },
-        { image: '20202021top20.webp', title: 'Épanouissement', subtitle: 'Chaque enfant compte', order: 8 },
-        { image: 'top_2022_01.webp', title: 'Notre École', subtitle: 'Un lieu de vie et d\'apprentissage', order: 9 },
-        { image: 'top_2022_02.webp', title: 'Activités', subtitle: 'Sport, culture et découverte', order: 10 },
-        { image: 'top_2022_04.webp', title: 'Projets', subtitle: 'Apprendre autrement', order: 11 },
-        { image: 'top_2022_05.webp', title: 'Convivialité', subtitle: 'Des moments partagés', order: 12 },
-        { image: 'top_2022_06.webp', title: 'Réussite', subtitle: 'Accompagner chaque élève', order: 13 }
-    ];
+// 2. Liste des textes affichés par-dessus les images
+// Ils seront piochés aléatoirement !
+const texts = [
+    { title: 'Bienvenue à Saint Vincent', subtitle: 'Ensemble, vivre une école de toutes les intelligences.' },
+    { title: 'Construire son Histoire', subtitle: 'Accompagner chaque enfant sur un chemin de réussite.' },
+    { title: 'Au Cœur de Sainte-Luce', subtitle: 'Un établissement catholique ouvert à tous.' },
+    { title: 'Grandir Ensemble', subtitle: 'Un cadre bienveillant pour s’épanouir au quotidien.' },
+    { title: 'Découvrir et Apprendre', subtitle: 'Des projets pédagogiques innovants pour tous.' }
+];
 
-    // Randomize slides for variety
-    const shuffled = [...carouselImages].sort(() => Math.random() - 0.5);
+// ==========================================
+// LOGIQUE D'AFFICHAGE (Ne pas modifier)
+// ==========================================
 
-    // Clear existing slides
-    carouselInner.innerHTML = '';
+// Fonction pour mélanger un tableau aléatoirement
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
 
-    // Create slides
-    shuffled.forEach((slide, index) => {
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('carousel-inner-container');
+    if (!container) return;
+
+    // Mélanger les images pour ne pas avoir toujours le même ordre
+    const shuffledImages = shuffleArray(imageFiles);
+    
+    // Mélanger les textes pour les assigner aléatoirement
+    const shuffledTexts = shuffleArray(texts);
+
+    let html = '';
+    
+    // On limite à 5-6 images maximum par chargement de page pour que ce soit fluide
+    const imagesToDisplay = shuffledImages.slice(0, 6);
+
+    imagesToDisplay.forEach((imgFile, index) => {
         const isActive = index === 0 ? 'active' : '';
-        const imagePath = `assets/images/${slide.image}`;
+        
+        // On récupère un texte aléatoire, ou rien s'il n'y a plus de textes dispos
+        const text = shuffledTexts[index] || null;
+        
+        const captionHtml = text ? `
+            <div class="carousel-caption text-start">
+                <h1 class="display-3 fw-bold mb-3 slide-in-bottom">${text.title}</h1>
+                <p class="lead fs-4 slide-in-bottom delay-1">${text.subtitle}</p>
+            </div>
+        ` : '';
 
-        const slideDiv = document.createElement('div');
-        slideDiv.className = `carousel-item ${isActive}`;
-        slideDiv.innerHTML = `
-            <img src="${imagePath}" class="d-block w-100" alt="${slide.title}"
-                style="height: 65vh; object-fit: cover; filter: brightness(0.9);"
-                onerror="this.src='assets/images/banner1.webp'">
-            <div class="carousel-caption d-none d-md-block text-start">
-                <h${index === 0 ? '1' : '2'} class="display-3 fw-bold mb-3 slide-in-bottom">${slide.title}</h${index === 0 ? '1' : '2'}>
-                <p class="lead mb-4 fade-in">${slide.subtitle}</p>
+        html += `
+            <div class="carousel-item ${isActive}">
+                <img src="assets/images/carousel/${imgFile}" loading="${index === 0 ? 'eager' : 'lazy'}" class="d-block w-100 placeholder-img"
+                    alt="Image carrousel ${index + 1}" style="filter: brightness(0.9);">
+                ${captionHtml}
             </div>
         `;
-
-        // Add blob shape to first slide
-        // Blob removal: User requested to remove the blob shape.
-        // Previous code injected a .carousel-blob-container with .blob-shape here.
-
-        carouselInner.appendChild(slideDiv);
     });
 
-
+    container.innerHTML = html;
 });
