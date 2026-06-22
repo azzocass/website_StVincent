@@ -89,7 +89,7 @@
         }
 
         .btn-submit-soiree {
-            background: linear-gradient(135deg, #1e3a8a, #dc2626);
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
             color: white;
             border: none;
             border-radius: 50px;
@@ -368,7 +368,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: linear-gradient(135deg, #1e3a8a, #dc2626);
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
             color: white;
             text-decoration: none;
             border-radius: 50px;
@@ -423,7 +423,7 @@
         // ============================================================
         // CONFIGURATION — URL de l'Apps Script
         // ============================================================
-        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycby6zZVuA7cERTZbi0YtdLrXCqbQbVtepNI2KAp5qnWpj8sofnUU1f-50tauCJ4tclSF/exec';
+        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbwQG7qp_kTpqCaL2iqylj6BEEPx4T8BMiTzwIZqk5P--7LZ2qUG9YAqbfyKhIa7GMyL9w/exec';
 
         // ============================================================
         // CHARGEMENT DES CRÉNEAUX
@@ -451,8 +451,8 @@
                 return;
             }
 
-            let html = '<div class="row g-3 mb-4">';
-            Object.entries(data).forEach(([creneau, infos]) => {
+            let html = '<div class="row justify-content-center g-3 mb-4">';
+            Object.entries(data).forEach(([key, infos]) => {
                 const restantes = infos.restantes;
                 const max = infos.max;
                 const isFull = restantes <= 0;
@@ -460,15 +460,17 @@
 
                 const badgeClass = isFull ? 'badge-full' : (isLow ? 'badge-low' : 'badge-dispo');
                 const badgeText = isFull ? 'Complet' : `${restantes} place${restantes > 1 ? 's' : ''}`;
-                const heureAffichee = creneau.replace('-', ' – ');
+                const heureAffichee = infos.creneau.replace('-', ' – ');
+                const icon = infos.stand.toLowerCase().includes('buvette') || infos.stand.toLowerCase().includes('bar') ? '🍻' : '⚓';
 
                 html += `
                     <div class="col-sm-4">
-                        <input type="radio" class="d-none creneau-radio" name="creneau" 
-                            id="creneau_${creneau}" value="${creneau}" ${isFull ? 'disabled' : ''}>
-                        <label class="creneau-btn w-100 ${isFull ? 'full' : ''}" for="creneau_${creneau}">
-                            <div class="fs-2 mb-2">🍻</div>
-                            <div class="fw-bold mb-2">${heureAffichee}</div>
+                        <input type="checkbox" class="d-none creneau-checkbox" name="selections" 
+                            id="chk_${key}" data-stand="${infos.stand}" data-creneau="${infos.creneau}" ${isFull ? 'disabled' : ''}>
+                        <label class="creneau-btn w-100 ${isFull ? 'full' : ''}" for="chk_${key}">
+                            <div class="fs-2 mb-2">${icon}</div>
+                            <div class="fw-bold mb-1">${infos.stand}</div>
+                            <div class="small mb-2">${heureAffichee}</div>
                             <span class="${badgeClass}">${badgeText}</span>
                         </label>
                     </div>`;
@@ -477,11 +479,12 @@
             container.innerHTML = html;
 
             // Effet visuel sélection
-            document.querySelectorAll('.creneau-radio').forEach(radio => {
-                radio.addEventListener('change', () => {
-                    document.querySelectorAll('.creneau-btn').forEach(btn => btn.classList.remove('selected'));
-                    if (radio.checked) {
-                        radio.nextElementSibling.classList.add('selected');
+            document.querySelectorAll('.creneau-checkbox').forEach(chk => {
+                chk.addEventListener('change', () => {
+                    if (chk.checked) {
+                        chk.nextElementSibling.classList.add('selected');
+                    } else {
+                        chk.nextElementSibling.classList.remove('selected');
                     }
                 });
             });
@@ -519,9 +522,13 @@
                 return;
             }
 
-            const creneauRadio = form.querySelector('input[name="creneau"]:checked');
-            if (!creneauRadio) {
-                showGlobalFeedback('error', 'Veuillez choisir un créneau avant de valider.');
+            const selections = [];
+            document.querySelectorAll('input[name="selections"]:checked').forEach(chk => {
+                selections.push({ stand: chk.dataset.stand, creneau: chk.dataset.creneau });
+            });
+
+            if (selections.length === 0) {
+                showGlobalFeedback('error', 'Veuillez choisir au moins un stand/créneau avant de valider.');
                 return;
             }
 
@@ -530,7 +537,7 @@
                 prenom: document.getElementById('prenom').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 telephone: document.getElementById('telephone').value.trim(),
-                creneau: creneauRadio.value,
+                selections: selections,
                 commentaire: document.getElementById('commentaire').value.trim()
             };
 
@@ -548,7 +555,7 @@
                 const data = await res.json();
 
                 if (data.status === 'ok') {
-                    showGlobalFeedback('success', `🎉 Merci ${payload.prenom} ! Votre inscription pour le créneau ${payload.creneau.replace('-', ' – ')} est confirmée.`);
+                    showGlobalFeedback('success', `🎉 Merci ${payload.prenom} ! Vos inscriptions ont bien été enregistrées.`);
                     form.reset();
                     form.classList.remove('was-validated');
                     document.querySelectorAll('.is-valid, .is-invalid').forEach(el => el.classList.remove('is-valid', 'is-invalid'));
@@ -591,7 +598,7 @@
                 } else {
                     let html = '<div class="slot-card"><h5><i class="bi bi-check-circle-fill text-success me-2"></i>Vos inscriptions</h5><ul class="list-unstyled mb-0 mt-3">';
                     data.inscriptions.forEach(i => {
-                        html += `<li class="mb-2">🍻 Buvette — <strong>${i.creneau.replace('-', ' – ')}</strong></li>`;
+                        html += `<li class="mb-2">⚓ ${i.stand} — <strong>${i.creneau.replace('-', ' – ')}</strong></li>`;
                     });
                     html += '</ul></div>';
                     resultsDiv.innerHTML = html;

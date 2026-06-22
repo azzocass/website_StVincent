@@ -226,8 +226,22 @@
     <main class="py-5">
         <div class="container" style="max-width: 780px;">
 
-            <!-- Hero -->
-            <div class="hero-kermesse">
+            <!-- Hero (Message de remerciement pour la fin de la kermesse) -->
+            <!-- POUR L'AN PROCHAIN : 
+                 1. Ajoutez la classe "d-none" à la div id="hero-remerciements" ci-dessous pour la masquer.
+                 2. Retirez la classe "d-none" de la div id="hero-inscription" plus bas pour l'afficher. -->
+            <div id="hero-remerciements" class="hero-kermesse">
+                <i class="bi bi-balloon-fill display-3 mb-3 d-block"></i>
+                <h1 class="display-6 fw-bold mb-2">🎪 La Kermesse est terminée ! 🎉</h1>
+                <p class="lead mb-3">Un immense <strong>MERCI</strong> à tous les bénévoles qui ont contribué à cette magnifique journée de fête !</p>
+                <p class="mt-4 mb-0" style="font-size: 1.1rem; color: rgba(255,255,255,.9);">
+                    L'événement a été un vrai succès grâce à vous. À l'année prochaine !
+                </p>
+            </div>
+
+            <!-- Hero (Message d'inscription actif) -->
+            <!-- POUR L'AN PROCHAIN : Pensez à modifier la date (ex: Samedi 20 Juin) et les horaires. -->
+            <div id="hero-inscription" class="hero-kermesse d-none">
                 <i class="bi bi-balloon-fill display-3 mb-3 d-block"></i>
                 <h1 class="display-6 fw-bold mb-2">🎪 Kermesse de l'École 🎉</h1>
                 <p class="lead mb-3">Inscrivez-vous pour tenir un stand et contribuer à cette journée de fête !</p>
@@ -246,7 +260,8 @@
             </div>
 
             <!-- Formulaire -->
-            <form id="kermesseForm" novalidate>
+            <!-- POUR L'AN PROCHAIN : Retirez la classe "d-none" de la balise <form> ci-dessous pour réactiver le formulaire. -->
+            <form id="kermesseForm" novalidate class="d-none">
 
                 <!-- Honey pot anti-bot (invisible pour les humains) -->
                 <div style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true">
@@ -346,7 +361,8 @@
             </form>
 
             <!-- Section Recherche -->
-            <div class="form-section mt-5 border-top pt-5">
+            <!-- POUR L'AN PROCHAIN : Retirez la classe "d-none" de la <div> ci-dessous pour réactiver la recherche de réservations. -->
+            <div class="form-section mt-5 border-top pt-5 d-none">
                 <h4 class="fw-bold text-royal mb-3"><i class="bi bi-search me-2"></i>Déjà inscrit ?</h4>
                 <p class="text-muted small mb-4">Entrez votre email pour retrouver vos créneaux et stands réservés.</p>
                 <div class="row g-2">
