@@ -115,6 +115,19 @@
             style="padding-top: 0.6rem;"></button>
     </div>
 
+    <!-- Top Banner Fournitures -->
+    <div class="alert alert-success alert-dismissible fade show text-center rounded-0 mb-0 py-2 border-0 shadow-sm"
+        role="alert"
+        style="z-index: 1048; position: relative; background-color: #dcfce7; color: #166534; border-top: 1px solid rgba(0,0,0,0.05) !important;">
+        <i class="bi bi-pencil-fill me-2 fs-5 align-middle"></i>
+        <strong>Préparation de la rentrée !</strong> <span class="d-none d-md-inline">Les listes de fournitures par classe sont disponibles.</span>
+        <button class="btn btn-sm btn-success rounded-pill ms-2 fw-bold" data-bs-toggle="modal" data-bs-target="#fournituresModal">
+            Voir les listes <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+        <button type="button" class="btn-close pb-2" data-bs-dismiss="alert" aria-label="Close"
+            style="padding-top: 0.6rem;"></button>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
         <div class="container">
@@ -920,19 +933,62 @@
 
     <!-- Modal Fournitures -->
     <div class="modal fade" id="fournituresModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Listes de Fournitures</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-briefcase me-2"></i>Listes de Fournitures</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-start">
-                    <p>Les listes détaillées par classe sont disponibles en téléchargement sur École Directe.</p>
-                    <ul>
-                        <li>Cartable sans roulettes conseillé</li>
-                        <li>Trousse complète (stylos, colle, ciseaux)</li>
-                        <li>Tenue de sport</li>
-                    </ul>
+                <div class="modal-body text-start p-4">
+                    <p class="mb-4">Retrouvez ci-dessous les listes de fournitures scolaires pour la rentrée, classées par niveau. Cliquez sur une classe pour télécharger la liste au format PDF.</p>
+                    
+                    <div class="row g-4">
+                        <!-- Maternelle -->
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-success border-bottom pb-2 mb-3">Maternelle</h6>
+                            <div class="d-grid gap-2">
+                                <a href="assets/documents/fournitures/maternelle_ps.pdf" target="_blank" class="btn btn-outline-success d-flex justify-content-between align-items-center rounded-3">
+                                    <span>Petite Section (PS)</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="assets/documents/fournitures/maternelle_ms.pdf" target="_blank" class="btn btn-outline-success d-flex justify-content-between align-items-center rounded-3">
+                                    <span>Moyenne Section (MS)</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="assets/documents/fournitures/maternelle_gs.pdf" target="_blank" class="btn btn-outline-success d-flex justify-content-between align-items-center rounded-3">
+                                    <span>Grande Section (GS)</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Élémentaire -->
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Élémentaire</h6>
+                            <div class="d-grid gap-2">
+                                <a href="assets/documents/fournitures/elementaire_cp.pdf" target="_blank" class="btn btn-outline-primary d-flex justify-content-between align-items-center rounded-3">
+                                    <span>CP</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="assets/documents/fournitures/elementaire_ce1.pdf" target="_blank" class="btn btn-outline-primary d-flex justify-content-between align-items-center rounded-3">
+                                    <span>CE1</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="assets/documents/fournitures/elementaire_ce2.pdf" target="_blank" class="btn btn-outline-primary d-flex justify-content-between align-items-center rounded-3">
+                                    <span>CE2</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="assets/documents/fournitures/elementaire_cm1.pdf" target="_blank" class="btn btn-outline-primary d-flex justify-content-between align-items-center rounded-3">
+                                    <span>CM1</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <a href="assets/documents/fournitures/elementaire_cm2.pdf" target="_blank" class="btn btn-outline-primary d-flex justify-content-between align-items-center rounded-3">
+                                    <span>CM2</span>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
