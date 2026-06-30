@@ -62,9 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 html += `
                     <div class="mb-4">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary bg-opacity-10 rounded-3 p-2 me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                <i class="bi bi-wallet2 text-primary fs-5"></i>
-                            </div>
+                            <i class="bi bi-piggy-bank text-primary fs-4 me-2"></i>
                             <h6 class="fw-bold text-royal mb-0">Contribution des familles (sur 10 mois)</h6>
                         </div>
                         
@@ -75,11 +73,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         <div class="table-responsive rounded-3 border">
                             <table class="table table-hover align-middle mb-0" style="font-size: 0.88rem;">
-                                <thead class="table-light">
+                                <thead>
                                     <tr>
-                                        <th class="py-3 px-3 text-secondary">Revenu fiscal de référence / parts</th>
-                                        <th class="py-3 text-center text-secondary" style="width: 25%;">Ordinaire</th>
-                                        <th class="py-3 text-center text-secondary" style="width: 25%;">Spéciale</th>
+                                        <th class="py-3 px-3 border-0 text-white fw-semibold" style="background-color: var(--color-royal) !important;">Revenu fiscal de référence / parts</th>
+                                        <th class="py-3 text-center border-0 text-white fw-semibold" style="background-color: var(--color-royal) !important; width: 25%;">Ordinaire</th>
+                                        <th class="py-3 text-center border-0 text-white fw-semibold" style="background-color: var(--color-royal) !important; width: 25%;">Spéciale</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,9 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 html += `
                     <div class="mb-4">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary bg-opacity-10 rounded-3 p-2 me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                <i class="bi bi-wallet2 text-primary fs-5"></i>
-                            </div>
+                            <i class="bi bi-piggy-bank text-primary fs-4 me-2"></i>
                             <h6 class="fw-bold text-royal mb-0">Contribution des familles</h6>
                         </div>
                         <div class="list-group rounded-3 border mb-3">
@@ -148,9 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             html += `
                 <div class="mb-4 mt-4">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-success bg-opacity-10 rounded-3 p-2 me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                            <i class="bi bi-egg-fried text-success fs-5"></i>
-                        </div>
+                        <i class="bi bi-egg-fried text-success fs-4 me-2"></i>
                         <h6 class="fw-bold text-royal mb-0">Restauration Scolaire (Repas)</h6>
                     </div>
                     
@@ -203,9 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             html += `
                 <div class="mb-3 mt-4">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-info bg-opacity-10 rounded-3 p-2 me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                            <i class="bi bi-clock text-info fs-5"></i>
-                        </div>
+                        <i class="bi bi-clock text-info fs-4 me-2"></i>
                         <h6 class="fw-bold text-royal mb-0">Accueil Périscolaire &amp; Étude</h6>
                     </div>
                     
