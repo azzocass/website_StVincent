@@ -864,33 +864,19 @@
 
     <!-- Modal Tarifs -->
     <div class="modal fade" id="tarifsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tarifs 2026/2027</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-0 text-white"
+                    style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-currency-euro me-2 text-white"></i>Tarifs Scolaires 2026/2027</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-start">
-                    <h6 class="fw-bold text-primary">Contribution des familles (10 mois)</h6>
-                    <ul>
-                        <li>Niveau A : <strong>45,00 € / mois</strong> (450€ annuel)</li>
-                        <li>Niveau B : <strong>48,00 € / mois</strong> (480€ annuel)</li>
-                    </ul>
-                    <small class="text-muted">Réduction de 50% pour le 3ème enfant.</small>
-                    <hr>
-                    <h6 class="fw-bold text-primary">Restauration</h6>
-                    <ul>
-                        <li>Repas standard : <strong>5,30 €</strong></li>
-                        <li>Repas allergique : <strong>2,80 €</strong></li>
-                        <li>Repas tarif spécial : <strong>6,70 €</strong></li>
-                    </ul>
-                    <hr>
-                    <h6 class="fw-bold text-primary">Périscolaire (Matin/Soir)</h6>
-                    <ul>
-                        <li>Matin : 2,50 €</li>
-                        <li>Soir (par 1/4h) : 0,95 €</li>
-                        <li>Étude encadrée : 4,60 €</li>
-                    </ul>
+                <div class="modal-body text-start p-4">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Chargement des tarifs...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
