@@ -27,7 +27,7 @@ const BANNERS_CONFIG = {
         visible:     true,
         heading:     "Événements APEL",
         headingIcon: "bi-bag-heart-fill",
-        style:       { bg: "#fdf4e7", text: "#7c4a00", border: "#f0a500" },
+        style:       { bg: "#f6ebd9", text: "#5c4018", border: "#d4a942" },
         events: [
             {
                 visible: true,
@@ -96,7 +96,7 @@ const BANNERS_CONFIG = {
                 url:     "#fournituresModal"
             },
             {
-                visible: false,
+                visible: true,
                 label:   "Commander en ligne (Code : 26RH1H3)",
                 icon:    "🛒",
                 color:   "#166534",
@@ -133,17 +133,21 @@ const BANNERS_CONFIG = {
     }
 
     function buildBannerHTML() {
-        // Construire les groupes de boutons visibles
         const groups = [];
+        let activeStyle = null;
 
         Object.values(BANNERS_CONFIG).forEach(function (section) {
             if (!section.visible) return;
             const visibleEvents = (section.events || []).filter(function (ev) { return ev.visible; });
             if (!visibleEvents.length) return;
 
+            if (!activeStyle && section.style) {
+                activeStyle = section.style;
+            }
+
             const s = section.style || {};
             const icon = '<i class="bi ' + (section.headingIcon || 'bi-info-circle')
-                + ' me-1" style="color:' + (s.border || '#333') + ';"></i>';
+                + ' me-1" style="color:' + (s.border || 'currentColor') + ';"></i>';
             const label = '<strong>' + icon + section.heading + '&thinsp;:&thinsp;</strong>';
             const buttons = visibleEvents.map(renderButton).join('');
 
@@ -153,6 +157,11 @@ const BANNERS_CONFIG = {
 
         if (!groups.length) return '';
 
+        // Style dynamique depuis la section active (ex: apel.style.bg)
+        const bg          = (activeStyle && activeStyle.bg)     ? activeStyle.bg     : '#ffe58f';
+        const textColor   = (activeStyle && activeStyle.text)   ? activeStyle.text   : '#4a2c00';
+        const borderColor = (activeStyle && activeStyle.border) ? activeStyle.border : '#d97706';
+
         // Tous les groupes dans UNE seule barre, séparés par un | discret
         const inner = groups.join(
             '<span class="mx-2 opacity-25" style="border-left:1px solid currentColor; height:1.2em; display:inline-block; vertical-align:middle;"></span>'
@@ -160,8 +169,8 @@ const BANNERS_CONFIG = {
 
         return '<div class="alert alert-dismissible fade show text-center rounded-0 mb-0 py-2 border-0"'
             + ' role="alert"'
-            + ' style="position:relative; background-color:#faf7f0; color:#4a3a1a;'
-            + ' border-top:2px solid #e0c97a !important; box-shadow:0 2px 8px rgba(0,0,0,0.07);">'
+            + ' style="position:relative; background-color:' + bg + '; color:' + textColor + ';'
+            + ' border-top:3px solid ' + borderColor + ' !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);">'
             + '<span class="d-inline-flex flex-wrap justify-content-center align-items-center gap-3">'
             + inner
             + '</span>'
