@@ -88,55 +88,13 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- Top Banner Kermesse -->
-    <!-- POUR L'AN PROCHAIN : Retirez la classe "d-none" de la <div> ci-dessous pour afficher le bandeau sur la page d'accueil -->
-    <div class="alert alert-warning alert-dismissible fade show d-none text-center rounded-0 mb-0 py-2 border-0 shadow-sm"
-        role="alert" style="z-index: 1050; position: relative; background-color: #ffe8a1; color: #856404;">
-        <i class="bi bi-ticket-perforated-fill me-2 fs-5 align-middle"></i>
-        <strong>Kermesse de l'École !</strong> <span class="d-none d-md-inline">Inscrivez-vous dès maintenant pour tenir
-            un stand.</span>
-        <a href="kermesse.html" class="btn btn-sm btn-dark rounded-pill ms-2 fw-bold">S'inscrire <i
-                class="bi bi-arrow-right ms-1"></i></a>
-        <button type="button" class="btn-close pb-2" data-bs-dismiss="alert" aria-label="Close"
-            style="padding-top: 0.6rem;"></button>
-    </div>
-
-    <!-- Top Banner APEL (Masqué temporairement - Enlever "d-none" pour le réactiver) -->
-    <div class="alert alert-info alert-dismissible fade show text-center rounded-0 mb-0 py-2 border-0 shadow-sm d-none"
-        role="alert"
-        style="z-index: 1049; position: relative; background-color: #e0f2fe; color: #0369a1; border-top: 1px solid rgba(0,0,0,0.05) !important;">
-        <i class="bi bi-bag-heart-fill me-2 fs-5 align-middle"></i>
-        <strong>Ventes de l'APEL !</strong> <span class="d-none d-md-inline">Soutenez les projets de l'école en
-            participant à nos ventes et événements.</span>
-        <a href="soiree.html" class="btn btn-sm btn-primary rounded-pill ms-2 fw-bold">Stand soirée des familles <i
-                class="bi bi-arrow-right ms-1"></i></a>
-        <button type="button" class="btn-close pb-2" data-bs-dismiss="alert" aria-label="Close"
-            style="padding-top: 0.6rem;"></button>
-    </div>
-
-    <!-- Top Banner Fournitures -->
-    <!-- POUR L'AN PROCHAIN : Retirez la classe "d-none" ci-dessous pour afficher le bandeau fournitures (typiquement fin août) -->
-    <div class="alert alert-success alert-dismissible fade show d-none text-center rounded-0 mb-0 py-2 border-0 shadow-sm"
-        role="alert"
-        style="z-index: 1048; position: relative; background-color: #dcfce7; color: #166534; border-top: 1px solid rgba(0,0,0,0.05) !important;">
-        <i class="bi bi-pencil-fill me-2 fs-5 align-middle"></i>
-        <strong>Préparation de la rentrée !</strong> <span class="d-none d-md-inline">Les listes de fournitures par
-            classe sont disponibles.</span>
-        <div class="d-inline-block mt-2 mt-md-0">
-            <button class="btn btn-sm btn-success rounded-pill ms-2 fw-bold" data-bs-toggle="modal"
-                data-bs-target="#fournituresModal">
-                Voir les listes <i class="bi bi-arrow-right ms-1"></i>
-            </button>
-            <a href="https://www.rentreediscount.com/etablissement/SAINT-VINCENT-51836691.html" target="_blank"
-                class="btn btn-sm rounded-pill ms-2 fw-bold"
-                style="background-color: white; color: #166534; border: 1px solid #166534;">
-                Commander en ligne <span class="d-none d-lg-inline">(Code: 26RH1H3)</span> <i
-                    class="bi bi-cart-fill ms-1"></i>
-            </a>
-        </div>
-        <button type="button" class="btn-close pb-2" data-bs-dismiss="alert" aria-label="Close"
-            style="padding-top: 0.6rem;"></button>
-    </div>
+    <!-- ============================================================ -->
+    <!-- BANDEAUX — Gérés depuis assets/js/events-config.js          -->
+    <!-- Pour afficher/masquer ou modifier les événements,           -->
+    <!-- éditer UNIQUEMENT ce fichier : assets/js/events-config.js   -->
+    <!-- ============================================================ -->
+    <script src="assets/js/events-config.js"></script>
+    <div id="banners-container"></div>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
@@ -698,6 +656,19 @@
                 <span class="badge bg-royal-light rounded-pill px-3 py-2 fw-bold mb-2">Communauté Éducative</span>
                 <h2 class="display-5 font-heading text-royal">Notre Équipe</h2>
                 <div class="sep-line mx-auto mt-3"></div>
+            </div>
+
+            <!-- Photo de groupe de toute l'équipe -->
+            <div class="row justify-content-center mb-5" data-aos="fade-up">
+                <div class="col-12 col-lg-10">
+                    <div style="border-radius: 1.2rem; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.13);">
+                        <img src="assets/images/equipe_2026.webp"
+                            alt="Photo de toute l'équipe de l'École Saint Vincent - rentrée 2026"
+                            class="img-fluid w-100"
+                            style="object-fit: cover; max-height: 520px; display: block;">
+                    </div>
+
+                </div>
             </div>
 
             <!-- Dynamic Team Content (populated by team.js) -->
