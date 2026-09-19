@@ -653,25 +653,31 @@
                 </span>
                 <h2 class="display-5 font-heading text-royal">Actualités & Vie des Classes</h2>
                 <p class="text-muted mx-auto" style="max-width: 680px;">
-                    Retrouvez ici les temps forts, sorties scolaires, projets et actualités partagés par l'équipe enseignante.
+                    Retrouvez ici les temps forts, sorties scolaires, projets et actualités partagés par l'équipe
+                    enseignante.
                 </p>
                 <div class="sep-line mx-auto mt-3 mb-4"></div>
 
                 <!-- Filtres par catégorie -->
                 <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="news-category-filters">
-                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-primary active news-filter-btn" data-category="all">
+                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-primary active news-filter-btn"
+                        data-category="all">
                         <i class="bi bi-grid-fill me-1"></i>Toutes
                     </button>
-                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn" data-category="Vie de classe">
+                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn"
+                        data-category="Vie de classe">
                         <i class="bi bi-mortarboard-fill me-1"></i>Vie de classe
                     </button>
-                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn" data-category="Événements">
+                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn"
+                        data-category="Événements">
                         <i class="bi bi-calendar-event-fill me-1"></i>Événements
                     </button>
-                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn" data-category="Sport & Sortiess">
+                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn"
+                        data-category="Sport & Sorties">
                         <i class="bi bi-trophy-fill me-1"></i>Sport & Sorties
                     </button>
-                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn" data-category="Pastoral">
+                    <button class="btn btn-sm rounded-pill px-3 py-1 btn-outline-primary news-filter-btn"
+                        data-category="Pastoral">
                         <i class="bi bi-heart-fill me-1"></i>Pastoral
                     </button>
                 </div>
@@ -710,8 +716,7 @@
                     <div style="border-radius: 1.2rem; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.13);">
                         <img src="assets/images/equipe_2026.webp"
                             alt="Photo de toute l'équipe de l'École Saint Vincent - rentrée 2026"
-                            class="img-fluid w-100"
-                            style="object-fit: cover; max-height: 520px; display: block;">
+                            class="img-fluid w-100" style="object-fit: cover; max-height: 520px; display: block;">
                     </div>
 
                 </div>
@@ -1473,54 +1478,60 @@
                 </div>
             </div>
         </div>
-    <!-- Modal Détail d'un Article d'Actualité -->
-    <div class="modal fade" id="newsArticleModal" tabindex="-1" aria-labelledby="newsArticleModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content rounded-4 border-0 shadow">
-                <div class="modal-header border-0 pb-0 pt-4 px-4">
-                    <div class="d-flex align-items-center gap-2 flex-wrap" id="modal-article-meta">
-                        <span id="modal-article-badge" class="badge bg-primary rounded-pill px-3 py-1 fw-bold">Actualité</span>
-                        <span id="modal-article-date" class="text-muted small"></span>
-                        <span id="modal-article-author" class="badge bg-light text-secondary rounded-pill px-2 py-1 small"></span>
+        <!-- Modal Détail d'un Article d'Actualité -->
+        <div class="modal fade" id="newsArticleModal" tabindex="-1" aria-labelledby="newsArticleModalTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header border-0 pb-0 pt-4 px-4">
+                        <div class="d-flex align-items-center gap-2 flex-wrap" id="modal-article-meta">
+                            <span id="modal-article-badge"
+                                class="badge bg-primary rounded-pill px-3 py-1 fw-bold">Actualité</span>
+                            <span id="modal-article-date" class="text-muted small"></span>
+                            <span id="modal-article-author"
+                                class="badge bg-light text-secondary rounded-pill px-2 py-1 small"></span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body p-4 pt-3">
-                    <h3 id="modal-article-title" class="fw-bold text-royal mb-3 font-heading"></h3>
-                    
-                    <!-- Media Container (Image ou Vidéo Drive) -->
-                    <div id="modal-article-media" class="mb-4 text-center rounded-3 overflow-hidden d-none">
-                        <!-- Image ou iframe vidéo inséré dynamiquement -->
-                    </div>
+                    <div class="modal-body p-4 pt-3">
+                        <h3 id="modal-article-title" class="fw-bold text-royal mb-3 font-heading"></h3>
 
-                    <!-- Contenu formaté (HTML riche ou texte) -->
-                    <div id="modal-article-content" class="article-rich-text text-body" style="font-size: 1.05rem; line-height: 1.7;">
-                        <!-- Contenu injecté -->
+                        <!-- Media Container (Image ou Vidéo Drive) -->
+                        <div id="modal-article-media" class="mb-4 text-center rounded-3 overflow-hidden d-none">
+                            <!-- Image ou iframe vidéo inséré dynamiquement -->
+                        </div>
+
+                        <!-- Contenu formaté (HTML riche ou texte) -->
+                        <div id="modal-article-content" class="article-rich-text text-body"
+                            style="font-size: 1.05rem; line-height: 1.7;">
+                            <!-- Contenu injecté -->
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Fermer</button>
-                    <a id="modal-article-external-link" href="#" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4 fw-bold d-none">
-                        En savoir plus <i class="bi bi-box-arrow-up-right ms-1"></i>
-                    </a>
+                    <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">Fermer</button>
+                        <a id="modal-article-external-link" href="#" target="_blank" rel="noopener"
+                            class="btn btn-primary rounded-pill px-4 fw-bold d-none">
+                            En savoir plus <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        // Présentation: Expand text
-        function expandText() {
-            const t = document.getElementById('pres-text');
-            const f = document.getElementById('pres-fade');
-            t.classList.remove('collapsed');
-            t.classList.add('expanded');
-            f.classList.add('hidden');
-        }
-    </script>
+        <script>
+            // Présentation: Expand text
+            function expandText() {
+                const t = document.getElementById('pres-text');
+                const f = document.getElementById('pres-fade');
+                t.classList.remove('collapsed');
+                t.classList.add('expanded');
+                f.classList.add('hidden');
+            }
+        </script>
 
-    <!-- Analytics Event Tracking -->
-    <script src="assets/js/analytics.js" defer></script>
+        <!-- Analytics Event Tracking -->
+        <script src="assets/js/analytics.js" defer></script>
 </body>
 
 </html>
