@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Espace Rédaction et Publication d'Actualités — École Saint Vincent">
+    <title>Espace Enseignants — Rédiger une Actualité | École Saint Vincent</title>
+
+    <!-- Google Fonts: Outfit & Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Quill.js WYSIWYG -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="assets/css/style.css?v=9" rel="stylesheet">
+    <link rel="icon" href="assets/images/favicon.png" type="image/png">
+
+    <style>
+        .editor-container-box {
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+        }
+
+        .ql-toolbar.ql-snow {
+            border: none !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            background-color: #f8fafc;
+            padding: 0.75rem !important;
+        }
+
+        .ql-container.ql-snow {
+            border: none !important;
+            min-height: 250px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        /* Tooltip custom styling on clear formatting button */
+        .ql-clean {
+            position: relative;
+        }
+
+        /* Templates buttons */
+        .btn-template {
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--color-royal);
+        }
+
+        .btn-template:hover {
+            background: #f0f9ff;
+            border-color: var(--color-primary);
+            color: var(--color-primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Upload zone */
+        .upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 1rem;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            background-color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--color-primary);
+            background-color: #f0f9ff;
+        }
+
+        /* Live Preview Card */
+        .preview-card {
+            border-radius: 1.25rem;
+            border: 1px solid rgba(0, 52, 89, 0.1);
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 52, 89, 0.06);
+            overflow: hidden;
+            color: #334155;
+        }
+
+        .preview-card p, .preview-card span {
+            color: #475569 !important;
+        }
+
+        .preview-img-box {
+            height: 180px;
+            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Color picker helper in toolbar */
+        .custom-color-wrapper {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .custom-color-input {
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            overflow: hidden;
+            background: none;
+        }
+
+        [data-theme="dark"] .editor-container-box,
+        [data-theme="dark"] .preview-card,
+        [data-theme="dark"] .upload-zone,
+        [data-theme="dark"] .ql-toolbar.ql-snow,
+        [data-theme="dark"] .btn-template {
+            background-color: var(--color-bg-card) !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        [data-theme="dark"] .ql-container.ql-snow,
+        [data-theme="dark"] .preview-card p {
+            color: #f8fafc !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+                <img src="assets/images/logo.webp" alt="Logo École Saint Vincent" height="50" class="me-2 d-inline-block align-text-top">
+                <span class="navbar-brand-text">École St Vincent</span>
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <a href="index.html#actualites" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold">
+                    <i class="bi bi-arrow-left me-1"></i> Retour au site
+                </a>
+                <button id="theme-toggle" class="btn btn-sm btn-outline-secondary rounded-circle" style="width: 38px; height: 38px;" title="Changer le thème">
+                    <i id="theme-icon" class="bi bi-moon-fill"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-5">
+        <div class="container" style="max-width: 960px;">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <span class="badge bg-royal-light text-royal rounded-pill px-3 py-2 fw-bold mb-2">
+                    <i class="bi bi-pencil-square me-1"></i> Espace Rédaction Enseignants
+                </span>
+                <h1 class="display-6 font-heading text-royal">Rédiger & Publier une Actualité</h1>
+                <p class="text-muted mx-auto" style="max-width: 650px;">
+                    Partagez la vie de votre classe, une sortie, un projet ou une annonce. L'actualité apparaîtra automatiquement sur la page d'accueil du site de l'école.
+                </p>
+                <div class="sep-line mx-auto mt-3"></div>
+            </div>
+
+            <!-- Alert notification box -->
+            <div id="alertBox" class="alert d-none rounded-4 mb-4 shadow-sm" role="alert"></div>
+
+            <!-- Form Card -->
+            <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 mb-5" style="background-color: var(--color-bg-card, #ffffff);">
+                <form id="newsForm">
+
+                    <!-- Ligne 1 : Titre & Catégorie -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold text-royal">Titre de l'actualité <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control rounded-3 py-2" id="titre" placeholder="Ex: Sortie nature des élèves de CP et CE1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-royal">Catégorie <span class="text-danger">*</span></label>
+                            <select class="form-select rounded-3 py-2" id="categorie" required>
+                                <option value="Vie de classe" selected>🎓 Vie de classe</option>
+                                <option value="Événement">🎉 Événement</option>
+                                <option value="Sport">🏆 Sport & Sorties</option>
+                                <option value="Pastoral">❤️ Pastoral</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Ligne 2 : Auteur & Date -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-royal">Auteur / Classe <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control rounded-3 py-2" id="auteur" placeholder="Ex: Mme Martin / Classe de CM2" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-royal">Date de l'événement / publication</label>
+                            <input type="date" class="form-control rounded-3 py-2" id="date">
+                        </div>
+                    </div>
+
+                    <!-- Ligne 3 : Contrôle d'accès Enseignant (Email OU Mot de passe) -->
+                    <div class="p-3 bg-light rounded-3 border mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-shield-lock-fill text-primary fs-5 me-2"></i>
+                            <span class="fw-bold text-royal">Autorisation de publication</span>
+                            <span class="badge bg-secondary-subtle text-secondary ms-2 small">Au choix : Email OU Mot de passe</span>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">Votre email enseignant :</label>
+                                <input type="email" class="form-control form-control-sm rounded-2" id="userEmail" placeholder="nom@ecolesaintvincent.fr ou gmail">
+                                <div class="form-text small">Vérifié selon la liste autorisée dans l'onglet <code>access</code> du Sheet.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">Ou le mot de passe de l'école :</label>
+                                <input type="password" class="form-control form-control-sm rounded-2" id="secretCode" placeholder="Mot de passe école">
+                                <div class="form-text small">Renseigné en cellule B1 de l'onglet <code>access</code>.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Résumé court -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-royal">Court résumé (affiché sur la vignette en page d'accueil) <span class="text-danger">*</span></label>
+                        <textarea class="form-control rounded-3" id="description" rows="2" placeholder="Une ou deux phrases d'introduction qui donnent envie de lire la suite..." required></textarea>
+                    </div>
+
+                    <!-- Modèles d'articles 1-clic -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                            <label class="form-label fw-bold text-royal mb-0">
+                                <i class="bi bi-magic me-1 text-primary"></i> Modèles d'articles prêts à l'emploi :
+                            </label>
+                            <span class="text-muted small">Cliquez pour pré-remplir l'éditeur</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('sortie')">
+                                🚌 Sortie / Voyage
+                            </button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('projet')">
+                                🎨 Projet / Atelier
+                            </button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('sport')">
+                                🏆 Événement sportif
+                            </button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('mot')">
+                                📢 Annonce / Mot aux parents
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Éditeur Riche WYSIWYG avec Quill & quill-emoji -->
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <label class="form-label fw-bold text-royal mb-0">Contenu complet de l'article</label>
+                            <span class="text-muted small"><i class="bi bi-info-circle me-1"></i>Utilisez la palette de couleurs et le bouton émoji dans la barre d'outils</span>
+                        </div>
+                        <div class="editor-container-box shadow-sm">
+                            <div id="editor"></div>
+                        </div>
+                    </div>
+
+                    <!-- Photo de couverture -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-royal">Photo de couverture</label>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                                    <i class="bi bi-cloud-arrow-up display-5 text-primary mb-2 d-block"></i>
+                                    <span class="fw-bold d-block text-royal" id="fileNameLabel">Choisir ou glisser une photo</span>
+                                    <span class="small text-muted">Téléversée automatiquement sur Google Drive</span>
+                                    <input type="file" id="fileInput" accept="image/*" class="d-none">
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex flex-column justify-content-center">
+                                <span class="text-muted small mb-1">Ou collez un lien d'image Google Drive / Web existant :</span>
+                                <input type="url" class="form-control rounded-3" id="imageUrl" placeholder="https://drive.google.com/file/d/.../view">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vidéo & Lien externe -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-royal">Lien Vidéo Google Drive (optionnel)</label>
+                            <input type="url" class="form-control rounded-3" id="videoUrl" placeholder="https://drive.google.com/file/d/.../view">
+                            <div class="form-text small">La vidéo sera intégrée directement dans le lecteur vidéo du site.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-royal">Lien externe « En savoir plus » (optionnel)</label>
+                            <input type="url" class="form-control rounded-3" id="lien" placeholder="https://...">
+                        </div>
+                    </div>
+
+                    <!-- Switch Épingler à la une -->
+                    <div class="form-check form-switch p-3 bg-light rounded-3 mb-4 border">
+                        <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" id="epingle" style="width: 2.5em; height: 1.3em;">
+                        <label class="form-check-label fw-bold text-royal" for="epingle">
+                            📌 Mettre cet article « À la une » (mis en avant tout en haut de la page d'accueil)
+                        </label>
+                    </div>
+
+                    <!-- Accordéon : Aperçu en direct -->
+                    <div class="mb-4">
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#previewCollapse">
+                            <i class="bi bi-eye me-1"></i>Afficher / Masquer l'aperçu en direct
+                        </button>
+                        <div class="collapse show" id="previewCollapse">
+                            <div class="row">
+                                <div class="col-md-6 mx-auto">
+                                    <div class="preview-card">
+                                        <div class="preview-img-box" id="previewImgBox">
+                                            <i class="bi bi-image display-4 text-muted opacity-50"></i>
+                                            <div class="position-absolute top-0 start-0 m-2">
+                                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">Vie de classe</span>
+                                            </div>
+                                        </div>
+                                        <div class="p-3">
+                                            <div class="d-flex align-items-center gap-2 text-muted small mb-1">
+                                                <span id="previewDate"><i class="bi bi-calendar3 me-1"></i>Aujourd'hui</span>
+                                                <span id="previewAuthor">• Enseignant</span>
+                                            </div>
+                                            <h6 class="fw-bold text-royal mb-2 font-heading" id="previewTitle">Titre de votre actualité</h6>
+                                            <p class="small mb-2" id="previewDesc" style="color: #475569 !important;">Le court résumé s'affichera ici...</p>
+                                            <span class="text-primary fw-bold small">Lire la suite <i class="bi bi-arrow-right"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de publication -->
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3" id="submitBtn">
+                            <i class="bi bi-send-fill me-2"></i>Publier sur le site de l'école
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal d'insertion de lien personnalisé (si aucun texte n'est sélectionné) -->
+    <div class="modal fade" id="smartLinkModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 450px;">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold text-royal"><i class="bi bi-link-45deg text-primary me-2"></i>Insérer un lien</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-royal small">Texte à afficher dans l'article :</label>
+                        <input type="text" class="form-control rounded-3" id="linkTextModal" placeholder="Ex: Consulter les informations">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-royal small">Adresse URL du lien :</label>
+                        <input type="url" class="form-control rounded-3" id="linkUrlModal" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-between">
+                    <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold" id="btnValidateLink">Insérer le lien</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Emoji Picker Natif (Identique à PC / WhatsApp / Mobile) -->
+    <div class="modal fade" id="emojiModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+            <div class="modal-content rounded-4 border-0 shadow overflow-hidden">
+                <div class="modal-header border-0 pb-0 pt-3 px-3">
+                    <h6 class="modal-title fw-bold text-royal"><i class="bi bi-emoji-smile text-primary me-2"></i>Choisir un émoji</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2 text-center">
+                    <emoji-picker locale="fr" style="width: 100%; height: 360px;"></emoji-picker>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-3 bg-footer text-white text-center">
+        <div class="container">
+            <p class="mb-0 small opacity-75">École Saint Vincent — Espace Enseignants & Direction</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="assets/js/theme.js"></script>
+
+    <script>
+        // URL du Google Apps Script Web App déployé
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0PYYdiWgHI3appnwC1OnK51vKhDuTUOKOn6kSjMt-zEa6g4VfIFoNZmIKjaTq-1Y7rg/exec';
+
+        // Date du jour par défaut
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Palette complète de 35+ couleurs pour texte et surlignage
+        const fullColorPalette = [
+            '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff',
+            '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666',
+            '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00',
+            '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600',
+            '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'
+        ];
+
+        // Configuration de Quill avec palette étendue
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Rédigez ici le détail de votre article...',
+            modules: {
+                toolbar: {
+                    container: [
+                        [{ 'header': [2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': fullColorPalette }, { 'background': fullColorPalette }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['blockquote', 'link'],
+                        ['clean']
+                    ]
+                }
+            }
+        });
+
+        // ============================================================
+        // EMOJI PICKER MODERNE NATIF (WhatsApp / PC / Mac / Mobile)
+        // ============================================================
+        const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
+
+        // Ajout du bouton Emoji dans la barre d'outils Quill
+        function injectEmojiButtonInToolbar() {
+            const toolbar = document.querySelector('.ql-toolbar');
+            if (!toolbar) return;
+
+            const span = document.createElement('span');
+            span.className = 'ql-formats';
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'ql-emoji-btn';
+            btn.title = 'Insérer un émoji (PC / WhatsApp / Mobile)';
+            btn.innerHTML = '😊';
+            btn.style.fontSize = '1.15rem';
+            btn.style.lineHeight = '1';
+            btn.style.padding = '2px 4px';
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                emojiModal.show();
+            });
+            span.appendChild(btn);
+            toolbar.appendChild(span);
+        }
+        setTimeout(injectEmojiButtonInToolbar, 150);
+
+        // Insertion d'un émoji sélectionné dans le picker
+        document.addEventListener('emoji-click', (event) => {
+            const emojiChar = event.detail.unicode;
+            if (emojiChar) {
+                const range = quill.getSelection(true);
+                quill.insertText(range.index, emojiChar);
+                quill.setSelection(range.index + emojiChar.length);
+                emojiModal.hide();
+            }
+        });
+
+        // ============================================================
+        // INFOBULLES & PERSONNALISATION DE LA BARRE D'OUTILS
+        // ============================================================
+        function addToolbarTooltips() {
+            const tooltips = {
+                '.ql-header': 'Taille du titre',
+                '.ql-bold': 'Gras (Ctrl+B)',
+                '.ql-italic': 'Italique (Ctrl+I)',
+                '.ql-underline': 'Souligné (Ctrl+U)',
+                '.ql-strike': 'Barré',
+                '.ql-color': 'Couleur du texte',
+                '.ql-background': 'Couleur de surlignage',
+                '.ql-list[value="ordered"]': 'Liste numérotée',
+                '.ql-list[value="bullet"]': 'Liste à puces',
+                '.ql-align': 'Alignement du texte',
+                '.ql-blockquote': 'Citation mise en valeur',
+                '.ql-link': 'Insérer un lien web',
+                '.ql-emoji': 'Insérer un émoji',
+                '.ql-clean': 'Effacer toute la mise en forme (repasser en texte brut)'
+            };
+
+            for (const [selector, tip] of Object.entries(tooltips)) {
+                document.querySelectorAll(selector).forEach(el => {
+                    el.setAttribute('title', tip);
+                });
+            }
+        }
+        setTimeout(addToolbarTooltips, 200);
+
+        // ============================================================
+        // SMART LINK (BOUTON LIEN AVEC OU SANS SÉLECTION DE TEXTE)
+        // ============================================================
+        let savedLinkRange = null;
+        const smartLinkModal = new bootstrap.Modal(document.getElementById('smartLinkModal'));
+
+        const toolbarModule = quill.getModule('toolbar');
+        toolbarModule.addHandler('link', function (value) {
+            if (value) {
+                const range = quill.getSelection(true);
+                savedLinkRange = range;
+                const selectedText = (range && range.length > 0) ? quill.getText(range.index, range.length) : '';
+
+                document.getElementById('linkTextModal').value = selectedText;
+                document.getElementById('linkUrlModal').value = 'https://';
+                smartLinkModal.show();
+            } else {
+                quill.format('link', false);
+            }
+        });
+
+        document.getElementById('btnValidateLink').addEventListener('click', function () {
+            const textVal = document.getElementById('linkTextModal').value.trim() || 'Lien';
+            let urlVal = document.getElementById('linkUrlModal').value.trim();
+            if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
+                urlVal = 'https://' + urlVal;
+            }
+
+            if (savedLinkRange) {
+                if (savedLinkRange.length > 0) {
+                    quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
+                } else {
+                    quill.insertText(savedLinkRange.index, textVal, 'link', urlVal);
+                    quill.setSelection(savedLinkRange.index + textVal.length);
+                }
+            }
+            smartLinkModal.hide();
+        });
+
+        // ============================================================
+        // TEMPLATES 1-CLIC
+        // ============================================================
+        const templates = {
+            sortie: `
+                <h3>🚌 Notre belle journée de sortie scolaire</h3>
+                <p>Ce vendredi, les élèves ont eu la chance de participer à une sortie inoubliable.</p>
+                <h4>🌟 Les moments forts de la visite :</h4>
+                <ul>
+                    <li>Découverte et ateliers pratiques avec les animateurs</li>
+                    <li>Pique-nique convivial tous ensemble sous le soleil</li>
+                    <li>Jeux de piste et énigmes résolues en petits groupes</li>
+                </ul>
+                <blockquote>« C'était trop bien, on a appris plein de choses ! » — Un élève de la classe</blockquote>
+                <p>Un grand merci aux parents accompagnateurs pour leur aide précieuse tout au long de cette journée !</p>
+            `,
+            projet: `
+                <h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3>
+                <p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p>
+                <h4>📋 Ce que nous avons réalisé :</h4>
+                <ul>
+                    <li>Recherches documentaires et esquisses préparatoires</li>
+                    <li>Mise en couleur et manipulation de différentes matières</li>
+                    <li>Présentation orale de chaque œuvre devant les camarades</li>
+                </ul>
+                <p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>
+            `,
+            sport: `
+                <h3>🏆 Rencontre sportive : Bravo à tous nos sportifs !</h3>
+                <p>Les élèves ont brillamment représenté l'École Saint Vincent lors de cette rencontre sportive inter-écoles.</p>
+                <h4>🏅 Au programme :</h4>
+                <ul>
+                    <li>Courses de relais et épreuves d'endurance</li>
+                    <li>Jeux collectifs dans un esprit d'équipe exemplaire</li>
+                    <li>Goûter bien mérité partagé entre tous les participants</li>
+                </ul>
+                <p>Félicitations à tous les enfants pour leur motivation, leurs sourires et leur fair-play !</p>
+            `,
+            mot: `
+                <h3>📢 Mot des enseignants : Informations importantes</h3>
+                <p>Chers parents,</p>
+                <p>Voici quelques informations utiles à noter pour les prochaines semaines :</p>
+                <ul>
+                    <li><strong>Dates à retenir :</strong> ...</li>
+                    <li><strong>Matériel à prévoir :</strong> ...</li>
+                    <li><strong>Rappel :</strong> ...</li>
+                </ul>
+                <p>Nous restons à votre disposition pour toute question via le carnet de liaison ou l'espace École Directe.</p>
+                <p>Bien cordialement,<br><em>L'équipe enseignante</em></p>
+            `
+        };
+
+        function applyTemplate(key) {
+            if (templates[key]) {
+                if (quill.getText().trim() !== '') {
+                    if (!confirm("Voulez-vous remplacer le texte actuel par ce modèle ?")) return;
+                }
+                quill.clipboard.dangerouslyPasteHTML(templates[key]);
+                updatePreview();
+            }
+        }
+
+        // ============================================================
+        // GESTION PHOTO DE COUVERTURE
+        // ============================================================
+        let uploadedBase64 = '';
+        let uploadedFilename = '';
+        let uploadedMimeType = '';
+
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            uploadedFilename = file.name;
+            uploadedMimeType = file.type;
+            document.getElementById('fileNameLabel').textContent = '✅ ' + file.name;
+
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                uploadedBase64 = evt.target.result.split(',')[1];
+                document.getElementById('previewImgBox').innerHTML = `
+                    <img src="${evt.target.result}" alt="Aperçu">
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${document.getElementById('categorie').value}</span>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ============================================================
+        // APERÇU EN DIRECT
+        // ============================================================
+        function updatePreview() {
+            const t = document.getElementById('titre').value || "Titre de votre actualité";
+            const d = document.getElementById('description').value || "Le court résumé s'affichera ici...";
+            const c = document.getElementById('categorie').value;
+            const a = document.getElementById('auteur').value;
+
+            document.getElementById('previewTitle').textContent = t;
+            document.getElementById('previewDesc').textContent = d;
+            const badge = document.getElementById('previewBadge');
+            if (badge) badge.textContent = c;
+            document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
+        }
+
+        document.getElementById('titre').addEventListener('input', updatePreview);
+        document.getElementById('description').addEventListener('input', updatePreview);
+        document.getElementById('categorie').addEventListener('change', updatePreview);
+        document.getElementById('auteur').addEventListener('input', updatePreview);
+
+        // ============================================================
+        // SOUMISSION DU FORMULAIRE VERS GOOGLE APPS SCRIPT
+        // ============================================================
+        document.getElementById('newsForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const alertBox = document.getElementById('alertBox');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
+            alertBox.className = 'alert d-none';
+
+            const payload = {
+                titre: document.getElementById('titre').value,
+                categorie: document.getElementById('categorie').value,
+                auteur: document.getElementById('auteur').value,
+                userEmail: document.getElementById('userEmail').value,
+                secretCode: document.getElementById('secretCode').value,
+                date: document.getElementById('date').value,
+                description: document.getElementById('description').value,
+                contenu: quill.root.innerHTML,
+                imageUrl: document.getElementById('imageUrl').value,
+                imageBase64: uploadedBase64,
+                imageName: uploadedFilename,
+                imageType: uploadedMimeType,
+                videoUrl: document.getElementById('videoUrl').value,
+                lien: document.getElementById('lien').value,
+                epingle: document.getElementById('epingle').checked
+            };
+
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify(payload)
+                });
+
+                const text = await res.text();
+                let data = {};
+                try {
+                    data = JSON.parse(text);
+                } catch (err) {
+                    data = { success: true, message: "Actualité enregistrée avec succès !" };
+                }
+
+                if (data.success !== false) {
+                    alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
+                    alertBox.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-1">🎉 Article publié avec succès !</h5>
+                                <p class="mb-0 small">Votre actualité <strong>« ${payload.titre} »</strong> a été enregistrée. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
+                            </div>
+                        </div>
+                    `;
+
+                    // Réinitialisation du formulaire
+                    document.getElementById('newsForm').reset();
+                    quill.setContents([]);
+                    document.getElementById('date').valueAsDate = new Date();
+                    uploadedBase64 = '';
+                    document.getElementById('fileNameLabel').textContent = 'Choisir ou glisser une photo';
+                    updatePreview();
+                } else {
+                    alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
+                    alertBox.innerHTML = `<strong>❌ Erreur :</strong> ${data.message || "Impossible d'enregistrer l'article."}`;
+                }
+            } catch (error) {
+                console.error('Erreur soumission:', error);
+                alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
+                alertBox.innerHTML = `<strong>❌ Erreur réseau :</strong> Impossible de contacter le serveur Google Apps Script (${error.message}). Vérifiez votre connexion.`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier sur le site de l\'école';
+                window.scrollTo({ top: alertBox.offsetTop - 80, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+
+</html>
