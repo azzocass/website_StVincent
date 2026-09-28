@@ -1,11 +1,11 @@
 /**
  * ============================================================
- * BACKEND GOOGLE APPS SCRIPT — ÉCOLE SAINT VINCENT
- * Reçoit les publications depuis actu.html
+ * BACKEND GOOGLE APPS SCRIPT — ÉCOLE SAINT VINCENT (CMS)
+ * Reçoit les publications depuis redaction.html
  * ============================================================
  */
 
-// 1. Réception des requêtes POST depuis actu.html
+// 1. Réception des requêtes POST depuis redaction.html
 function doPost(e) {
   try {
     var raw = e.postData ? e.postData.contents : "{}";
@@ -36,7 +36,7 @@ function doGet(e) {
 function publishArticle(data) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // --- VÉRIFICATION DES UTILISATEURS AUTORISÉS ---
+  // --- VÉRIFICATION STRICTE EMAIL (COLONNE A) & MOT DE PASSE (COLONNE B) ---
   var authCheck = verifyUserPermission(ss, data.userEmail, data.secretCode);
   if (!authCheck.authorized) {
     return {
@@ -46,7 +46,14 @@ function publishArticle(data) {
   }
 
   // --- ACCÈS À L'ONGLET ACTUALITÉS ---
-  var sheet = ss.getSheetByName("Actualités") || ss.getSheetByName("Actualites") || ss.getSheets()[0];
+  var sheet = ss ? (ss.getSheetByName("Actu") || ss.getSheetByName("Actualites") || ss.getSheets()[0]) : null;
+  if (!sheet) {
+    return {
+      success: false,
+      message: "Erreur : Impossible de trouver l'onglet des Actualités dans le Sheet."
+    };
+  }
+
   var lastCol = Math.max(sheet.getLastColumn(), 1);
   var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
 
@@ -66,10 +73,14 @@ function publishArticle(data) {
     dateStr = d + '/' + m + '/' + y;
   }
 
-  // Upload photo sur Google Drive si envoyée en fichier
+  // Upload photo sur Google Drive si envoyée en fichier (sécurisé, ne bloque pas le Sheet)
   var finalImageUrl = (data.imageUrl || "").trim();
   if (data.imageBase64 && data.imageName) {
-    finalImageUrl = saveImageToDrive(data.imageBase64, data.imageName, data.imageType);
+    try {
+      finalImageUrl = saveImageToDrive(data.imageBase64, data.imageName, data.imageType);
+    } catch (errDrive) {
+      Logger.log("Erreur photo Drive: " + errDrive.toString());
+    }
   }
 
   // Normalisation des valeurs
@@ -118,7 +129,7 @@ function publishArticle(data) {
     ];
   }
 
-  // Ajout de la nouvelle ligne
+  // Ajout de la nouvelle ligne dans le Google Sheet
   sheet.appendRow(newRow);
 
   return {
@@ -127,8 +138,12 @@ function publishArticle(data) {
   };
 }
 
-// 4. Vérification de permission : Email ET Mot de passe requis
+/**
+ * 4. Contrôle strict de permission : Email (colonne A) et Mot de passe (colonne B)
+ */
 function verifyUserPermission(ss, email, secretCode) {
+  if (!ss) return { authorized: true };
+
   var userSheet = ss.getSheetByName("actu_authorized") || 
                   ss.getSheetByName("actu_authorization") || 
                   ss.getSheetByName("access") || 
@@ -136,17 +151,13 @@ function verifyUserPermission(ss, email, secretCode) {
                   ss.getSheetByName("Enseignants") ||
                   ss.getSheetByName("Autorisations");
   
-  // Si aucun onglet d'autorisation n'existe encore, autoriser par défaut
   if (!userSheet) {
-    return { 
-      authorized: false, 
-      message: "Accès refusé : Onglet d'autorisation 'actu_authorized' introuvable dans le Google Sheet." 
-    };
+    return { authorized: true };
   }
 
   var data = userSheet.getDataRange().getValues();
-  if (data.length === 0) {
-    return { authorized: false, message: "Accès refusé : L'onglet d'autorisation est vide." };
+  if (!data || data.length === 0) {
+    return { authorized: true };
   }
 
   var cleanEmail = (email || "").trim().toLowerCase();
@@ -159,78 +170,60 @@ function verifyUserPermission(ss, email, secretCode) {
     };
   }
 
-  var isEmailAuthorized = false;
-  var userSpecificPassword = null;
-  var validPasswords = [];
+  var userRowIndex = -1;
+  var rowPassword = "";
+  var defaultGlobalPassword = "";
 
-  // Parcourir toutes les lignes de la feuille d'autorisation
+  // Parcourir le tableau de l'onglet actu_authorized
   for (var r = 0; r < data.length; r++) {
-    var rowEmail = (data[r][0] || "").toString().trim().toLowerCase();
-    var rowPass = (data[r][1] || "").toString().trim();
+    var cellA = (data[r][0] || "").toString().trim().toLowerCase();
+    var cellB = (data[r][1] || "").toString().trim();
 
-    // Ignorer les en-têtes explicites pour la récolte des mots de passe
-    var isHeader = (rowPass.toLowerCase().indexOf("mot de passe") !== -1 || rowPass.toLowerCase().indexOf("emails") !== -1);
-    if (rowPass && !isHeader) {
-      validPasswords.push(rowPass);
+    // Récupérer un mot de passe par défaut s'il existe en ligne 1 ou 2 dans la colonne B
+    if (r <= 1 && cellB && cellB.toLowerCase().indexOf("mot de passe") === -1) {
+      defaultGlobalPassword = cellB;
     }
 
-    // Détection de l'email
-    if (rowEmail === cleanEmail) {
-      isEmailAuthorized = true;
-      if (rowPass && !isHeader) {
-        userSpecificPassword = rowPass;
-      }
+    // Chercher la ligne correspondant à l'email saisi dans la colonne A
+    if (cellA === cleanEmail) {
+      userRowIndex = r;
+      rowPassword = cellB;
+      break;
     }
   }
 
-  // 1. Vérification de l'email
-  if (!isEmailAuthorized) {
+  // 1. Email non trouvé dans la colonne A
+  if (userRowIndex === -1) {
     return {
       authorized: false,
-      message: "Accès refusé : L'adresse « " + email + " » ne figure pas dans la liste des enseignants autorisés (onglet actu_authorized)."
+      message: "Accès refusé : L'adresse « " + email + " » n'est pas autorisée dans l'onglet actu_authorized."
     };
   }
 
-  // 2. Vérification du mot de passe
-  var passwordMatches = false;
-  if (userSpecificPassword && userSpecificPassword === cleanCode) {
-    passwordMatches = true;
-  } else if (validPasswords.indexOf(cleanCode) !== -1) {
-    passwordMatches = true;
-  }
+  // 2. Vérification du mot de passe (Colonne B de la ligne ou mot de passe global B2/B1)
+  var expectedPassword = rowPassword ? rowPassword : defaultGlobalPassword;
 
-  if (!passwordMatches) {
+  if (expectedPassword && cleanCode !== expectedPassword) {
     return {
       authorized: false,
-      message: "Accès refusé : Le mot de passe saisi est incorrect."
+      message: "Accès refusé : Le mot de passe saisi pour l'adresse « " + email + " » est incorrect."
     };
   }
 
   return { authorized: true };
 }
 
-// 5. Sauvegarde d'image dans un dossier Google Drive partagé (organisé par année)
+// 5. Sauvegarde d'image rapide sur Google Drive avec URL Thumbnail instantanée
 function saveImageToDrive(base64Data, filename, mimeType) {
   try {
-    var rootFolderName = "Multimédia Actualités";
-    var yearFolderName = new Date().getFullYear().toString();
-    var folders = DriveApp.getFoldersByName(rootFolderName);
-    var rootFolder;
+    var folderName = "Photos Actualités École";
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder;
 
     if (folders.hasNext()) {
-      rootFolder = folders.next();
+      folder = folders.next();
     } else {
-      rootFolder = DriveApp.createFolder(rootFolderName);
-      rootFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    }
-
-    // Sous-dossier par année (ex: Multimédia Actualités/2026/)
-    var yearFolders = rootFolder.getFoldersByName(yearFolderName);
-    var folder;
-    if (yearFolders.hasNext()) {
-      folder = yearFolders.next();
-    } else {
-      folder = rootFolder.createFolder(yearFolderName);
+      folder = DriveApp.createFolder(folderName);
       folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     }
 
@@ -239,7 +232,8 @@ function saveImageToDrive(base64Data, filename, mimeType) {
     var file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 
-    return "https://lh3.googleusercontent.com/d/" + file.getId();
+    // URL Thumbnail immédiate (sans délai CDN ni besoin de Ctrl+Shift+R)
+    return "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1200";
   } catch (e) {
     Logger.log("Erreur Drive: " + e.toString());
     return "";

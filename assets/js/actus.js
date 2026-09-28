@@ -111,17 +111,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function convertDriveUrl(url) {
         if (!url) return '';
+        let fileId = null;
         if (url.includes('drive.google.com/file/d/')) {
-            const fileId = url.match(/\/d\/([^/]+)/)?.[1];
-            if (fileId) {
-                return `https://lh3.googleusercontent.com/d/${fileId}`;
-            }
+            fileId = url.match(/\/d\/([^/]+)/)?.[1];
+        } else if (url.includes('drive.google.com/open?id=')) {
+            fileId = url.match(/id=([^&]+)/)?.[1];
+        } else if (url.includes('googleusercontent.com/d/')) {
+            fileId = url.match(/\/d\/([^/]+)/)?.[1];
         }
-        if (url.includes('drive.google.com/open?id=')) {
-            const fileId = url.match(/id=([^&]+)/)?.[1];
-            if (fileId) {
-                return `https://lh3.googleusercontent.com/d/${fileId}`;
-            }
+
+        if (fileId) {
+            // Utiliser l'API Thumbnail Google Drive pour un affichage instantané sans délai CDN
+            return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
         }
         return url;
     }
@@ -398,7 +399,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const imgUrl = resolveImageUrl(news);
                 if (imgUrl) {
                     mediaContainer.innerHTML = `
-                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid rounded-3 shadow-sm w-100" style="max-height: 450px; object-fit: cover;" onerror="this.style.display='none'">
+                        <div class="position-relative overflow-hidden rounded-3 shadow-sm bg-light mb-2">
+                            <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" 
+                                style="max-height: 240px; object-fit: cover; object-position: center;" 
+                                onerror="if(!this.dataset.retry){this.dataset.retry=true; const fid=this.src.match(/id=([^&]+)/)?.[1]; if(fid) this.src='https://lh3.googleusercontent.com/d/'+fid; else this.style.display='none';}else{this.style.display='none';}">
+                        </div>
                     `;
                     mediaContainer.classList.remove('d-none');
                     hasMedia = true;

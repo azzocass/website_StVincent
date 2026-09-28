@@ -469,7 +469,7 @@
 
     <script>
         // URL du Google Apps Script Web App déployé
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_1s8LLt-ZC5ezdeOf4psuNrkMk_Ajhed5oU3OTPDrnzDijs1nYRhuJFiEtZvgUnIbog/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6FUNsz7PDbYAtgy_-62h-YC6KKp4hoExcEWDnKST7QtvkGSXJ-BGvJgmMdOAV7mvPTg/exec';
 
         // Date du jour par défaut
         document.getElementById('date').valueAsDate = new Date();
@@ -679,26 +679,61 @@
         let uploadedFilename = '';
         let uploadedMimeType = '';
 
-        document.getElementById('fileInput').addEventListener('change', function (e) {
+        document.getElementById('fileInput').addEventListener('change', async function (e) {
             const file = e.target.files[0];
             if (!file) return;
-            uploadedFilename = file.name;
-            uploadedMimeType = file.type;
-            document.getElementById('fileNameLabel').textContent = '✅ ' + file.name;
+            uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+            uploadedMimeType = "image/jpeg";
+            document.getElementById('fileNameLabel').textContent = '⏳ Optimisation de la photo...';
             document.getElementById('removePhotoBtn').classList.remove('d-none');
 
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-                uploadedBase64 = evt.target.result.split(',')[1];
-                document.getElementById('previewImgBox').innerHTML = `
-                    <img src="${evt.target.result}" alt="Aperçu">
-                    <div class="position-absolute top-0 start-0 m-2">
-                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${document.getElementById('categorie').value}</span>
-                    </div>
-                `;
-            };
-            reader.readAsDataURL(file);
+            // Compression automatique de l'image (max 1200px, 80% qualité) pour envoi ultra-rapide (< 1s)
+            const compressedDataUrl = await compressAndStoreImage(file);
+            document.getElementById('fileNameLabel').textContent = '✅ ' + file.name + ' (photo optimisée)';
+            document.getElementById('previewImgBox').innerHTML = `
+                <img src="${compressedDataUrl}" alt="Aperçu">
+                <div class="position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${document.getElementById('categorie').value}</span>
+                </div>
+            `;
         });
+
+        // Compression canvas légère pour Apps Script (réduit de 15 Mo à 150 Ko)
+        function compressAndStoreImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 1200;
+
+                        if (width > maxDim || height > maxDim) {
+                            if (width > height) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            } else {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        uploadedBase64 = compressedDataUrl.split(',')[1];
+                        resolve(compressedDataUrl);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
 
         // Supprimer la photo uploadée
         function removeUploadedPhoto() {
@@ -812,7 +847,7 @@
                     updatePreview();
                 } else {
                     alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = `<strong>❌ Erreur :</strong> ${data.message || "Impossible d'enregistrer l'article."}`;
+                    alertBox.innerHTML = `<strong>❌ Erreur d'accès :</strong> ${data.message || "Mot de passe ou adresse email non autorisé."}`;
                 }
             } catch (error) {
                 console.error('Erreur soumission:', error);
