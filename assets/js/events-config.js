@@ -24,38 +24,38 @@ const BANNERS_CONFIG = {
     //  APEL — Événements & ventes
     // -------------------------------------------------------
     apel: {
-        visible:     true,
-        heading:     "Événements APEL",
+        visible: true,
+        heading: "Événements APEL",
         headingIcon: "bi-bag-heart-fill",
-        style:       { bg: "#f6ebd9", text: "#5c4018", border: "#d4a942" },
+        style: { bg: "#f6ebd9", text: "#5c4018", border: "#d4a942" },
         events: [
             {
-                visible: true,
-                label:   "Apéro des Papas",
-                icon:    "🍻",
-                color:   "#5c8c42ff",
-                url:     "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/apero-des-papas-2026"
+                visible: false,
+                label: "Apéro des Papas",
+                icon: "🍻",
+                color: "#5c8c42ff",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/apero-des-papas-2026"
             },
             {
                 visible: true,
-                label:   "Apéro des Mamans",
-                icon:    "🍸",
-                color:   "#f39e36ff",
-                url:     "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/apero-des-mamans-2026-1"
+                label: "Apéro des Mamans",
+                icon: "🍸",
+                color: "#f39e36ff",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/apero-des-mamans-2026-1"
             },
             {
                 visible: true,
-                label:   "Vente Gâteaux Bijou",
-                icon:    "🍪",
-                color:   "#d721a9ff",
-                url:     "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/vente-gateaux-bijou-rentree-2026-2027"
+                label: "Vente Gâteaux Bijou",
+                icon: "🍪",
+                color: "#d721a9ff",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/vente-gateaux-bijou-rentree-2026-2027"
             },
             {
                 visible: false,
-                label:   "Soirée des Familles",
-                icon:    "🎉",
-                color:   "#8b5cf6",
-                url:     "soiree.html"
+                label: "Soirée des Familles",
+                icon: "🎉",
+                color: "#8b5cf6",
+                url: "soiree.html"
             },
         ]
     },
@@ -64,17 +64,17 @@ const BANNERS_CONFIG = {
     //  OGEC — Kermesse et autres événements
     // -------------------------------------------------------
     ogec: {
-        visible:     false,
-        heading:     "OGEC",
+        visible: false,
+        heading: "OGEC",
         headingIcon: "bi-ticket-perforated-fill",
-        style:       { bg: "#ffe8a1", text: "#856404", border: "#f59e0b" },
+        style: { bg: "#ffe8a1", text: "#856404", border: "#f59e0b" },
         events: [
             {
                 visible: false,
-                label:   "Kermesse de l'École",
-                icon:    "🎪",
-                color:   "#3cbdecff",
-                url:     "kermesse.html"
+                label: "Kermesse de l'École",
+                icon: "🎪",
+                color: "#3cbdecff",
+                url: "kermesse.html"
             },
         ]
     },
@@ -83,24 +83,24 @@ const BANNERS_CONFIG = {
     //  FOURNITURES — Rentrée scolaire
     // -------------------------------------------------------
     fournitures: {
-        visible:     false,
-        heading:     "Préparation de la rentrée !",
+        visible: false,
+        heading: "Préparation de la rentrée !",
         headingIcon: "bi-pencil-fill",
-        style:       { bg: "#dcfce7", text: "#166534", border: "#22c55e" },
+        style: { bg: "#dcfce7", text: "#166534", border: "#22c55e" },
         events: [
             {
                 visible: false,
-                label:   "Voir les listes",
-                icon:    "✏️",
-                color:   "#16a34a",
-                url:     "#fournituresModal"
+                label: "Voir les listes",
+                icon: "✏️",
+                color: "#16a34a",
+                url: "#fournituresModal"
             },
             {
                 visible: true,
-                label:   "Commander en ligne (Code : 26RH1H3)",
-                icon:    "🛒",
-                color:   "#166534",
-                url:     "https://www.rentreediscount.com/etablissement/SAINT-VINCENT-51836691.html"
+                label: "Commander en ligne (Code : 26RH1H3)",
+                icon: "🛒",
+                color: "#166534",
+                url: "https://www.rentreediscount.com/etablissement/SAINT-VINCENT-51836691.html"
             },
         ]
     }
@@ -117,9 +117,9 @@ const BANNERS_CONFIG = {
     // Génère un bouton selon le type d'URL
     function renderButton(ev) {
         const isExternal = ev.url.startsWith('http');
-        const isModal    = ev.url.startsWith('#');
+        const isModal = ev.url.startsWith('#');
         const style = 'background-color:' + ev.color + '; color:#fff; border:none; font-size:.8rem;';
-        const cls   = 'btn btn-sm rounded-pill fw-bold px-3';
+        const cls = 'btn btn-sm rounded-pill fw-bold px-3';
         const inner = ev.icon + ' ' + ev.label;
 
         if (isModal) {
@@ -158,8 +158,8 @@ const BANNERS_CONFIG = {
         if (!groups.length) return '';
 
         // Style dynamique depuis la section active (ex: apel.style.bg)
-        const bg          = (activeStyle && activeStyle.bg)     ? activeStyle.bg     : '#ffe58f';
-        const textColor   = (activeStyle && activeStyle.text)   ? activeStyle.text   : '#4a2c00';
+        const bg = (activeStyle && activeStyle.bg) ? activeStyle.bg : '#ffe58f';
+        const textColor = (activeStyle && activeStyle.text) ? activeStyle.text : '#4a2c00';
         const borderColor = (activeStyle && activeStyle.border) ? activeStyle.border : '#d97706';
 
         // Tous les groupes dans UNE seule barre, séparés par un | discret
