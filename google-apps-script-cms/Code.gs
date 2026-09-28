@@ -127,63 +127,110 @@ function publishArticle(data) {
   };
 }
 
-// 4. Vérification de permission dans l'onglet "access" ou "actu_authorization"
+// 4. Vérification de permission : Email ET Mot de passe requis
 function verifyUserPermission(ss, email, secretCode) {
-  var userSheet = ss.getSheetByName("access") || 
+  var userSheet = ss.getSheetByName("actu_authorized") || 
                   ss.getSheetByName("actu_authorization") || 
+                  ss.getSheetByName("access") || 
                   ss.getSheetByName("Utilisateurs") || 
-                  ss.getSheetByName("Enseignants");
+                  ss.getSheetByName("Enseignants") ||
+                  ss.getSheetByName("Autorisations");
   
   // Si aucun onglet d'autorisation n'existe encore, autoriser par défaut
   if (!userSheet) {
-    return { authorized: true };
+    return { 
+      authorized: false, 
+      message: "Accès refusé : Onglet d'autorisation 'actu_authorized' introuvable dans le Google Sheet." 
+    };
   }
 
   var data = userSheet.getDataRange().getValues();
   if (data.length === 0) {
-    return { authorized: true };
+    return { authorized: false, message: "Accès refusé : L'onglet d'autorisation est vide." };
   }
 
   var cleanEmail = (email || "").trim().toLowerCase();
   var cleanCode = (secretCode || "").trim();
 
-  // 1. Vérification du mot de passe de secours (partout dans la ligne 1 ou cellule B1)
-  for (var c = 0; c < data[0].length; c++) {
-    var cellVal = (data[0][c] || "").toString().trim();
-    if (cellVal && cleanCode && cellVal === cleanCode) {
-      return { authorized: true };
-    }
+  if (!cleanEmail || !cleanCode) {
+    return {
+      authorized: false,
+      message: "Accès refusé : L'email enseignant ET le mot de passe sont tous les deux requis."
+    };
   }
 
-  // 2. Vérification de l'email parmi la liste des adresses autorisées
-  if (cleanEmail) {
-    for (var r = 0; r < data.length; r++) {
-      for (var col = 0; col < data[r].length; col++) {
-        var val = (data[r][col] || "").toString().trim().toLowerCase();
-        if (val === cleanEmail) {
-          return { authorized: true };
-        }
+  var isEmailAuthorized = false;
+  var userSpecificPassword = null;
+  var validPasswords = [];
+
+  // Parcourir toutes les lignes de la feuille d'autorisation
+  for (var r = 0; r < data.length; r++) {
+    var rowEmail = (data[r][0] || "").toString().trim().toLowerCase();
+    var rowPass = (data[r][1] || "").toString().trim();
+
+    // Ignorer les en-têtes explicites pour la récolte des mots de passe
+    var isHeader = (rowPass.toLowerCase().indexOf("mot de passe") !== -1 || rowPass.toLowerCase().indexOf("emails") !== -1);
+    if (rowPass && !isHeader) {
+      validPasswords.push(rowPass);
+    }
+
+    // Détection de l'email
+    if (rowEmail === cleanEmail) {
+      isEmailAuthorized = true;
+      if (rowPass && !isHeader) {
+        userSpecificPassword = rowPass;
       }
     }
   }
 
-  return {
-    authorized: false,
-    message: "Accès refusé : L'adresse « " + (email || "non renseignée") + " » ou le mot de passe ne correspondent pas aux accès enregistrés dans l'onglet access du Sheet."
-  };
+  // 1. Vérification de l'email
+  if (!isEmailAuthorized) {
+    return {
+      authorized: false,
+      message: "Accès refusé : L'adresse « " + email + " » ne figure pas dans la liste des enseignants autorisés (onglet actu_authorized)."
+    };
+  }
+
+  // 2. Vérification du mot de passe
+  var passwordMatches = false;
+  if (userSpecificPassword && userSpecificPassword === cleanCode) {
+    passwordMatches = true;
+  } else if (validPasswords.indexOf(cleanCode) !== -1) {
+    passwordMatches = true;
+  }
+
+  if (!passwordMatches) {
+    return {
+      authorized: false,
+      message: "Accès refusé : Le mot de passe saisi est incorrect."
+    };
+  }
+
+  return { authorized: true };
 }
 
-// 5. Sauvegarde d'image dans un dossier Google Drive partagé
+// 5. Sauvegarde d'image dans un dossier Google Drive partagé (organisé par année)
 function saveImageToDrive(base64Data, filename, mimeType) {
   try {
-    var folderName = "Photos Actualités École";
-    var folders = DriveApp.getFoldersByName(folderName);
-    var folder;
+    var rootFolderName = "Multimédia Actualités";
+    var yearFolderName = new Date().getFullYear().toString();
+    var folders = DriveApp.getFoldersByName(rootFolderName);
+    var rootFolder;
 
     if (folders.hasNext()) {
-      folder = folders.next();
+      rootFolder = folders.next();
     } else {
-      folder = DriveApp.createFolder(folderName);
+      rootFolder = DriveApp.createFolder(rootFolderName);
+      rootFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    }
+
+    // Sous-dossier par année (ex: Multimédia Actualités/2026/)
+    var yearFolders = rootFolder.getFoldersByName(yearFolderName);
+    var folder;
+    if (yearFolders.hasNext()) {
+      folder = yearFolders.next();
+    } else {
+      folder = rootFolder.createFolder(yearFolderName);
       folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     }
 

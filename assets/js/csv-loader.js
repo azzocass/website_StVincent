@@ -24,80 +24,85 @@ class CsvLoader {
 
     /**
      * Parse CSV text into an array of objects.
-     * Handles quoted fields and standard CSV escaping.
+     * Handles quoted fields, escaped quotes, multiline HTML text, and standard CSV formatting.
      * @param {string} csvText 
      * @returns {Array}
      */
     static parseCsv(csvText) {
-        // Robust CSV line splitter that handles quoted newlines
-        // But for simplicity in this specific app, we will stick to splitting by \n
-        // and using a regex to parse individual lines respecting quotes.
+        if (!csvText || !csvText.trim()) return [];
 
-        const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
-        if (lines.length < 2) return [];
+        const rows = [];
+        let currentRow = [];
+        let currentField = '';
+        let inQuotes = false;
 
-        // Helper to parse a line respecting quotes
-        const parseLine = (line) => {
-            const result = [];
-            let start = 0;
-            let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                if (line[i] === '"') {
-                    inQuotes = !inQuotes;
-                } else if (line[i] === ',' && !inQuotes) {
-                    let field = line.substring(start, i).trim();
-                    // Remove surrounding quotes if present
-                    if (field.startsWith('"') && field.endsWith('"')) {
-                        field = field.slice(1, -1).replace(/""/g, '"');
+        for (let i = 0; i < csvText.length; i++) {
+            const char = csvText[i];
+            const nextChar = csvText[i + 1];
+
+            if (inQuotes) {
+                if (char === '"') {
+                    if (nextChar === '"') {
+                        // Double guillemet échapé ("") -> guillemet simple dans la chaîne
+                        currentField += '"';
+                        i++; // sauter le guillemet suivant
+                    } else {
+                        // Fin du champ entre guillemets
+                        inQuotes = false;
                     }
-                    result.push(field);
-                    start = i + 1;
+                } else {
+                    currentField += char;
+                }
+            } else {
+                if (char === '"') {
+                    inQuotes = true;
+                } else if (char === ',') {
+                    currentRow.push(currentField.trim());
+                    currentField = '';
+                } else if (char === '\r') {
+                    // Ignorer les retours chariot \r
+                } else if (char === '\n') {
+                    currentRow.push(currentField.trim());
+                    if (currentRow.some(f => f !== '')) {
+                        rows.push(currentRow);
+                    }
+                    currentRow = [];
+                    currentField = '';
+                } else {
+                    currentField += char;
                 }
             }
-            // Add last field
-            let field = line.substring(start).trim();
-            if (field.startsWith('"') && field.endsWith('"')) {
-                field = field.slice(1, -1).replace(/""/g, '"');
+        }
+
+        // Ajouter le dernier champ et la dernière ligne s'il en reste
+        if (currentField !== '' || currentRow.length > 0) {
+            currentRow.push(currentField.trim());
+            if (currentRow.some(f => f !== '')) {
+                rows.push(currentRow);
             }
-            result.push(field);
-            return result;
-        };
+        }
 
-        // 1. Parse Headers
-        // Fix for Google Sheets quirk: sometimes it returns "Col1,Col2",Col1,Col2
-        // We will take the first N valid headers.
-        let headers = parseLine(lines[0]);
+        if (rows.length < 2) return [];
 
-        // Sanitize headers: empty headers should be ignored or merged? 
-        // For this specific app, we know we expect Date, Entree, Plat... 
-        // We will assume the first 5 columns are what we want if we see duplicates/garbage.
-        // But a safer way is to trust the data row length.
+        // 1. En-têtes
+        const headers = rows[0].map(h => h.trim());
 
+        // 2. Traitement des lignes de données
         const result = [];
-
-        for (let i = 1; i < lines.length; i++) {
-            const values = parseLine(lines[i]);
-
-            // If values length matches headers, great.
-            // If values < headers, maybe headers has garbage at the end.
-            // We will map based on the specific known keys if possible, or just index.
-
+        for (let r = 1; r < rows.length; r++) {
+            const values = rows[r];
             const obj = {};
-            // Logic: Use the minimum length to avoid out-of-bounds
-            const len = Math.min(headers.length, values.length);
-
-            for (let j = 0; j < len; j++) {
-                const headerName = headers[j];
-                // Skip empty header names
+            for (let c = 0; c < headers.length; c++) {
+                const headerName = headers[c];
                 if (headerName) {
-                    obj[headerName] = values[j];
+                    obj[headerName] = values[c] !== undefined ? values[c] : '';
                 }
             }
-            // Only add if we have at least a Date (or 1st column)
             if (Object.keys(obj).length > 0) {
                 result.push(obj);
             }
         }
+
         return result;
     }
 

@@ -216,7 +216,7 @@
                             <select class="form-select rounded-3 py-2" id="categorie" required>
                                 <option value="Vie de classe" selected>🎓 Vie de classe</option>
                                 <option value="Événement">🎉 Événement</option>
-                                <option value="Sport">🏆 Sport & Sorties</option>
+                                <option value="Sport & Sorties">🏆 Sport & Sorties</option>
                                 <option value="Pastoral">❤️ Pastoral</option>
                             </select>
                         </div>
@@ -241,36 +241,33 @@
                         <div class="d-flex align-items-center mb-2">
                             <i class="bi bi-shield-lock-fill text-primary fs-5 me-2"></i>
                             <span class="fw-bold text-royal">Autorisation de publication</span>
-                            <span class="badge bg-secondary-subtle text-secondary ms-2 small">Au choix : Email OU Mot de
-                                passe</span>
+                            <span class="badge bg-warning-subtle text-warning-emphasis ms-2 small">
+                                <i class="bi bi-lock-fill me-1"></i>Email ET Mot de passe requis
+                            </span>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label text-muted small mb-1">Votre email enseignant :</label>
+                                <label class="form-label text-muted small mb-1">Votre email enseignant : <span
+                                        class="text-danger">*</span></label>
                                 <input type="email" class="form-control form-control-sm rounded-2" id="userEmail"
-                                    placeholder="nom@ecolesaintvincent.fr ou gmail">
-                                <div class="form-text small">Vérifié selon la liste autorisée dans l'onglet
-                                    <code>access</code> du Sheet.
+                                    placeholder="nom@ecolesaintvincent.fr ou gmail" required>
+                                <div class="form-text small">Doit figurer dans la liste autorisée (onglet
+                                    <code>access</code>).
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-muted small mb-1">Ou le mot de passe de l'école :</label>
+                                <label class="form-label text-muted small mb-1">Mot de passe de l'école : <span
+                                        class="text-danger">*</span></label>
                                 <input type="password" class="form-control form-control-sm rounded-2" id="secretCode"
-                                    placeholder="Mot de passe école">
-                                <div class="form-text small">Renseigné en cellule B1 de l'onglet <code>access</code>.
+                                    placeholder="Mot de passe école" required>
+                                <div class="form-text small">Communiqué par la direction.
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Résumé court -->
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-royal">Court résumé (affiché sur la vignette en page
-                            d'accueil) <span class="text-danger">*</span></label>
-                        <textarea class="form-control rounded-3" id="description" rows="2"
-                            placeholder="Une ou deux phrases d'introduction qui donnent envie de lire la suite..."
-                            required></textarea>
-                    </div>
+                    <!-- Résumé auto-généré (supprimé le champ manuel, généré à partir du contenu WYSIWYG) -->
+                    <input type="hidden" id="description" value="">
 
                     <!-- Modèles d'articles 1-clic -->
                     <div class="mb-3">
@@ -321,6 +318,10 @@
                                     <span class="small text-muted">Téléversée automatiquement sur Google Drive</span>
                                     <input type="file" id="fileInput" accept="image/*" class="d-none">
                                 </div>
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill mt-2 d-none"
+                                    id="removePhotoBtn" onclick="removeUploadedPhoto()">
+                                    <i class="bi bi-x-circle me-1"></i>Retirer la photo
+                                </button>
                             </div>
                             <div class="col-md-6 d-flex flex-column justify-content-center">
                                 <span class="text-muted small mb-1">Ou collez un lien d'image Google Drive / Web
@@ -383,7 +384,7 @@
                                             <h6 class="fw-bold text-royal mb-2 font-heading" id="previewTitle">Titre de
                                                 votre actualité</h6>
                                             <p class="small mb-2" id="previewDesc" style="color: #475569 !important;">Le
-                                                court résumé s'affichera ici...</p>
+                                                résumé sera généré automatiquement à partir du contenu...</p>
                                             <span class="text-primary fw-bold small">Lire la suite <i
                                                     class="bi bi-arrow-right"></i></span>
                                         </div>
@@ -468,7 +469,7 @@
 
     <script>
         // URL du Google Apps Script Web App déployé
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwEKOdQ7tq2uFol8WQJyxqXlYcAEucjGgvCL2ZVfr8qhsjZXdUTeKrqi93U6uTQEy63w/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_1s8LLt-ZC5ezdeOf4psuNrkMk_Ajhed5oU3OTPDrnzDijs1nYRhuJFiEtZvgUnIbog/exec';
 
         // Date du jour par défaut
         document.getElementById('date').valueAsDate = new Date();
@@ -684,6 +685,7 @@
             uploadedFilename = file.name;
             uploadedMimeType = file.type;
             document.getElementById('fileNameLabel').textContent = '✅ ' + file.name;
+            document.getElementById('removePhotoBtn').classList.remove('d-none');
 
             const reader = new FileReader();
             reader.onload = function (evt) {
@@ -698,12 +700,32 @@
             reader.readAsDataURL(file);
         });
 
+        // Supprimer la photo uploadée
+        function removeUploadedPhoto() {
+            uploadedBase64 = '';
+            uploadedFilename = '';
+            uploadedMimeType = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileNameLabel').textContent = 'Choisir ou glisser une photo';
+            document.getElementById('removePhotoBtn').classList.add('d-none');
+            document.getElementById('previewImgBox').innerHTML = `
+                <i class="bi bi-image display-4 text-muted opacity-50"></i>
+                <div class="position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${document.getElementById('categorie').value}</span>
+                </div>
+            `;
+        }
+
         // ============================================================
         // APERÇU EN DIRECT
         // ============================================================
         function updatePreview() {
             const t = document.getElementById('titre').value || "Titre de votre actualité";
-            const d = document.getElementById('description').value || "Le court résumé s'affichera ici...";
+            // Auto-résumé : extraire les 150 premiers caractères du contenu Quill
+            const plainText = quill.getText().trim();
+            const d = plainText.length > 0
+                ? plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '')
+                : 'Le résumé sera généré automatiquement à partir du contenu...';
             const c = document.getElementById('categorie').value;
             const a = document.getElementById('auteur').value;
 
@@ -715,9 +737,10 @@
         }
 
         document.getElementById('titre').addEventListener('input', updatePreview);
-        document.getElementById('description').addEventListener('input', updatePreview);
         document.getElementById('categorie').addEventListener('change', updatePreview);
         document.getElementById('auteur').addEventListener('input', updatePreview);
+        // Mettre à jour l'aperçu quand le contenu Quill change
+        quill.on('text-change', updatePreview);
 
         // ============================================================
         // SOUMISSION DU FORMULAIRE VERS GOOGLE APPS SCRIPT
@@ -732,6 +755,10 @@
             submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
             alertBox.className = 'alert d-none';
 
+            // Auto-génération du résumé à partir du contenu Quill (150 premiers caractères)
+            const plainText = quill.getText().trim();
+            const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+
             const payload = {
                 titre: document.getElementById('titre').value,
                 categorie: document.getElementById('categorie').value,
@@ -739,7 +766,7 @@
                 userEmail: document.getElementById('userEmail').value,
                 secretCode: document.getElementById('secretCode').value,
                 date: document.getElementById('date').value,
-                description: document.getElementById('description').value,
+                description: autoDescription,
                 contenu: quill.root.innerHTML,
                 imageUrl: document.getElementById('imageUrl').value,
                 imageBase64: uploadedBase64,
@@ -777,12 +804,11 @@
                         </div>
                     `;
 
-                    // Réinitialisation du formulaire
+                    // Réinitialisation complète du formulaire et de la photo
                     document.getElementById('newsForm').reset();
                     quill.setContents([]);
                     document.getElementById('date').valueAsDate = new Date();
-                    uploadedBase64 = '';
-                    document.getElementById('fileNameLabel').textContent = 'Choisir ou glisser une photo';
+                    removeUploadedPhoto();
                     updatePreview();
                 } else {
                     alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
