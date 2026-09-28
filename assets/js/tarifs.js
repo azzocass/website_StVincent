@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const libelle = t.Libelle || '';
                 const isSpecial = libelle.toLowerCase().includes('spécial') || libelle.toLowerCase().includes('special');
                 const type = isSpecial ? 'special' : 'ordinaire';
-                
+
                 // Extract tier inside parentheses
                 const match = libelle.match(/\(([^)]+)\)/);
                 if (!match) {
@@ -46,12 +46,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
                 const tier = match[1].replace(/^RFR\s+/i, '').trim();
-                
+
                 if (!tierMap[tier]) {
                     tierMap[tier] = { tier, ordinaire: null, special: null };
                     tiers.push(tierMap[tier]);
                 }
-                
+
                 tierMap[tier][type] = {
                     prix: t.Prix || '',
                     commentaire: t.Commentaire || ''
@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </thead>
                                 <tbody>
                 `;
-                
+
                 tiers.forEach(row => {
                     const ordPrix = row.ordinaire ? row.ordinaire.prix : '-';
                     const ordComm = row.ordinaire && row.ordinaire.commentaire ? row.ordinaire.commentaire : '';
                     const specPrix = row.special ? row.special.prix : '-';
                     const specComm = row.special && row.special.commentaire ? row.special.commentaire : '';
-                    
+
                     html += `
                         <tr>
                             <td class="fw-semibold py-3 px-3">${row.tier}</td>
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </tr>
                     `;
                 });
-                
+
                 html += `
                                 </tbody>
                             </table>
@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         
                         <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-2 px-1 text-muted" style="font-size: 0.78rem;">
                             <span><i class="bi bi-gift me-1"></i>Soutien facultatif : <strong>+5€/mois</strong>, <strong>+10€/mois</strong> ou au choix.</span>
-                            <span><i class="bi bi-people-fill me-1"></i>Réduction de 50% pour le 3ème enfant.</span>
                         </div>
                     </div>
                 `;
@@ -150,12 +149,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     <div class="row g-2">
             `;
-            
+
             byCategory['Restauration'].forEach(t => {
                 let icon = 'bi-egg';
                 let colorClass = 'text-success';
                 let borderClass = 'border-success-subtle';
-                
+
                 if (t.Libelle.toLowerCase().includes('standard') || t.Libelle.toLowerCase().includes('ordinaire')) {
                     icon = 'bi-check-circle-fill';
                     colorClass = 'text-success';
@@ -169,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     colorClass = 'text-primary';
                     borderClass = 'border-primary-subtle';
                 }
-                
+
                 html += `
                     <div class="col-sm-4">
                         <div class="card h-100 border shadow-sm rounded-3">
@@ -185,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `;
             });
-            
+
             html += `
                     </div>
                 </div>
@@ -203,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     <div class="list-group rounded-3 border">
             `;
-            
+
             byCategory['Periscolaire'].forEach(t => {
                 let icon = 'bi-clock-fill';
                 if (t.Libelle.toLowerCase().includes('matin')) {
@@ -213,7 +212,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (t.Libelle.toLowerCase().includes('étude') || t.Libelle.toLowerCase().includes('etude')) {
                     icon = 'bi-pencil-square text-info';
                 }
-                
+
                 html += `
                     <div class="list-group-item d-flex justify-content-between align-items-center py-3 px-3">
                         <div class="d-flex align-items-center">
@@ -227,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `;
             });
-            
+
             html += `
                     </div>
                 </div>
