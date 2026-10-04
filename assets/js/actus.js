@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         }).filter(item => item.titre.trim() !== '');
 
-        // Trier par date décroissante (les plus récentes en premier)[cite: 1]
+        // Trier par date décroissante (les plus récentes en premier)
         allNews.sort((a, b) => b.date - a.date);
 
         if (allNews.length === 0) {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Rendu initial[cite: 1]
+        // Rendu initial
         renderNewsSection(allNews);
         renderNewsOffcanvas(allNews);
         if (previewCard) renderNewsPreview(allNews[0]);
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // NOTIFICATIONS & LIGHTBOX
+    // NOTIFICATION NOUVEL ARTICLE & LIGHTBOX
     // ============================================================
 
     function isRecentArticle(dateObj) {
@@ -117,10 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showNewArticleBadge(article, storageKey, latestDateMs) {
         const navActu = document.querySelector('a[href="#actualites"].nav-link');
-
-        if (navActu) {
-            navActu.addEventListener('click', () => markAsSeen(storageKey, latestDateMs));
-        }
+        if (navActu) navActu.addEventListener('click', () => markAsSeen(storageKey, latestDateMs));
 
         if (navActu && !document.getElementById('new-article-badge')) {
             navActu.style.position = 'relative';
@@ -132,61 +129,89 @@ document.addEventListener('DOMContentLoaded', async () => {
             badge.style.boxShadow = '0 0 10px rgba(239,68,68,0.7)';
             badge.innerHTML = '<i class="bi bi-bell-fill"></i>';
             navActu.appendChild(badge);
-
-            if (!document.getElementById('pulse-style')) {
-                const s = document.createElement('style');
-                s.id = 'pulse-style';
-                s.textContent = `@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.9}} #new-article-badge{animation:pulse-dot 1.5s infinite;}`;
-                document.head.appendChild(s);
-            }
+        }
+                // 2. Toast flottant (CSS via classe + media query, safe-area iOS)
+        if (!document.getElementById('esv-toast-style')) {
+            const st = document.createElement('style');
+            st.id = 'esv-toast-style';
+            st.textContent = `
+                #esv-custom-toast {
+                    position: fixed;
+                    z-index: 10999;
+                    right: 30px;
+                    bottom: 30px;
+                    width: 340px;
+                    box-sizing: border-box;
+                    background: linear-gradient(135deg, #1e3a5f, #00618a);
+                    color: #fff;
+                    border-radius: 16px;
+                    padding: 1.2rem;
+                    box-shadow: 0 10px 30px rgba(0,52,89,.4);
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 12px;
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: opacity .4s ease, transform .4s ease;
+                }
+                #esv-custom-toast.show { opacity: 1; transform: translateY(0); }
+                @media (max-width: 767px) {
+                    #esv-custom-toast {
+                        left: 12px;
+                        right: 12px;
+                        width: auto;
+                        /* au-dessus de la barre iOS/Android ; augmente si un autre bouton flottant est en bas */
+                        bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+                    }
+                }
+            `;
+            document.head.appendChild(st);
         }
 
-        const toastContainer = document.getElementById('toast-container-notif') || createToastContainer();
-        const toastId = 'toast-new-article-' + Date.now();
+        const old = document.getElementById('esv-custom-toast');
+        if (old) old.remove();
+
+        const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         const prettyDate = article.date ? article.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
 
-        toastContainer.insertAdjacentHTML('beforeend', `
-            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4 show" role="alert" aria-live="assertive" aria-atomic="true" style="background:#1e3a5f;color:#fff;width:100%;">
-                <div class="d-flex">
-                    <div class="toast-body py-3 px-3 w-100">
-                        <div class="d-flex align-items-center mb-1">
-                            <span class="badge bg-danger rounded-pill px-2 py-1 me-2" style="font-size:0.7rem">Nouveau</span>
-                            <strong style="font-size:.9rem">Nouvelle actualité</strong>
-                        </div>
-                        <div style="font-size:.85rem;opacity:.95;margin-bottom:8px;word-break:break-word;">
-                            ${article.titre}
-                            ${prettyDate ? '<br><span style="opacity:.75;font-size:.78rem">' + prettyDate + '</span>' : ''}
-                        </div>
-                        <a href="#actualites" class="btn btn-sm rounded-pill fw-bold text-decoration-none" style="background:#f5a623;color:#1e3a5f;border:none;font-size:.78rem;padding:5px 14px;" onclick="markActuAsSeen_${toastId}()">
-                            Voir l'article →
-                        </a>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 mt-2 align-self-start" data-bs-dismiss="toast" onclick="markActuAsSeen_${toastId}()" aria-label="Fermer"></button>
+        const toastEl = document.createElement('div');
+        toastEl.id = 'esv-custom-toast';
+        toastEl.setAttribute('role', 'status');
+        toastEl.innerHTML = `
+            <div style="flex-grow:1;min-width:0;">
+                <div style="display:flex;align-items:center;margin-bottom:8px;">
+                    <span style="background:#e63946;color:#fff;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:bold;margin-right:8px;">Nouveau</span>
+                    <strong style="font-size:.95rem;">Nouvelle actualité</strong>
                 </div>
-            </div>`);
+                <div style="font-size:.85rem;margin-bottom:12px;line-height:1.4;color:#f8fafc;overflow-wrap:anywhere;">
+                    ${esc(article.titre)}
+                    ${prettyDate ? `<br><span style="opacity:.7;font-size:.75rem;">${prettyDate}</span>` : ''}
+                </div>
+                <a href="#actualites" data-esv-close style="background:#f5a623;color:#1e3a5f;text-decoration:none;padding:8px 16px;border-radius:20px;font-size:.8rem;font-weight:bold;display:inline-block;">Voir l'article →</a>
+            </div>
+            <button type="button" data-esv-close aria-label="Fermer" style="background:transparent;border:none;color:#fff;font-size:1.6rem;cursor:pointer;padding:4px 8px;margin:-4px -8px 0 0;line-height:1;opacity:.8;">&times;</button>
+        `;
+        document.body.appendChild(toastEl);
 
-        window['markActuAsSeen_' + toastId] = () => {
-            markAsSeen(storageKey, latestDateMs);
-            const toastEl = document.getElementById(toastId);
-            if (toastEl) toastEl.remove();
+        const closeToast = (markSeen) => {
+            if (markSeen) markAsSeen(storageKey, latestDateMs);
+            toastEl.classList.remove('show');
+            setTimeout(() => toastEl.remove(), 400);
         };
-    }
+        toastEl.querySelectorAll('[data-esv-close]').forEach(el =>
+            el.addEventListener('click', () => closeToast(true)));
 
-    function createToastContainer() {
-        const existing = document.getElementById('toast-container-notif');
-        if (existing) existing.remove();
+        // Apparition (double rAF = la transition démarre bien sur mobile)
+        requestAnimationFrame(() => requestAnimationFrame(() => toastEl.classList.add('show')));
 
-        const el = document.createElement('div');
-        el.id = 'toast-container-notif';
-        document.body.appendChild(el);
-        return el;
+        // Disparition auto après 15 s, sans marquer « vu » (il reviendra à la prochaine visite)
+        setTimeout(() => { if (document.body.contains(toastEl)) closeToast(false); }, 15000);
     }
 
     function markAsSeen(storageKey, dateMs) {
         localStorage.setItem(storageKey, String(dateMs));
         const badge = document.getElementById('new-article-badge');
         if (badge) badge.remove();
-        document.querySelectorAll('.toast').forEach(t => t.remove());
     }
 
     // ============================================================

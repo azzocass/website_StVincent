@@ -23,6 +23,15 @@
     --color-bg-light: #F0F8FF;
 }
 
+/* Empêche le débordement horizontal (AOS fade-left/right) qui décale les éléments fixed sur mobile */
+html {
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: clip;
+}
+
 body {
     font-family: var(--font-body);
     font-size: 1.1rem;
@@ -1497,26 +1506,6 @@ section {
     #modal-article-content {
         font-size: 0.9rem !important;
         line-height: 1.4 !important;
-    }
-}
-
-/* --- Conteneur Toast de notification ultra-stable --- */
-#toast-container-notif {
-    position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
-    left: auto !important;
-    z-index: 10999 !important;
-    width: 320px !important;
-    max-width: 90vw !important;
-    transform: none !important;
-}
-
-@media (max-width: 768px) {
-    #toast-container-notif {
-        right: 50% !important;
-        transform: translateX(50%) !important;
-        bottom: 15px !important;
     }
 }
 
