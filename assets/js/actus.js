@@ -122,7 +122,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showNewArticleBadge(article, storageKey, latestDateMs) {
         const navActu = document.querySelector('a[href="#actualites"].nav-link');
 
-        // Gérer le clic global sur le lien "Actualités" de la nav pour masquer définitivement la notif
         if (navActu) {
             navActu.addEventListener('click', () => markAsSeen(storageKey, latestDateMs));
         }
@@ -146,13 +145,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Toast mobile / desktop corrigé (taille fixe propre, centré sur mobile, coin bas-droit sur PC)
+        // 👈 Utilisation d'un conteneur 100% stable basé sur les classes Bootstrap standard
         const toastContainer = document.getElementById('toast-container-notif') || createToastContainer();
         const toastId = 'toast-new-article-' + Date.now();
         const prettyDate = article.date ? article.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
 
         toastContainer.insertAdjacentHTML('beforeend', `
-            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4" role="alert" aria-live="polite" data-bs-autohide="false" style="background:#1e3a5f;color:#fff;width:90vw;max-width:320px;margin: 0 auto 10px auto;">
+            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4 show" role="alert" aria-live="assertive" aria-atomic="true" style="background:#1e3a5f;color:#fff;width:100%;max-width:320px;">
                 <div class="d-flex">
                     <div class="toast-body py-3 px-3 w-100">
                         <div class="d-flex align-items-center mb-1">
@@ -174,29 +173,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         window['markActuAsSeen_' + toastId] = () => {
             markAsSeen(storageKey, latestDateMs);
             const toastEl = document.getElementById(toastId);
-            if (toastEl) bootstrap.Toast.getOrCreateInstance(toastEl).hide();
+            if (toastEl) toastEl.remove();
         };
-
-        setTimeout(() => {
-            const toastEl = document.getElementById(toastId);
-            if (toastEl) {
-                const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl);
-                bsToast.show();
-            }
-        }, 1000);
     }
 
     function createToastContainer() {
+        const existing = document.getElementById('toast-container-notif');
+        if (existing) existing.remove();
+
         const el = document.createElement('div');
         el.id = 'toast-container-notif';
-        // Position fixe propre qui gère les marges sur mobile et le coin sur desktop
-        el.className = 'position-fixed bottom-0 start-0 end-0 p-3';
+        // 👈 On utilise les classes utilitaires Bootstrap pour un positionnement fixe garanti sans bug de scroll
+        el.className = 'toast-container position-fixed bottom-0 end-0 p-3';
         el.style.zIndex = '10999';
-        el.style.pointerEvents = 'none'; // Laisse cliquer à travers le conteneur vide
-        document.body.appendChild(el);
 
-        // On réactive les clics sur les enfants (le toast lui-même)
-        el.style.pointerEvents = 'auto';
+        // Ajustement mobile pour centrer proprement le toast en bas sans qu'il colle aux bords
+        el.style.width = '100%';
+        el.style.maxWidth = '350px';
+        el.style.left = '50%';
+        el.style.transform = 'translateX(-50%)';
+
+        // Sur PC, on le remet sagement en bas à droite
+        if (window.innerWidth >= 768) {
+            el.style.left = 'auto';
+            el.style.transform = 'none';
+            el.style.right = '0';
+        }
+
+        document.body.appendChild(el);
         return el;
     }
 
