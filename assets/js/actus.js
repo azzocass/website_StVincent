@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const sectionContent = document.getElementById('news-section-content');
     const offcanvasBody = document.getElementById('news-offcanvas-body');
-    const previewCard = document.getElementById('news-preview'); // optional legacy widget
+    const previewCard = document.getElementById('news-preview');
     const filterButtons = document.querySelectorAll('.news-filter-btn');
 
     let allNews = [];
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Nettoyer et normaliser les données du Sheet (supporte tout ordre de colonnes)
+        // Nettoyer et normaliser les données du Sheet
         allNews = rawData.map((item, index) => {
             const dateStr = item.Date || '';
             const titre = item.Titre || 'Actualité';
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         }).filter(item => item.titre.trim() !== '');
 
-        // Trier par date décroissante (les plus récentes en premier)
+        // Trier par date décroissante (les plus récentes en premier)[cite: 1]
         allNews.sort((a, b) => b.date - a.date);
 
         if (allNews.length === 0) {
@@ -61,15 +61,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Rendu initial
+        // Rendu initial[cite: 1]
         renderNewsSection(allNews);
         renderNewsOffcanvas(allNews);
         if (previewCard) renderNewsPreview(allNews[0]);
 
-        // Configuration des boutons de filtre par catégorie
+        // Configuration des filtres et notification
         setupCategoryFilters();
-
-        // Vérifier s'il y a un nouvel article non vu
         checkNewArticleNotification(allNews);
 
     } catch (error) {
@@ -78,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // NOTIFICATION NOUVEL ARTICLE & LIGHTBOX
+    // NOTIFICATIONS & LIGHTBOX
     // ============================================================
 
     function isRecentArticle(dateObj) {
@@ -180,15 +178,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const el = document.createElement('div');
         el.id = 'toast-container-notif';
-
-        // Utilisation de Flexbox Bootstrap pour centrer sur mobile et aligner à droite sur PC
-        el.className = 'position-fixed p-3 d-flex justify-content-center justify-content-md-end';
-        el.style.bottom = '15px';
-        el.style.left = '0';
-        el.style.right = '0';
-        el.style.zIndex = '10999';
-        el.style.pointerEvents = 'auto'; // Laisse cliquer à travers la zone invisible
-
         document.body.appendChild(el);
         return el;
     }
@@ -221,14 +210,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function resolveImageUrl(news) {
-        if (news.image) {
-            return convertDriveUrl(news.image);
-        }
+        if (news.image) return convertDriveUrl(news.image);
         if (news.contenu) {
             const match = news.contenu.match(/<img[^>]+src=["']([^"']+)["']/i);
-            if (match && match[1]) {
-                return convertDriveUrl(match[1]);
-            }
+            if (match && match[1]) return convertDriveUrl(match[1]);
         }
         return null;
     }
@@ -320,7 +305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // RENDU DE LA SECTION DÉDIÉE ACTUALITÉS
+    // RENDU DE LA SECTION ACTUALITÉS
     // ============================================================
 
     function renderNewsSection(items) {
@@ -350,15 +335,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             pinnedArticle = regularArticles.splice(pinnedIndex, 1)[0];
         }
 
+        // 1. Article Épinglé / Hero
         if (pinnedArticle) {
             const heroImg = resolveImageUrl(pinnedArticle);
             const badgeClass = getCategoryBadgeClass(pinnedArticle.categorie);
             const catIcon = getCategoryIcon(pinnedArticle.categorie);
             const formattedDate = formatDisplayDate(pinnedArticle.date);
 
-            // Vérifier si le texte complet tient entièrement dans le résumé (ex: moins de 200 caractères)
-            const cleanContentText = (pinnedArticle.contenu || pinnedArticle.description || '').replace(/<[^>]*>?/gm, '').trim();
-            const showReadMoreHero = cleanContentText.length > 120;
+            const cleanDesc = (pinnedArticle.description || '').trim();
+            const cleanContent = (pinnedArticle.contenu || '').replace(/<[^>]*>?/gm, '').trim();
+            const showReadMoreHero = cleanContent.length > cleanDesc.length && cleanContent !== cleanDesc;
 
             html += `
                 <div class="row mb-5">
@@ -386,7 +372,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         </div>
                                         <h3 class="fw-bold text-royal mb-3 font-heading">${pinnedArticle.titre}</h3>
                                         <p class="text-muted mb-4" style="line-height: 1.6; color: #475569 !important;">
-                                            ${pinnedArticle.description || cleanContentText}
+                                            ${pinnedArticle.description || cleanContent}
                                         </p>
                                         ${showReadMoreHero ? `
                                             <button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm btn-open-news-modal" data-news-id="${pinnedArticle.id}">
@@ -402,6 +388,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         }
 
+        // 2. Grille des autres articles
         const displayList = regularArticles.slice(0, 6);
 
         if (displayList.length > 0) {
@@ -412,9 +399,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const catIcon = getCategoryIcon(news.categorie);
                 const formattedDate = formatDisplayDate(news.date);
 
-                // Masquer "Lire la suite" si le texte est très court (<= 120 caractères)
-                const cleanText = (news.description || news.contenu || '').replace(/<[^>]*>?/gm, '').trim();
-                const showReadMore = cleanText.length > 120;
+                // Condition "Lire la suite" : affiché uniquement si le contenu dépasse la description
+                const cleanDesc = (news.description || '').trim();
+                const cleanContent = (news.contenu || '').replace(/<[^>]*>?/gm, '').trim();
+                const showReadMore = cleanContent.length > cleanDesc.length && cleanContent !== cleanDesc;
 
                 html += `
                     <div class="col-12 col-md-6 col-lg-4">
@@ -437,7 +425,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     </div>
                                     <h5 class="fw-bold text-royal mb-2 font-heading" style="font-size: 1.15rem;">${news.titre}</h5>
                                     <p class="text-muted small mb-3" style="line-height: 1.5; color: #475569 !important;">
-                                        ${news.description || cleanText.substring(0, 120) + (cleanText.length > 120 ? '...' : '')}
+                                        ${news.description || cleanContent.substring(0, 120) + '...'}
                                     </p>
                                 </div>
                                 <div>
@@ -460,7 +448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // GESTION DU MODAL DE DÉTAIL D'ARTICLE
+    // GESTION DE LA MODALE D'ARTICLE
     // ============================================================
 
     function attachModalOpeners() {
@@ -469,9 +457,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 e.preventDefault();
                 const id = parseInt(btn.getAttribute('data-news-id'), 10);
                 const news = allNews.find(n => n.id === id);
-                if (news) {
-                    openNewsModal(news);
-                }
+                if (news) openNewsModal(news);
             });
         });
     }
@@ -514,16 +500,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (mediaContainer) {
             mediaContainer.innerHTML = '';
             let hasTopMedia = false;
-
             const imgUrl = resolveImageUrl(news);
             const videoUrl = news.video;
 
             if (imgUrl && videoUrl) {
                 mediaContainer.innerHTML = `
                     <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-3">
-                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" 
-                            style="max-height: 320px; object-fit: cover; object-position: center;" 
-                            onerror="if(!this.dataset.retry){this.dataset.retry=true; const fid=this.src.match(/id=([^&]+)/)?.[1]; if(fid) this.src='https://lh3.googleusercontent.com/d/'+fid; else this.style.display='none';}else{this.style.display='none';}">
+                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" style="max-height: 320px; object-fit: cover;">
                     </div>
                 `;
                 mediaContainer.classList.remove('d-none');
@@ -541,9 +524,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (imgUrl) {
                 mediaContainer.innerHTML = `
                     <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-3">
-                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" 
-                            style="max-height: 320px; object-fit: cover; object-position: center;" 
-                            onerror="if(!this.dataset.retry){this.dataset.retry=true; const fid=this.src.match(/id=([^&]+)/)?.[1]; if(fid) this.src='https://lh3.googleusercontent.com/d/'+fid; else this.style.display='none';}else{this.style.display='none';}">
+                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" style="max-height: 320px; object-fit: cover;">
                     </div>
                 `;
                 mediaContainer.classList.remove('d-none');
@@ -554,17 +535,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 hasTopMedia = true;
             }
 
-            if (!hasTopMedia) {
-                mediaContainer.classList.add('d-none');
-            }
+            if (!hasTopMedia) mediaContainer.classList.add('d-none');
         }
 
         if (contentEl) {
-            contentEl.style.lineHeight = '1.6';
-            contentEl.style.textAlign = 'left';
-            contentEl.style.color = '#334155';
-            contentEl.style.fontSize = '1rem';
-
             if (news.contenu && news.contenu.trim() !== '') {
                 contentEl.innerHTML = news.contenu;
             } else {
@@ -588,7 +562,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // FILTRES PAR CATÉGORIE
+    // FILTRES & OFFCANVAS
     // ============================================================
 
     function setupCategoryFilters() {
@@ -607,13 +581,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ============================================================
-    // OFFCANVAS ARCHIVE HISTORIQUE
-    // ============================================================
-
     function renderNewsOffcanvas(newsArray) {
         if (!offcanvasBody) return;
-
         let html = '<div class="list-group list-group-flush">';
 
         newsArray.forEach(news => {
@@ -624,9 +593,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             html += `
                 <div class="list-group-item px-0 py-3 border-bottom">
                     <div class="d-flex align-items-start gap-3">
-                        ${imgUrl ? `
-                            <img src="${imgUrl}" alt="${news.titre}" class="rounded-3 flex-shrink-0" style="width: 75px; height: 75px; object-fit: cover;" onerror="this.style.display='none'">
-                        ` : ''}
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${news.titre}" class="rounded-3 flex-shrink-0" style="width: 75px; height: 75px; object-fit: cover;" onerror="this.style.display='none'">` : ''}
                         <div class="flex-grow-1">
                             <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                                 <span class="badge ${badgeClass} rounded-pill px-2 py-0" style="font-size: 0.72rem;">${news.categorie}</span>
@@ -667,9 +634,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!previewCard) return;
         previewCard.innerHTML = `
             <div class="d-flex">
-                <div class="me-3">
-                    <i class="bi bi-newspaper fs-1 text-royal"></i>
-                </div>
+                <div class="me-3"><i class="bi bi-newspaper fs-1 text-royal"></i></div>
                 <div>
                     <h5 class="fw-bold text-royal">Dernières Actualités</h5>
                     <p class="mb-2">${news.titre} : ${news.description}</p>
@@ -694,8 +659,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (offcanvasBody) {
             offcanvasBody.innerHTML = `
                 <div class="alert alert-info border-0 rounded-3">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Aucune actualité disponible pour le moment.
+                    <i class="bi bi-info-circle me-2"></i>Aucune actualité disponible pour le moment.
                 </div>
             `;
         }

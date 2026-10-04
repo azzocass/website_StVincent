@@ -1500,6 +1500,26 @@ section {
     }
 }
 
+/* --- Conteneur Toast de notification ultra-stable --- */
+#toast-container-notif {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    left: auto !important;
+    z-index: 10999 !important;
+    width: 320px !important;
+    max-width: 90vw !important;
+    transform: none !important;
+}
+
+@media (max-width: 768px) {
+    #toast-container-notif {
+        right: 50% !important;
+        transform: translateX(50%) !important;
+        bottom: 15px !important;
+    }
+}
+
 /* Dark mode for News */
 [data-theme="dark"] .news-card,
 [data-theme="dark"] .news-hero-card {
