@@ -69,9 +69,132 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Configuration des boutons de filtre par catégorie
         setupCategoryFilters();
 
+        // Vérifier s'il y a un nouvel article non vu
+        checkNewArticleNotification(allNews);
+
     } catch (error) {
         console.error('Erreur lors du chargement des actualités:', error);
         renderEmptyState();
+    }
+
+    // ============================================================
+    // NOTIFICATION NOUVEL ARTICLE & LIGHTBOX
+    // ============================================================
+
+    // Vérifie si un article date de moins de 14 jours
+    function isRecentArticle(dateObj) {
+        if (!dateObj || isNaN(dateObj.getTime()) || dateObj.getTime() === 0) return false;
+        const now = new Date();
+        const diffDays = (now.getTime() - dateObj.getTime()) / (1000 * 60 * 60 * 24);
+        return diffDays >= -1 && diffDays <= 14;
+    }
+
+    // Lightbox plein écran pour agrandir les images au clic
+    window.openLightboxImage = function (src, caption) {
+        if (!src) return;
+        const lbModalEl = document.getElementById('imageLightboxModal');
+        const lbImg = document.getElementById('lightboxImage');
+        const lbCap = document.getElementById('lightboxCaption');
+        if (lbImg) lbImg.src = src;
+        if (lbCap) lbCap.textContent = caption || '';
+        if (lbModalEl && window.bootstrap && bootstrap.Modal) {
+            const modal = bootstrap.Modal.getOrCreateInstance(lbModalEl);
+            modal.show();
+        }
+    };
+
+    function checkNewArticleNotification(newsList) {
+        if (!newsList || newsList.length === 0) return;
+
+        const STORAGE_KEY = 'esv_last_seen_article_date';
+        const latestArticle = newsList[0]; // déjà trié par date desc
+        const latestDateMs = latestArticle.date ? latestArticle.date.getTime() : 0;
+        if (!latestDateMs) return;
+
+        const lastSeenMs = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+        const isRecent = isRecentArticle(latestArticle.date);
+
+        // Afficher la pastille/toast si l'article est plus récent que la dernière visite OU récent (< 14j)
+        if (latestDateMs > lastSeenMs || (isRecent && lastSeenMs === 0)) {
+            showNewArticleBadge(latestArticle, STORAGE_KEY, latestDateMs);
+        }
+    }
+
+    function showNewArticleBadge(article, storageKey, latestDateMs) {
+        // 1. Pastille rouge « Nouveau » bien visible sur le lien Actualités dans la navbar
+        const navActu = document.querySelector('a[href="#actualites"].nav-link');
+        if (navActu && !document.getElementById('new-article-badge')) {
+            navActu.style.position = 'relative';
+            const badge = document.createElement('span');
+            badge.id = 'new-article-badge';
+            badge.className = 'badge rounded-pill bg-danger ms-1 align-middle';
+            badge.style.fontSize = '0.65rem';
+            badge.style.padding = '3px 7px';
+            badge.style.boxShadow = '0 0 8px rgba(239,68,68,0.6)';
+            badge.innerHTML = '<i class="bi bi-bell-fill me-1"></i>Nouveau';
+            navActu.appendChild(badge);
+
+            // Injecter animation pulse discrète
+            if (!document.getElementById('pulse-style')) {
+                const s = document.createElement('style');
+                s.id = 'pulse-style';
+                s.textContent = `@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.85}} #new-article-badge{animation:pulse-dot 2s infinite;}`;
+                document.head.appendChild(s);
+            }
+
+            // Supprimer badge au clic sur "Actualités"
+            navActu.addEventListener('click', () => markAsSeen(storageKey, latestDateMs), { once: true });
+        }
+
+        // 2. Toast Bootstrap en bas à droite
+        const toastContainer = document.getElementById('toast-container-notif') || createToastContainer();
+        const toastId = 'toast-new-article-' + Date.now();
+        const prettyDate = article.date ? article.date.toLocaleDateString('fr-FR', { day:'numeric', month:'long' }) : '';
+        toastContainer.insertAdjacentHTML('beforeend', `
+            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4" role="alert" aria-live="polite" data-bs-autohide="false" style="background:#1e3a5f;color:#fff;min-width:290px">
+                <div class="d-flex">
+                    <div class="toast-body py-3 px-3">
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="badge bg-danger rounded-pill px-2 py-1 me-2" style="font-size:0.7rem">Nouveau</span>
+                            <strong style="font-size:.9rem">Nouvelle actualité</strong>
+                        </div>
+                        <div style="font-size:.82rem;opacity:.92;margin-bottom:8px">
+                            ${article.titre.substring(0, 60)}${article.titre.length > 60 ? '…' : ''}
+                            ${prettyDate ? '<br><span style="opacity:.7;font-size:.78rem">' + prettyDate + '</span>' : ''}
+                        </div>
+                        <a href="#actualites" class="btn btn-sm rounded-pill fw-bold" style="background:#f5a623;color:#1e3a5f;border:none;font-size:.78rem;padding:4px 14px;" onclick="markActuAsSeen_${toastId}()">
+                            Voir l'article →
+                        </a>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-3 mt-3 align-self-start" data-bs-dismiss="toast" onclick="markActuAsSeen_${toastId}()" aria-label="Fermer"></button>
+                </div>
+            </div>`);
+
+        window['markActuAsSeen_' + toastId] = () => {
+            markAsSeen(storageKey, latestDateMs);
+            const toastEl = document.getElementById(toastId);
+            if (toastEl) bootstrap.Toast.getOrCreateInstance(toastEl).hide();
+        };
+
+        setTimeout(() => {
+            const toastEl = document.getElementById(toastId);
+            if (toastEl) bootstrap.Toast.getOrCreateInstance(toastEl).show();
+        }, 1500);
+    }
+
+    function createToastContainer() {
+        const el = document.createElement('div');
+        el.id = 'toast-container-notif';
+        el.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        el.style.zIndex = '1090';
+        document.body.appendChild(el);
+        return el;
+    }
+
+    function markAsSeen(storageKey, dateMs) {
+        localStorage.setItem(storageKey, String(dateMs));
+        const badge = document.getElementById('new-article-badge');
+        if (badge) badge.remove();
     }
 
     // ============================================================
@@ -386,31 +509,60 @@ document.addEventListener('DOMContentLoaded', async () => {
             badgeEl.innerHTML = `<i class="bi ${getCategoryIcon(news.categorie)} me-1"></i>${news.categorie}`;
         }
 
-        // Media (Vidéo ou Image)
+        // Media (Photo de couverture et/ou Vidéo principale)
+        const bottomMediaContainer = document.getElementById('modal-article-bottom-media');
+        if (bottomMediaContainer) {
+            bottomMediaContainer.innerHTML = '';
+            bottomMediaContainer.classList.add('d-none');
+        }
+
         if (mediaContainer) {
             mediaContainer.innerHTML = '';
-            let hasMedia = false;
+            let hasTopMedia = false;
 
-            if (news.video) {
-                mediaContainer.innerHTML = buildVideoEmbedHtml(news.video);
+            const imgUrl = resolveImageUrl(news);
+            const videoUrl = news.video;
+
+            if (imgUrl && videoUrl) {
+                // Photo d'accueil en haut ET vidéo en bas de l'article
+                mediaContainer.innerHTML = `
+                    <div class="position-relative overflow-hidden rounded-3 shadow-sm bg-light mb-2">
+                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" 
+                            style="max-height: 280px; object-fit: cover; object-position: center;" 
+                            onerror="if(!this.dataset.retry){this.dataset.retry=true; const fid=this.src.match(/id=([^&]+)/)?.[1]; if(fid) this.src='https://lh3.googleusercontent.com/d/'+fid; else this.style.display='none';}else{this.style.display='none';}">
+                    </div>
+                `;
                 mediaContainer.classList.remove('d-none');
-                hasMedia = true;
-            } else {
-                const imgUrl = resolveImageUrl(news);
-                if (imgUrl) {
-                    mediaContainer.innerHTML = `
-                        <div class="position-relative overflow-hidden rounded-3 shadow-sm bg-light mb-2">
-                            <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" 
-                                style="max-height: 240px; object-fit: cover; object-position: center;" 
-                                onerror="if(!this.dataset.retry){this.dataset.retry=true; const fid=this.src.match(/id=([^&]+)/)?.[1]; if(fid) this.src='https://lh3.googleusercontent.com/d/'+fid; else this.style.display='none';}else{this.style.display='none';}">
+                hasTopMedia = true;
+
+                if (bottomMediaContainer) {
+                    bottomMediaContainer.innerHTML = `
+                        <div class="pt-3 border-top mt-4">
+                            <h6 class="fw-bold text-royal mb-2"><i class="bi bi-camera-reels-fill text-primary me-2"></i>Vidéo associée :</h6>
+                            ${buildVideoEmbedHtml(videoUrl)}
                         </div>
                     `;
-                    mediaContainer.classList.remove('d-none');
-                    hasMedia = true;
+                    bottomMediaContainer.classList.remove('d-none');
                 }
+            } else if (imgUrl) {
+                // Photo seule
+                mediaContainer.innerHTML = `
+                    <div class="position-relative overflow-hidden rounded-3 shadow-sm bg-light mb-2">
+                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" 
+                            style="max-height: 280px; object-fit: cover; object-position: center;" 
+                            onerror="if(!this.dataset.retry){this.dataset.retry=true; const fid=this.src.match(/id=([^&]+)/)?.[1]; if(fid) this.src='https://lh3.googleusercontent.com/d/'+fid; else this.style.display='none';}else{this.style.display='none';}">
+                    </div>
+                `;
+                mediaContainer.classList.remove('d-none');
+                hasTopMedia = true;
+            } else if (videoUrl) {
+                // Vidéo seule en haut
+                mediaContainer.innerHTML = buildVideoEmbedHtml(videoUrl);
+                mediaContainer.classList.remove('d-none');
+                hasTopMedia = true;
             }
 
-            if (!hasMedia) {
+            if (!hasTopMedia) {
                 mediaContainer.classList.add('d-none');
             }
         }

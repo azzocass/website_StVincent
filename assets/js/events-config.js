@@ -37,7 +37,7 @@ const BANNERS_CONFIG = {
                 url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/apero-des-papas-2026"
             },
             {
-                visible: true,
+                visible: false,
                 label: "Apéro des Mamans",
                 icon: "🍸",
                 color: "#f39e36ff",

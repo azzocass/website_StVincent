@@ -1,7 +1,7 @@
 /**
  * ============================================================
  * BACKEND GOOGLE APPS SCRIPT — ÉCOLE SAINT VINCENT (CMS)
- * Reçoit les publications depuis redaction.html
+ * Reçoit les publications, uploads d'images et vidéos depuis redaction.html
  * ============================================================
  */
 
@@ -10,8 +10,33 @@ function doPost(e) {
   try {
     var raw = e.postData ? e.postData.contents : "{}";
     var data = JSON.parse(raw);
-    
-    var result = publishArticle(data);
+    var action = (data.action || "publish").trim();
+    var result;
+
+    if (action === "uploadVideo") {
+      result = handleUploadVideo(data);
+    } else if (action === "uploadImage") {
+      result = handleUploadImage(data);
+    } else if (action === "uploadMedia") {
+      var isVideo = (data.mediaType || "").indexOf("video") !== -1 || (data.mediaName || "").match(/\.(mp4|mov|avi|webm|mkv)$/i);
+      if (isVideo) {
+        result = handleUploadVideo(data);
+      } else {
+        result = handleUploadImage(data);
+      }
+    } else if (action === "publish") {
+      result = publishArticle(data);
+    } else {
+      // Si aucune action explicite mais qu'un titre est présent, traiter comme publication
+      if (data.titre && data.titre.trim()) {
+        result = publishArticle(data);
+      } else {
+        result = {
+          success: false,
+          message: "Action non reconnue ou titre manquant (" + action + ")."
+        };
+      }
+    }
     
     return ContentService.createTextOutput(JSON.stringify(result))
       .setMimeType(ContentService.MimeType.JSON);
@@ -32,12 +57,12 @@ function doGet(e) {
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
-// 3. Logique principale de publication
+// 3. Logique principale de publication d'article
 function publishArticle(data) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // --- VÉRIFICATION STRICTE EMAIL (COLONNE A) & MOT DE PASSE (COLONNE B) ---
-  var authCheck = verifyUserPermission(ss, data.userEmail, data.secretCode);
+  // --- VÉRIFICATION DU MOT DE PASSE UNIQUE DE RÉDACTION ---
+  var authCheck = verifySecretPassword(data.secretCode);
   if (!authCheck.authorized) {
     return {
       success: false,
@@ -45,12 +70,20 @@ function publishArticle(data) {
     };
   }
 
-  // --- ACCÈS À L'ONGLET ACTUALITÉS ---
+  // --- ACCÈS À L'ONGLET ACTUALITÉS (Actu) ---
+  var cleanTitle = (data.titre || "").trim();
+  if (!cleanTitle) {
+    return {
+      success: false,
+      message: "Erreur : Le titre de l'actualité est obligatoire pour publier un article."
+    };
+  }
+
   var sheet = ss ? (ss.getSheetByName("Actu") || ss.getSheetByName("Actualites") || ss.getSheets()[0]) : null;
   if (!sheet) {
     return {
       success: false,
-      message: "Erreur : Impossible de trouver l'onglet des Actualités dans le Sheet."
+      message: "Erreur : Impossible de trouver l'onglet des Actualités dans le Google Sheet."
     };
   }
 
@@ -73,13 +106,26 @@ function publishArticle(data) {
     dateStr = d + '/' + m + '/' + y;
   }
 
-  // Upload photo sur Google Drive si envoyée en fichier (sécurisé, ne bloque pas le Sheet)
+  // Upload photo de couverture si envoyée en fichier direct
   var finalImageUrl = (data.imageUrl || "").trim();
   if (data.imageBase64 && data.imageName) {
     try {
       finalImageUrl = saveImageToDrive(data.imageBase64, data.imageName, data.imageType);
     } catch (errDrive) {
       Logger.log("Erreur photo Drive: " + errDrive.toString());
+    }
+  }
+
+  // Upload vidéo principale si envoyée directement en fichier
+  var finalVideoUrl = (data.videoUrl || "").trim();
+  if (data.videoBase64 && data.videoName && !finalVideoUrl) {
+    try {
+      var vidResult = saveVideoToDrive(data.videoBase64, data.videoName, data.videoType);
+      if (vidResult && vidResult.url) {
+        finalVideoUrl = vidResult.url;
+      }
+    } catch (errVid) {
+      Logger.log("Erreur vidéo Drive: " + errVid.toString());
     }
   }
 
@@ -91,9 +137,9 @@ function publishArticle(data) {
     "contenu": (data.contenu || "").trim(),
     "auteur": (data.auteur || "").trim(),
     "categorie": (data.categorie || "Vie de classe").trim(),
-    "epingle": data.epingle ? "oui" : "non",
+    "epingle": (data.epingle === true || String(data.epingle).toLowerCase() === "oui") ? "oui" : "non",
     "image": finalImageUrl,
-    "video": (data.videoUrl || "").trim(),
+    "video": finalVideoUrl,
     "lien": (data.lien || "").trim()
   };
 
@@ -134,110 +180,211 @@ function publishArticle(data) {
 
   return {
     success: true,
-    message: "Article « " + data.titre + " » publié avec succès !"
+    message: "Article « " + cleanTitle + " » publié avec succès !"
   };
 }
 
 /**
- * 4. Contrôle strict de permission : Email (colonne A) et Mot de passe (colonne B)
+ * 4. Action API : Téléversement direct d'une vidéo vers le dossier Google Drive « informatiques/Videos site »
  */
-function verifyUserPermission(ss, email, secretCode) {
-  if (!ss) return { authorized: true };
-
-  var userSheet = ss.getSheetByName("actu_authorized") || 
-                  ss.getSheetByName("actu_authorization") || 
-                  ss.getSheetByName("access") || 
-                  ss.getSheetByName("Utilisateurs") || 
-                  ss.getSheetByName("Enseignants") ||
-                  ss.getSheetByName("Autorisations");
-  
-  if (!userSheet) {
-    return { authorized: true };
+function handleUploadVideo(data) {
+  var auth = verifySecretPassword(data.secretCode);
+  if (!auth.authorized) {
+    return { success: false, message: auth.message };
+  }
+  if (!data.videoBase64) {
+    return { success: false, message: "Aucun fichier vidéo reçu." };
   }
 
-  var data = userSheet.getDataRange().getValues();
-  if (!data || data.length === 0) {
-    return { authorized: true };
-  }
-
-  var cleanEmail = (email || "").trim().toLowerCase();
-  var cleanCode = (secretCode || "").trim();
-
-  if (!cleanEmail || !cleanCode) {
+  try {
+    var vidResult = saveVideoToDrive(data.videoBase64, data.videoName, data.videoType);
     return {
-      authorized: false,
-      message: "Accès refusé : L'email enseignant ET le mot de passe sont tous les deux requis."
+      success: true,
+      url: vidResult.url,
+      fileId: vidResult.id,
+      name: vidResult.name,
+      message: "Vidéo enregistrée avec succès dans le dossier « informatiques/Videos site » !"
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Erreur lors du téléversement de la vidéo sur Drive : " + err.toString()
     };
   }
-
-  var userRowIndex = -1;
-  var rowPassword = "";
-  var defaultGlobalPassword = "";
-
-  // Parcourir le tableau de l'onglet actu_authorized
-  for (var r = 0; r < data.length; r++) {
-    var cellA = (data[r][0] || "").toString().trim().toLowerCase();
-    var cellB = (data[r][1] || "").toString().trim();
-
-    // Récupérer un mot de passe par défaut s'il existe en ligne 1 ou 2 dans la colonne B
-    if (r <= 1 && cellB && cellB.toLowerCase().indexOf("mot de passe") === -1) {
-      defaultGlobalPassword = cellB;
-    }
-
-    // Chercher la ligne correspondant à l'email saisi dans la colonne A
-    if (cellA === cleanEmail) {
-      userRowIndex = r;
-      rowPassword = cellB;
-      break;
-    }
-  }
-
-  // 1. Email non trouvé dans la colonne A
-  if (userRowIndex === -1) {
-    return {
-      authorized: false,
-      message: "Accès refusé : L'adresse « " + email + " » n'est pas autorisée dans l'onglet actu_authorized."
-    };
-  }
-
-  // 2. Vérification du mot de passe (Colonne B de la ligne ou mot de passe global B2/B1)
-  var expectedPassword = rowPassword ? rowPassword : defaultGlobalPassword;
-
-  if (expectedPassword && cleanCode !== expectedPassword) {
-    return {
-      authorized: false,
-      message: "Accès refusé : Le mot de passe saisi pour l'adresse « " + email + " » est incorrect."
-    };
-  }
-
-  return { authorized: true };
 }
 
-// 5. Sauvegarde d'image rapide sur Google Drive avec URL Thumbnail instantanée
-function saveImageToDrive(base64Data, filename, mimeType) {
-  try {
-    var folderName = "Photos Actualités École";
-    var folders = DriveApp.getFoldersByName(folderName);
-    var folder;
-
-    if (folders.hasNext()) {
-      folder = folders.next();
-    } else {
-      folder = DriveApp.createFolder(folderName);
-      folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    }
-
-    var decoded = Utilities.base64Decode(base64Data);
-    var blob = Utilities.newBlob(decoded, mimeType || "image/jpeg", filename || "photo.jpg");
-    var file = folder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-
-    // URL Thumbnail immédiate (sans délai CDN ni besoin de Ctrl+Shift+R)
-    return "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1200";
-  } catch (e) {
-    Logger.log("Erreur Drive: " + e.toString());
-    return "";
+/**
+ * 5. Action API : Téléversement direct d'une image vers Google Drive (ex: photo insérée dans le texte)
+ */
+function handleUploadImage(data) {
+  var auth = verifySecretPassword(data.secretCode);
+  if (!auth.authorized) {
+    return { success: false, message: auth.message };
   }
+  if (!data.imageBase64) {
+    return { success: false, message: "Aucun fichier image reçu." };
+  }
+
+  try {
+    var url = saveImageToDrive(data.imageBase64, data.imageName, data.imageType);
+    return {
+      success: true,
+      url: url,
+      message: "Photo enregistrée avec succès !"
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Erreur lors du téléversement de la photo sur Drive : " + err.toString()
+    };
+  }
+}
+
+/**
+ * 6. Contrôle de mot de passe unique (100% sécurisé, hors Git)
+ * Priorité 1 : Propriétés du script (Script Properties)
+ * Fallback 2 : Onglet actu_authorized (Colonne B)
+ */
+function verifySecretPassword(secretCode) {
+  var cleanCode = (secretCode || "").trim();
+  if (!cleanCode) {
+    return {
+      authorized: false,
+      message: "Accès refusé : Le mot de passe de rédaction est obligatoire."
+    };
+  }
+
+  // 1. Vérification dans les Propriétés du Script (Le plus sécurisé, invisible sur Git)
+  var scriptProperties = PropertiesService.getScriptProperties();
+  var storedPwd = scriptProperties.getProperty("CMS_PASSWORD");
+  if (storedPwd && storedPwd.trim() !== "") {
+    if (cleanCode === storedPwd.trim()) {
+      return { authorized: true };
+    } else {
+      return {
+        authorized: false,
+        message: "Accès refusé : Le mot de passe de rédaction est incorrect."
+      };
+    }
+  }
+
+  // 2. Fallback de secours : Onglet actu_authorized (Colonne B ou mot de passe global)
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (ss) {
+    var userSheet = ss.getSheetByName("actu_authorized") || 
+                    ss.getSheetByName("actu_authorization") || 
+                    ss.getSheetByName("access") ||
+                    ss.getSheetByName("Utilisateurs");
+    if (userSheet) {
+      var data = userSheet.getDataRange().getValues();
+      for (var r = 0; r < data.length; r++) {
+        var cellB = (data[r][1] || "").toString().trim();
+        if (cellB && cellB.toLowerCase().indexOf("mot de passe") === -1) {
+          if (cleanCode === cellB) {
+            return { authorized: true };
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    authorized: false,
+    message: "Accès refusé : Mot de passe incorrect."
+  };
+}
+
+/**
+ * Helper : Trouver ou créer un sous-dossier dans un dossier parent
+ */
+function getOrCreateSubfolder(parentFolder, subfolderName) {
+  var it = parentFolder.getFoldersByName(subfolderName);
+  if (it.hasNext()) {
+    return it.next();
+  }
+  var created = parentFolder.createFolder(subfolderName);
+  created.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return created;
+}
+
+/**
+ * 7. Répertoire Drive « informatiques/Videos site » pour les vidéos
+ */
+function getVideoFolder() {
+  var sharedFolderId = "17u6d4AJN-g4nAajGWyhkl3o9thWmDbon";
+  try {
+    var sharedFolder = DriveApp.getFolderById(sharedFolderId);
+    if (sharedFolder) {
+      return sharedFolder;
+    }
+  } catch (errShared) {
+    Logger.log("Dossier ID partagé non accessible directement, recherche par nom: " + errShared.toString());
+  }
+
+  var parentName = "Informatique";
+  var subName = "Videos site";
+
+  var parentFolders = DriveApp.getFoldersByName(parentName);
+  var parentFolder;
+  if (parentFolders.hasNext()) {
+    parentFolder = parentFolders.next();
+  } else {
+    parentFolder = DriveApp.createFolder(parentName);
+    parentFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  }
+
+  return getOrCreateSubfolder(parentFolder, subName);
+}
+
+/**
+ * Sauvegarde une vidéo dans « informatiques/Videos site »
+ */
+function saveVideoToDrive(base64Data, filename, mimeType) {
+  var folder = getVideoFolder();
+  var decoded = Utilities.base64Decode(base64Data);
+  var blob = Utilities.newBlob(decoded, mimeType || "video/mp4", filename || "video.mp4");
+  var file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+  return {
+    id: file.getId(),
+    url: "https://drive.google.com/file/d/" + file.getId() + "/preview",
+    name: file.getName()
+  };
+}
+
+/**
+ * 8. Sauvegarde d'image sur Google Drive (« Photos Actualités École ») avec URL Thumbnail instantanée
+ */
+function saveImageToDrive(base64Data, filename, mimeType) {
+  var folderName = "Photos Actualités École";
+  var folders = DriveApp.getFoldersByName(folderName);
+  var folder;
+
+  if (folders.hasNext()) {
+    folder = folders.next();
+  } else {
+    folder = DriveApp.createFolder(folderName);
+    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  }
+
+  var decoded = Utilities.base64Decode(base64Data);
+  var blob = Utilities.newBlob(decoded, mimeType || "image/jpeg", filename || "photo.jpg");
+  var file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+  // URL Thumbnail immédiate (sans délai CDN)
+  return "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1200";
+}
+
+/**
+ * 9. Fonction pratique à exécuter UNE FOIS dans l'éditeur Google Apps Script
+ * pour définir le mot de passe partagé en toute sécurité sans toucher à Git !
+ */
+function configurerMotDePasseCMS(motDePasse) {
+  var pwd = motDePasse || "SaintVincent2026"; // 👈 Indiquez ici votre mot de passe et cliquez sur "Exécuter"
+  PropertiesService.getScriptProperties().setProperty("CMS_PASSWORD", pwd);
+  Logger.log("✅ Mot de passe CMS défini avec succès : " + pwd);
 }
 
 // Helper: Normalise le nom d'en-tête

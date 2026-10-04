@@ -236,128 +236,174 @@
                         </div>
                     </div>
 
-                    <!-- Ligne 3 : Contrôle d'accès Enseignant (Email OU Mot de passe) -->
-                    <div class="p-3 bg-light rounded-3 border mb-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-shield-lock-fill text-primary fs-5 me-2"></i>
-                            <span class="fw-bold text-royal">Autorisation de publication</span>
-                            <span class="badge bg-warning-subtle text-warning-emphasis ms-2 small">
-                                <i class="bi bi-lock-fill me-1"></i>Email ET Mot de passe requis
+                    <!-- Ligne 3 : Contrôle d'accès : Mot de passe unique de rédaction -->
+                    <div class="p-3 bg-light rounded-3 border mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-shield-lock-fill text-primary fs-5 me-2"></i>
+                                <span class="fw-bold text-royal">Mot de passe de rédaction</span>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary small">
+                                <i class="bi bi-key-fill me-1"></i>Mot de passe unique équipe
                             </span>
                         </div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label text-muted small mb-1">Votre email enseignant : <span
-                                        class="text-danger">*</span></label>
-                                <input type="email" class="form-control form-control-sm rounded-2" id="userEmail"
-                                    placeholder="nom@ecolesaintvincent.fr ou gmail" required>
-                                <div class="form-text small">Doit figurer dans la liste autorisée (onglet
-                                    <code>access</code>).
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-7 col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="bi bi-lock text-muted"></i></span>
+                                    <input type="password" class="form-control border-start-0" id="secretCode"
+                                        placeholder="Entrez le mot de passe de l'école..." required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn"
+                                        title="Afficher/Masquer le mot de passe">
+                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label text-muted small mb-1">Mot de passe de l'école : <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" class="form-control form-control-sm rounded-2" id="secretCode"
-                                    placeholder="Mot de passe école" required>
-                                <div class="form-text small">Communiqué par la direction.
+                            <div class="col-md-5 col-sm-12">
+                                <div class="form-text small text-muted my-0">
+                                    <i class="bi bi-info-circle me-1"></i>Mot de passe partagé communiqué par la
+                                    direction. Mémorisé sur cet appareil.
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Résumé auto-généré (supprimé le champ manuel, généré à partir du contenu WYSIWYG) -->
+                    <!-- Résumé auto-généré -->
                     <input type="hidden" id="description" value="">
 
                     <!-- Modèles d'articles 1-clic -->
                     <div class="mb-3">
                         <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
                             <label class="form-label fw-bold text-royal mb-0">
-                                <i class="bi bi-magic me-1 text-primary"></i> Modèles d'articles prêts à l'emploi :
+                                <i class="bi bi-magic me-1 text-primary"></i> Modèles prêts à l'emploi :
                             </label>
                             <span class="text-muted small">Cliquez pour pré-remplir l'éditeur</span>
                         </div>
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('sortie')">
-                                🚌 Sortie / Voyage
-                            </button>
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('projet')">
-                                🎨 Projet / Atelier
-                            </button>
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('sport')">
-                                🏆 Événement sportif
-                            </button>
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('mot')">
-                                📢 Annonce / Mot aux parents
-                            </button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('sortie')">🚌 Sortie /
+                                Voyage</button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('projet')">🎨 Projet /
+                                Atelier</button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('sport')">🏆 Événement
+                                sportif</button>
+                            <button type="button" class="btn btn-template" onclick="applyTemplate('mot')">📢 Annonce /
+                                Mot aux parents</button>
                         </div>
                     </div>
 
-                    <!-- Éditeur Riche WYSIWYG avec Quill & quill-emoji -->
+                    <!-- ① VIGNETTE D'ACCUEIL (avant le texte) -->
+                    <div class="card border rounded-4 p-3 p-md-4 mb-4"
+                        style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);">
+                        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                            <div>
+                                <h6 class="fw-bold text-royal mb-0">
+                                    <i class="bi bi-stars text-primary me-2"></i>Vignette d'accueil
+                                </h6>
+                                <span class="text-muted small">Facultatif — photo ou vidéo affichée en tête de l'article
+                                    sur la page d'accueil</span>
+                            </div>
+                            <span
+                                class="badge bg-secondary-subtle text-secondary small px-3 py-1 rounded-pill">Facultatif</span>
+                        </div>
+
+                        <!-- Zone unique photo + vidéo -->
+                        <div class="upload-zone py-4" id="vignetteDropZone"
+                            ondragover="event.preventDefault();this.classList.add('drag-over')"
+                            ondragleave="this.classList.remove('drag-over')" ondrop="handleVignetteDrop(event)"
+                            onclick="document.getElementById('vignetteFileInput').click()">
+                            <i class="bi bi-cloud-arrow-up fs-2 text-primary mb-1 d-block"></i>
+                            <span class="fw-bold d-block small text-royal" id="vignetteFileLabel">Choisir ou glisser une
+                                photo / vidéo</span>
+                            <span class="small text-muted" style="font-size:.75rem">JPG, PNG, MP4, AVI, MOV… (photo
+                                optimisée auto)</span>
+                            <input type="file" id="vignetteFileInput" accept="image/*,video/*,.avi,.mov,.mp4,.mkv,.webm"
+                                class="d-none">
+                        </div>
+
+                        <!-- Progression upload vignette vidéo -->
+                        <div id="vignetteVideoProgress" class="d-none my-2 p-2 bg-light rounded-2 border">
+                            <div class="d-flex align-items-center small text-primary mb-1">
+                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                <span id="vignetteProgressText">Téléversement de la vidéo vers Google Drive...</span>
+                            </div>
+                            <div class="progress" style="height:6px">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                    style="width:100%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Aperçu / Confirmation vignette -->
+                        <div id="vignettePreviewBox" class="d-none mt-3">
+                            <div
+                                class="d-flex align-items-center justify-content-between p-2 bg-success-subtle rounded-3">
+                                <span class="small fw-bold text-success" id="vignettePreviewLabel"><i
+                                        class="bi bi-check-circle-fill me-1"></i>Vignette prête</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill py-0 px-2"
+                                    onclick="removeVignette()"><i class="bi bi-x-circle me-1"></i>Retirer</button>
+                            </div>
+                            <img id="vignettePreviewImg" src="" alt="" class="img-fluid rounded-3 mt-2 shadow-sm"
+                                style="max-height:180px;object-fit:cover;width:100%;display:none">
+                        </div>
+
+                        <!-- Champs cachés (URL image/vidéo finale) -->
+                        <input type="hidden" id="imageUrl" value="">
+                        <input type="hidden" id="videoUrl" value="">
+                        <input type="hidden" id="vignetteType" value=""><!-- 'image' | 'video' -->
+                    </div>
+
+                    <!-- ② CONTENU DE L'ARTICLE (Quill + insertion média) -->
                     <div class="mb-4">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <label class="form-label fw-bold text-royal mb-0">Contenu complet de l'article</label>
-                            <span class="text-muted small"><i class="bi bi-info-circle me-1"></i>Utilisez la palette de
-                                couleurs et le bouton émoji dans la barre d'outils</span>
+                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                            <label class="form-label fw-bold text-royal mb-0">Contenu de l'article</label>
+                            <span class="text-muted small"><i class="bi bi-info-circle me-1"></i>Rédigez votre texte,
+                                puis insérez des médias au fil de la lecture</span>
                         </div>
                         <div class="editor-container-box shadow-sm">
                             <div id="editor"></div>
                         </div>
+
                     </div>
 
-                    <!-- Photo de couverture -->
+                    <!-- ③ AJOUT PHOTO / VIDÉO DANS L'ARTICLE (zone unique) -->
+                    <div class="card border rounded-4 p-3 mb-4 bg-light">
+                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                            <div>
+                                <label class="form-label fw-bold text-royal mb-0">
+                                    <i class="bi bi-paperclip text-primary me-2"></i>Insérer une photo ou une vidéo dans
+                                    l'article
+                                </label>
+                                <span class="d-block small text-muted mt-1">
+                                    📍 <strong>Emplacement :</strong> Le média s'insère directement dans le texte à
+                                    l'endroit exact où se trouve votre curseur (ou tout à la fin de l'article si vous
+                                    n'avez pas cliqué dans le texte).
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                            <button type="button" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm"
+                                id="btnInsertArticleMedia">
+                                <i class="bi bi-plus-circle-fill me-2"></i>+ Photo ou Vidéo (depuis l'ordinateur /
+                                mobile)
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 small"
+                                id="btnOpenVideoLinkModal">
+                                <i class="bi bi-link-45deg me-1"></i>Ou coller un lien (YouTube / Drive)
+                            </button>
+                        </div>
+                        <input type="file" id="articleMediaInput" accept="image/*,video/*,.avi,.mov,.mp4,.mkv,.webm"
+                            class="d-none">
+                    </div>
+
+                    <!-- ④ LIEN EXTERNE -->
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-royal">Photo de couverture</label>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="upload-zone" id="dropZone"
-                                    onclick="document.getElementById('fileInput').click()">
-                                    <i class="bi bi-cloud-arrow-up display-5 text-primary mb-2 d-block"></i>
-                                    <span class="fw-bold d-block text-royal" id="fileNameLabel">Choisir ou glisser une
-                                        photo</span>
-                                    <span class="small text-muted">Téléversée automatiquement sur Google Drive</span>
-                                    <input type="file" id="fileInput" accept="image/*" class="d-none">
-                                </div>
-                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill mt-2 d-none"
-                                    id="removePhotoBtn" onclick="removeUploadedPhoto()">
-                                    <i class="bi bi-x-circle me-1"></i>Retirer la photo
-                                </button>
-                            </div>
-                            <div class="col-md-6 d-flex flex-column justify-content-center">
-                                <span class="text-muted small mb-1">Ou collez un lien d'image Google Drive / Web
-                                    existant :</span>
-                                <input type="url" class="form-control rounded-3" id="imageUrl"
-                                    placeholder="https://drive.google.com/file/d/.../view">
-                            </div>
-                        </div>
+                        <label class="form-label fw-bold text-royal small mb-1">Lien externe « En savoir plus »
+                            (optionnel)</label>
+                        <input type="url" class="form-control rounded-3" id="lien" placeholder="https://...">
                     </div>
 
-                    <!-- Vidéo & Lien externe -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-royal">Lien Vidéo Google Drive (optionnel)</label>
-                            <input type="url" class="form-control rounded-3" id="videoUrl"
-                                placeholder="https://drive.google.com/file/d/.../view">
-                            <div class="form-text small">La vidéo sera intégrée directement dans le lecteur vidéo du
-                                site.</div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-royal">Lien externe « En savoir plus »
-                                (optionnel)</label>
-                            <input type="url" class="form-control rounded-3" id="lien" placeholder="https://...">
-                        </div>
-                    </div>
-
-                    <!-- Switch Épingler à la une -->
-                    <div class="form-check form-switch p-3 bg-light rounded-3 mb-4 border">
-                        <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" id="epingle"
-                            style="width: 2.5em; height: 1.3em;">
-                        <label class="form-check-label fw-bold text-royal" for="epingle">
-                            📌 Mettre cet article « À la une » (mis en avant tout en haut de la page d'accueil)
-                        </label>
-                    </div>
-
-                    <!-- Accordéon : Aperçu en direct -->
+                    <!-- ⑤ APERÇU EN DIRECT -->
                     <div class="mb-4">
                         <button class="btn btn-sm btn-outline-secondary rounded-pill mb-3" type="button"
                             data-bs-toggle="collapse" data-bs-target="#previewCollapse">
@@ -383,8 +429,8 @@
                                             </div>
                                             <h6 class="fw-bold text-royal mb-2 font-heading" id="previewTitle">Titre de
                                                 votre actualité</h6>
-                                            <p class="small mb-2" id="previewDesc" style="color: #475569 !important;">Le
-                                                résumé sera généré automatiquement à partir du contenu...</p>
+                                            <p class="small mb-2" id="previewDesc" style="color:#475569">Le résumé sera
+                                                généré automatiquement à partir du contenu...</p>
                                             <span class="text-primary fw-bold small">Lire la suite <i
                                                     class="bi bi-arrow-right"></i></span>
                                         </div>
@@ -394,13 +440,16 @@
                         </div>
                     </div>
 
-                    <!-- Bouton de publication -->
+                    <!-- ⑥ BOUTON PUBLICATION -->
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3"
                             id="submitBtn">
                             <i class="bi bi-send-fill me-2"></i>Publier sur le site de l'école
                         </button>
                     </div>
+
+                    <!-- Champ caché epingle (défini par le pop-up de confirmation) -->
+                    <input type="hidden" id="epingle" value="non">
 
                 </form>
             </div>
@@ -454,167 +503,293 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="py-3 bg-footer text-white text-center">
-        <div class="container">
-            <p class="mb-0 small opacity-75">École Saint Vincent — Espace Enseignants & Direction</p>
+    <!-- Modal Insertion Vidéo dans l'article -->
+    <div class="modal fade" id="articleVideoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold text-royal"><i
+                            class="bi bi-camera-video-fill text-primary me-2"></i>Insérer une vidéo dans l'article</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <ul class="nav nav-pills nav-fill mb-3 p-1 bg-light rounded-3" id="videoModalTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active rounded-pill fw-bold small py-2" id="tab-upload-video"
+                                data-bs-toggle="pill" data-bs-target="#pane-upload-video" type="button" role="tab">
+                                <i class="bi bi-cloud-arrow-up-fill me-1"></i>Téléverser (Drive)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-pill fw-bold small py-2" id="tab-link-video"
+                                data-bs-toggle="pill" data-bs-target="#pane-link-video" type="button" role="tab">
+                                <i class="bi bi-link-45deg me-1"></i>Lien YouTube / Drive
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Onglet 1 : Upload direct vers Drive informatiques/Videos site -->
+                        <div class="tab-pane fade show active" id="pane-upload-video" role="tabpanel">
+                            <p class="text-muted small mb-3">
+                                Sélectionnez un fichier vidéo depuis votre ordinateur ou téléphone (mp4, mov, webm).
+                                Elle sera automatiquement stockée sur Google Drive dans
+                                <code>informatiques/Videos site</code>.
+                            </p>
+                            <div class="upload-zone py-4 mb-3"
+                                onclick="document.getElementById('modalVideoFileInput').click()">
+                                <i class="bi bi-camera-reels display-6 text-primary mb-2 d-block"></i>
+                                <span class="fw-bold d-block small text-royal" id="modalVideoFileName">Choisir un
+                                    fichier vidéo</span>
+                                <span class="small text-muted" style="font-size: 0.75rem;">Recommandé &le; 25 Mo pour un
+                                    envoi fluide</span>
+                                <input type="file" id="modalVideoFileInput" accept="video/*" class="d-none">
+                            </div>
+
+                            <div id="modalVideoProgressBox" class="d-none my-2 p-2 bg-light rounded-2 border">
+                                <div class="d-flex align-items-center small text-primary mb-1">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                    <span>Téléversement vers Drive en cours...</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                        style="width: 100%"></div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary rounded-pill w-100 fw-bold py-2"
+                                id="btnConfirmUploadVideo" disabled>
+                                <i class="bi bi-cloud-upload me-1"></i>Téléverser & Insérer dans l'article
+                            </button>
+                        </div>
+
+                        <!-- Onglet 2 : Lien externe -->
+                        <div class="tab-pane fade" id="pane-link-video" role="tabpanel">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-royal small">Adresse URL de la vidéo :</label>
+                                <input type="url" class="form-control rounded-3" id="modalVideoLinkInput"
+                                    placeholder="https://www.youtube.com/watch?v=... ou Drive">
+                                <div class="form-text small">YouTube ou lien de partage Google Drive.</div>
+                            </div>
+                            <button type="button" class="btn btn-primary rounded-pill w-100 fw-bold py-2"
+                                id="btnConfirmLinkVideo">
+                                <i class="bi bi-check-circle me-1"></i>Insérer la vidéo dans le texte
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-    <script src="assets/js/theme.js"></script>
+        <!-- Modal Confirmation "À la une" avant publication -->
+        <div class="modal fade" id="confirmPublishModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header border-0 pb-0 pt-4 px-4 text-center d-block">
+                        <div class="mx-auto mb-2 text-warning display-5">
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <h5 class="modal-title fw-bold text-royal">Mise en avant de l'actualité</h5>
+                    </div>
+                    <div class="modal-body px-4 py-3 text-center">
+                        <p class="text-muted small mb-0">
+                            Souhaitez-vous publier cet article <strong>« À la une »</strong> ?<br>
+                            Il apparaîtra en grand format tout en haut de la page d'accueil.
+                        </p>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-1 d-flex flex-column gap-2">
+                        <button type="button"
+                            class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm text-dark"
+                            id="btnPublishFeatured">
+                            <i class="bi bi-pin-angle-fill me-1"></i>⭐ Oui, publier À LA UNE
+                        </button>
+                        <button type="button" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm"
+                            id="btnPublishNormal">
+                            <i class="bi bi-send me-1"></i>📰 Non, publication normale
+                        </button>
+                        <button type="button" class="btn btn-light w-100 rounded-pill py-2 text-muted small"
+                            data-bs-dismiss="modal">
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <script>
-        // URL du Google Apps Script Web App déployé
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6FUNsz7PDbYAtgy_-62h-YC6KKp4hoExcEWDnKST7QtvkGSXJ-BGvJgmMdOAV7mvPTg/exec';
+        <!-- Overlay de chargement / progression pour médias -->
+        <div id="mediaUploadOverlay"
+            class="position-fixed top-0 start-0 w-100 h-100 d-none flex-column align-items-center justify-content-center text-white text-center"
+            style="background: rgba(15,23,42,0.7); z-index: 10000; backdrop-filter: blur(5px);">
+            <div class="bg-white text-dark p-4 rounded-4 shadow-lg text-center" style="max-width: 380px;">
+                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+                <h5 class="fw-bold text-royal mb-2" id="mediaOverlayTitle">Traitement en cours...</h5>
+                <p class="text-muted small mb-0" id="mediaOverlayDesc">Optimisation et téléversement vers Google Drive.
+                </p>
+            </div>
+        </div>
 
-        // Date du jour par défaut
-        document.getElementById('date').valueAsDate = new Date();
+        <!-- Footer -->
+        <footer class="py-3 bg-footer text-white text-center">
+            <div class="container">
+                <p class="mb-0 small opacity-75">École Saint Vincent — Espace Enseignants & Direction</p>
+            </div>
+        </footer>
 
-        // Palette complète de 35+ couleurs pour texte et surlignage
-        const fullColorPalette = [
-            '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff',
-            '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666',
-            '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00',
-            '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600',
-            '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'
-        ];
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+        <script src="assets/js/theme.js"></script>
 
-        // Configuration de Quill avec palette étendue
-        const quill = new Quill('#editor', {
-            theme: 'snow',
-            placeholder: 'Rédigez ici le détail de votre article...',
-            modules: {
-                toolbar: {
-                    container: [
-                        [{ 'header': [2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'color': fullColorPalette }, { 'background': fullColorPalette }],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        [{ 'align': [] }],
-                        ['blockquote', 'link'],
-                        ['clean']
-                    ]
+        <script>
+            // URL du Google Apps Script Web App déployé
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlfEFCqkwHG6LB1o5V8qdBGl9vA7Rb3PBdTQfzEKmmMjvcYaxTF7e2rqjsirl9iBvLwA/exec';
+
+            // Date du jour par défaut
+            document.getElementById('date').valueAsDate = new Date();
+
+            // Palette complète de 35+ couleurs pour texte et surlignage
+            const fullColorPalette = [
+                '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff',
+                '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666',
+                '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00',
+                '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600',
+                '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'
+            ];
+
+            // Configuration de Quill avec palette étendue
+            const quill = new Quill('#editor', {
+                theme: 'snow',
+                placeholder: 'Rédigez ici le détail de votre article...',
+                modules: {
+                    toolbar: {
+                        container: [
+                            [{ 'header': [2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': fullColorPalette }, { 'background': fullColorPalette }],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            [{ 'align': [] }],
+                            ['blockquote', 'link'],
+                            ['clean']
+                        ]
+                    }
                 }
-            }
-        });
-
-        // ============================================================
-        // EMOJI PICKER MODERNE NATIF (WhatsApp / PC / Mac / Mobile)
-        // ============================================================
-        const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
-
-        // Ajout du bouton Emoji dans la barre d'outils Quill
-        function injectEmojiButtonInToolbar() {
-            const toolbar = document.querySelector('.ql-toolbar');
-            if (!toolbar) return;
-
-            const span = document.createElement('span');
-            span.className = 'ql-formats';
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'ql-emoji-btn';
-            btn.title = 'Insérer un émoji (PC / WhatsApp / Mobile)';
-            btn.innerHTML = '😊';
-            btn.style.fontSize = '1.15rem';
-            btn.style.lineHeight = '1';
-            btn.style.padding = '2px 4px';
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                emojiModal.show();
             });
-            span.appendChild(btn);
-            toolbar.appendChild(span);
-        }
-        setTimeout(injectEmojiButtonInToolbar, 150);
 
-        // Insertion d'un émoji sélectionné dans le picker
-        document.addEventListener('emoji-click', (event) => {
-            const emojiChar = event.detail.unicode;
-            if (emojiChar) {
-                const range = quill.getSelection(true);
-                quill.insertText(range.index, emojiChar);
-                quill.setSelection(range.index + emojiChar.length);
-                emojiModal.hide();
-            }
-        });
+            // ============================================================
+            // EMOJI PICKER MODERNE NATIF (WhatsApp / PC / Mac / Mobile)
+            // ============================================================
+            const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
 
-        // ============================================================
-        // INFOBULLES & PERSONNALISATION DE LA BARRE D'OUTILS
-        // ============================================================
-        function addToolbarTooltips() {
-            const tooltips = {
-                '.ql-header': 'Taille du titre',
-                '.ql-bold': 'Gras (Ctrl+B)',
-                '.ql-italic': 'Italique (Ctrl+I)',
-                '.ql-underline': 'Souligné (Ctrl+U)',
-                '.ql-strike': 'Barré',
-                '.ql-color': 'Couleur du texte',
-                '.ql-background': 'Couleur de surlignage',
-                '.ql-list[value="ordered"]': 'Liste numérotée',
-                '.ql-list[value="bullet"]': 'Liste à puces',
-                '.ql-align': 'Alignement du texte',
-                '.ql-blockquote': 'Citation mise en valeur',
-                '.ql-link': 'Insérer un lien web',
-                '.ql-emoji': 'Insérer un émoji',
-                '.ql-clean': 'Effacer toute la mise en forme (repasser en texte brut)'
-            };
+            // Ajout du bouton Emoji dans la barre d'outils Quill
+            function injectEmojiButtonInToolbar() {
+                const toolbar = document.querySelector('.ql-toolbar');
+                if (!toolbar) return;
 
-            for (const [selector, tip] of Object.entries(tooltips)) {
-                document.querySelectorAll(selector).forEach(el => {
-                    el.setAttribute('title', tip);
+                const span = document.createElement('span');
+                span.className = 'ql-formats';
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'ql-emoji-btn';
+                btn.title = 'Insérer un émoji (PC / WhatsApp / Mobile)';
+                btn.innerHTML = '😊';
+                btn.style.fontSize = '1.15rem';
+                btn.style.lineHeight = '1';
+                btn.style.padding = '2px 4px';
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    emojiModal.show();
                 });
+                span.appendChild(btn);
+                toolbar.appendChild(span);
             }
-        }
-        setTimeout(addToolbarTooltips, 200);
+            setTimeout(injectEmojiButtonInToolbar, 150);
 
-        // ============================================================
-        // SMART LINK (BOUTON LIEN AVEC OU SANS SÉLECTION DE TEXTE)
-        // ============================================================
-        let savedLinkRange = null;
-        const smartLinkModal = new bootstrap.Modal(document.getElementById('smartLinkModal'));
+            // Insertion d'un émoji sélectionné dans le picker
+            document.addEventListener('emoji-click', (event) => {
+                const emojiChar = event.detail.unicode;
+                if (emojiChar) {
+                    const range = quill.getSelection(true);
+                    quill.insertText(range.index, emojiChar);
+                    quill.setSelection(range.index + emojiChar.length);
+                    emojiModal.hide();
+                }
+            });
 
-        const toolbarModule = quill.getModule('toolbar');
-        toolbarModule.addHandler('link', function (value) {
-            if (value) {
-                const range = quill.getSelection(true);
-                savedLinkRange = range;
-                const selectedText = (range && range.length > 0) ? quill.getText(range.index, range.length) : '';
+            // ============================================================
+            // INFOBULLES & PERSONNALISATION DE LA BARRE D'OUTILS
+            // ============================================================
+            function addToolbarTooltips() {
+                const tooltips = {
+                    '.ql-header': 'Taille du titre',
+                    '.ql-bold': 'Gras (Ctrl+B)',
+                    '.ql-italic': 'Italique (Ctrl+I)',
+                    '.ql-underline': 'Souligné (Ctrl+U)',
+                    '.ql-strike': 'Barré',
+                    '.ql-color': 'Couleur du texte',
+                    '.ql-background': 'Couleur de surlignage',
+                    '.ql-list[value="ordered"]': 'Liste numérotée',
+                    '.ql-list[value="bullet"]': 'Liste à puces',
+                    '.ql-align': 'Alignement du texte',
+                    '.ql-blockquote': 'Citation mise en valeur',
+                    '.ql-link': 'Insérer un lien web',
+                    '.ql-emoji': 'Insérer un émoji',
+                    '.ql-clean': 'Effacer toute la mise en forme (repasser en texte brut)'
+                };
 
-                document.getElementById('linkTextModal').value = selectedText;
-                document.getElementById('linkUrlModal').value = 'https://';
-                smartLinkModal.show();
-            } else {
-                quill.format('link', false);
-            }
-        });
-
-        document.getElementById('btnValidateLink').addEventListener('click', function () {
-            const textVal = document.getElementById('linkTextModal').value.trim() || 'Lien';
-            let urlVal = document.getElementById('linkUrlModal').value.trim();
-            if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
-                urlVal = 'https://' + urlVal;
-            }
-
-            if (savedLinkRange) {
-                if (savedLinkRange.length > 0) {
-                    quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
-                } else {
-                    quill.insertText(savedLinkRange.index, textVal, 'link', urlVal);
-                    quill.setSelection(savedLinkRange.index + textVal.length);
+                for (const [selector, tip] of Object.entries(tooltips)) {
+                    document.querySelectorAll(selector).forEach(el => {
+                        el.setAttribute('title', tip);
+                    });
                 }
             }
-            smartLinkModal.hide();
-        });
+            setTimeout(addToolbarTooltips, 200);
 
-        // ============================================================
-        // TEMPLATES 1-CLIC
-        // ============================================================
-        const templates = {
-            sortie: `
+            // ============================================================
+            // SMART LINK (BOUTON LIEN AVEC OU SANS SÉLECTION DE TEXTE)
+            // ============================================================
+            let savedLinkRange = null;
+            const smartLinkModal = new bootstrap.Modal(document.getElementById('smartLinkModal'));
+
+            const toolbarModule = quill.getModule('toolbar');
+            toolbarModule.addHandler('link', function (value) {
+                if (value) {
+                    const range = quill.getSelection(true);
+                    savedLinkRange = range;
+                    const selectedText = (range && range.length > 0) ? quill.getText(range.index, range.length) : '';
+
+                    document.getElementById('linkTextModal').value = selectedText;
+                    document.getElementById('linkUrlModal').value = 'https://';
+                    smartLinkModal.show();
+                } else {
+                    quill.format('link', false);
+                }
+            });
+
+            document.getElementById('btnValidateLink').addEventListener('click', function () {
+                const textVal = document.getElementById('linkTextModal').value.trim() || 'Lien';
+                let urlVal = document.getElementById('linkUrlModal').value.trim();
+                if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
+                    urlVal = 'https://' + urlVal;
+                }
+
+                if (savedLinkRange) {
+                    if (savedLinkRange.length > 0) {
+                        quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
+                    } else {
+                        quill.insertText(savedLinkRange.index, textVal, 'link', urlVal);
+                        quill.setSelection(savedLinkRange.index + textVal.length);
+                    }
+                }
+                smartLinkModal.hide();
+            });
+
+            // ============================================================
+            // TEMPLATES 1-CLIC
+            // ============================================================
+            const templates = {
+                sortie: `
                 <h3>🚌 Notre belle journée de sortie scolaire</h3>
                 <p>Ce vendredi, les élèves ont eu la chance de participer à une sortie inoubliable.</p>
                 <h4>🌟 Les moments forts de la visite :</h4>
@@ -626,7 +801,7 @@
                 <blockquote>« C'était trop bien, on a appris plein de choses ! » — Un élève de la classe</blockquote>
                 <p>Un grand merci aux parents accompagnateurs pour leur aide précieuse tout au long de cette journée !</p>
             `,
-            projet: `
+                projet: `
                 <h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3>
                 <p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p>
                 <h4>📋 Ce que nous avons réalisé :</h4>
@@ -637,7 +812,7 @@
                 </ul>
                 <p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>
             `,
-            sport: `
+                sport: `
                 <h3>🏆 Rencontre sportive : Bravo à tous nos sportifs !</h3>
                 <p>Les élèves ont brillamment représenté l'École Saint Vincent lors de cette rencontre sportive inter-écoles.</p>
                 <h4>🏅 Au programme :</h4>
@@ -648,7 +823,7 @@
                 </ul>
                 <p>Félicitations à tous les enfants pour leur motivation, leurs sourires et leur fair-play !</p>
             `,
-            mot: `
+                mot: `
                 <h3>📢 Mot des enseignants : Informations importantes</h3>
                 <p>Chers parents,</p>
                 <p>Voici quelques informations utiles à noter pour les prochaines semaines :</p>
@@ -660,206 +835,589 @@
                 <p>Nous restons à votre disposition pour toute question via le carnet de liaison ou l'espace École Directe.</p>
                 <p>Bien cordialement,<br><em>L'équipe enseignante</em></p>
             `
-        };
-
-        function applyTemplate(key) {
-            if (templates[key]) {
-                if (quill.getText().trim() !== '') {
-                    if (!confirm("Voulez-vous remplacer le texte actuel par ce modèle ?")) return;
-                }
-                quill.clipboard.dangerouslyPasteHTML(templates[key]);
-                updatePreview();
-            }
-        }
-
-        // ============================================================
-        // GESTION PHOTO DE COUVERTURE
-        // ============================================================
-        let uploadedBase64 = '';
-        let uploadedFilename = '';
-        let uploadedMimeType = '';
-
-        document.getElementById('fileInput').addEventListener('change', async function (e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
-            uploadedMimeType = "image/jpeg";
-            document.getElementById('fileNameLabel').textContent = '⏳ Optimisation de la photo...';
-            document.getElementById('removePhotoBtn').classList.remove('d-none');
-
-            // Compression automatique de l'image (max 1200px, 80% qualité) pour envoi ultra-rapide (< 1s)
-            const compressedDataUrl = await compressAndStoreImage(file);
-            document.getElementById('fileNameLabel').textContent = '✅ ' + file.name + ' (photo optimisée)';
-            document.getElementById('previewImgBox').innerHTML = `
-                <img src="${compressedDataUrl}" alt="Aperçu">
-                <div class="position-absolute top-0 start-0 m-2">
-                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${document.getElementById('categorie').value}</span>
-                </div>
-            `;
-        });
-
-        // Compression canvas légère pour Apps Script (réduit de 15 Mo à 150 Ko)
-        function compressAndStoreImage(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = new Image();
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxDim = 1200;
-
-                        if (width > maxDim || height > maxDim) {
-                            if (width > height) {
-                                height = Math.round((height * maxDim) / width);
-                                width = maxDim;
-                            } else {
-                                width = Math.round((width * maxDim) / height);
-                                height = maxDim;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                        uploadedBase64 = compressedDataUrl.split(',')[1];
-                        resolve(compressedDataUrl);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Supprimer la photo uploadée
-        function removeUploadedPhoto() {
-            uploadedBase64 = '';
-            uploadedFilename = '';
-            uploadedMimeType = '';
-            document.getElementById('fileInput').value = '';
-            document.getElementById('fileNameLabel').textContent = 'Choisir ou glisser une photo';
-            document.getElementById('removePhotoBtn').classList.add('d-none');
-            document.getElementById('previewImgBox').innerHTML = `
-                <i class="bi bi-image display-4 text-muted opacity-50"></i>
-                <div class="position-absolute top-0 start-0 m-2">
-                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${document.getElementById('categorie').value}</span>
-                </div>
-            `;
-        }
-
-        // ============================================================
-        // APERÇU EN DIRECT
-        // ============================================================
-        function updatePreview() {
-            const t = document.getElementById('titre').value || "Titre de votre actualité";
-            // Auto-résumé : extraire les 150 premiers caractères du contenu Quill
-            const plainText = quill.getText().trim();
-            const d = plainText.length > 0
-                ? plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '')
-                : 'Le résumé sera généré automatiquement à partir du contenu...';
-            const c = document.getElementById('categorie').value;
-            const a = document.getElementById('auteur').value;
-
-            document.getElementById('previewTitle').textContent = t;
-            document.getElementById('previewDesc').textContent = d;
-            const badge = document.getElementById('previewBadge');
-            if (badge) badge.textContent = c;
-            document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
-        }
-
-        document.getElementById('titre').addEventListener('input', updatePreview);
-        document.getElementById('categorie').addEventListener('change', updatePreview);
-        document.getElementById('auteur').addEventListener('input', updatePreview);
-        // Mettre à jour l'aperçu quand le contenu Quill change
-        quill.on('text-change', updatePreview);
-
-        // ============================================================
-        // SOUMISSION DU FORMULAIRE VERS GOOGLE APPS SCRIPT
-        // ============================================================
-        document.getElementById('newsForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const submitBtn = document.getElementById('submitBtn');
-            const alertBox = document.getElementById('alertBox');
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
-            alertBox.className = 'alert d-none';
-
-            // Auto-génération du résumé à partir du contenu Quill (150 premiers caractères)
-            const plainText = quill.getText().trim();
-            const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
-
-            const payload = {
-                titre: document.getElementById('titre').value,
-                categorie: document.getElementById('categorie').value,
-                auteur: document.getElementById('auteur').value,
-                userEmail: document.getElementById('userEmail').value,
-                secretCode: document.getElementById('secretCode').value,
-                date: document.getElementById('date').value,
-                description: autoDescription,
-                contenu: quill.root.innerHTML,
-                imageUrl: document.getElementById('imageUrl').value,
-                imageBase64: uploadedBase64,
-                imageName: uploadedFilename,
-                imageType: uploadedMimeType,
-                videoUrl: document.getElementById('videoUrl').value,
-                lien: document.getElementById('lien').value,
-                epingle: document.getElementById('epingle').checked
             };
 
-            try {
-                const res = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    body: JSON.stringify(payload)
+            function applyTemplate(key) {
+                if (templates[key]) {
+                    if (quill.getText().trim() !== '') {
+                        if (!confirm("Voulez-vous remplacer le texte actuel par ce modèle ?")) return;
+                    }
+                    quill.clipboard.dangerouslyPasteHTML(templates[key]);
+                    updatePreview();
+                }
+            }
+
+            // ============================================================
+            // GESTION DU MOT DE PASSE UNIQUE (Persistance & Affichage)
+            // ============================================================
+            const secretCodeInput = document.getElementById('secretCode');
+            const savedPassword = localStorage.getItem('cms_school_pwd');
+            if (savedPassword && secretCodeInput) {
+                secretCodeInput.value = savedPassword;
+            }
+
+            const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+            if (togglePasswordBtn && secretCodeInput) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    if (secretCodeInput.type === 'password') {
+                        secretCodeInput.type = 'text';
+                        togglePasswordIcon.className = 'bi bi-eye-slash';
+                    } else {
+                        secretCodeInput.type = 'password';
+                        togglePasswordIcon.className = 'bi bi-eye';
+                    }
+                });
+            }
+
+            // ============================================================
+            // HELPERS FRILEREADER & OVERLAY DE CHARGEMENT
+            // ============================================================
+            function readFileAsBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const result = reader.result;
+                        const base64 = result.split(',')[1];
+                        resolve(base64);
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Compression canvas automatique d'une image (max 1200px, 80% qualité JPEG)
+            function compressAndStoreImage(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = new Image();
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const maxDim = 1200;
+
+                            if (width > maxDim || height > maxDim) {
+                                if (width > height) {
+                                    height = Math.round((height * maxDim) / width);
+                                    width = maxDim;
+                                } else {
+                                    width = Math.round((width * maxDim) / height);
+                                    height = maxDim;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                            resolve(compressedDataUrl);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            const mediaOverlay = document.getElementById('mediaUploadOverlay');
+            function showMediaOverlay(title, desc) {
+                if (mediaOverlay) {
+                    document.getElementById('mediaOverlayTitle').textContent = title || "Traitement en cours...";
+                    document.getElementById('mediaOverlayDesc').textContent = desc || "Téléversement vers Google Drive.";
+                    mediaOverlay.classList.remove('d-none');
+                    mediaOverlay.classList.add('d-flex');
+                }
+            }
+            function hideMediaOverlay() {
+                if (mediaOverlay) {
+                    mediaOverlay.classList.add('d-none');
+                    mediaOverlay.classList.remove('d-flex');
+                }
+            }
+
+            // Suivi de la position du curseur dans l'éditeur Quill
+            let lastQuillSelection = null;
+            quill.on('selection-change', function (range) {
+                if (range) {
+                    lastQuillSelection = range;
+                }
+            });
+
+            // ============================================================
+            // ① VIGNETTE D'ACCUEIL UNIFIÉE (PHOTO OU VIDÉO)
+            // ============================================================
+            let uploadedBase64 = '';
+            let uploadedFilename = '';
+            let uploadedMimeType = '';
+
+            const vignetteFileInput = document.getElementById('vignetteFileInput');
+            const vignetteDropZone = document.getElementById('vignetteDropZone');
+            const vignettePreviewBox = document.getElementById('vignettePreviewBox');
+            const vignettePreviewImg = document.getElementById('vignettePreviewImg');
+            const vignettePreviewLabel = document.getElementById('vignettePreviewLabel');
+            const vignetteVideoProgress = document.getElementById('vignetteVideoProgress');
+
+            // Drag & drop sur la vignette
+            window.handleVignetteDrop = function (event) {
+                event.preventDefault();
+                vignetteDropZone.classList.remove('drag-over');
+                if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+                    processVignetteFile(event.dataTransfer.files[0]);
+                }
+            };
+
+            if (vignetteFileInput) {
+                vignetteFileInput.addEventListener('change', function (e) {
+                    if (e.target.files && e.target.files.length > 0) {
+                        processVignetteFile(e.target.files[0]);
+                    }
+                });
+            }
+
+            async function processVignetteFile(file) {
+                if (!file) return;
+
+                const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+
+                if (isVideo) {
+                    // --- VIGNETTE VIDÉO ---
+                    const pwd = secretCodeInput.value.trim();
+                    if (!pwd) {
+                        alert("Veuillez d'abord renseigner le mot de passe de rédaction en haut de la page.");
+                        secretCodeInput.focus();
+                        vignetteFileInput.value = '';
+                        return;
+                    }
+
+                    if (file.size > 26 * 1024 * 1024) {
+                        alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez la compresser ou utiliser un lien Drive/YouTube.`);
+                        vignetteFileInput.value = '';
+                        return;
+                    }
+
+                    vignetteVideoProgress.classList.remove('d-none');
+                    vignettePreviewBox.classList.add('d-none');
+
+                    try {
+                        const base64Data = await readFileAsBase64(file);
+                        const res = await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                action: 'uploadVideo',
+                                videoBase64: base64Data,
+                                videoName: file.name,
+                                videoType: file.type || 'video/mp4',
+                                secretCode: pwd
+                            })
+                        });
+
+                        const data = await res.json();
+                        if (data.success && data.url) {
+                            document.getElementById('videoUrl').value = data.url;
+                            document.getElementById('imageUrl').value = '';
+                            document.getElementById('vignetteType').value = 'video';
+                            uploadedBase64 = '';
+                            uploadedFilename = '';
+                            uploadedMimeType = '';
+
+                            vignettePreviewImg.style.display = 'none';
+                            vignettePreviewLabel.innerHTML = `<i class="bi bi-camera-reels-fill me-1"></i>Vidéo prête : ${file.name}`;
+                            vignettePreviewBox.classList.remove('d-none');
+
+                            // Mise à jour de l'aperçu en direct
+                            const cat = document.getElementById('categorie').value;
+                            document.getElementById('previewImgBox').innerHTML = `
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-dark text-white p-4">
+                                <i class="bi bi-play-circle-fill display-3 text-primary mb-2"></i>
+                                <span class="small fw-bold text-center">${file.name}</span>
+                            </div>
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+                            </div>
+                        `;
+                        } else {
+                            alert("❌ Erreur téléversement vidéo : " + (data.message || "Erreur serveur"));
+                        }
+                    } catch (err) {
+                        console.error('Erreur téléversement vidéo vignette:', err);
+                        alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
+                    } finally {
+                        vignetteVideoProgress.classList.add('d-none');
+                    }
+
+                } else {
+                    // --- VIGNETTE PHOTO ---
+                    vignettePreviewLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Optimisation de la photo...';
+                    vignettePreviewBox.classList.remove('d-none');
+                    vignettePreviewImg.style.display = 'none';
+
+                    uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+                    uploadedMimeType = "image/jpeg";
+
+                    const compressedDataUrl = await compressAndStoreImage(file);
+                    uploadedBase64 = compressedDataUrl.split(',')[1];
+
+                    document.getElementById('imageUrl').value = '';
+                    document.getElementById('videoUrl').value = '';
+                    document.getElementById('vignetteType').value = 'image';
+
+                    vignettePreviewImg.src = compressedDataUrl;
+                    vignettePreviewImg.style.display = 'block';
+                    vignettePreviewLabel.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>Photo prête : ${file.name} (optimisée)`;
+
+                    const cat = document.getElementById('categorie').value;
+                    document.getElementById('previewImgBox').innerHTML = `
+                    <img src="${compressedDataUrl}" alt="Aperçu vignette">
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+                    </div>
+                `;
+                }
+            }
+
+            window.removeVignette = function () {
+                uploadedBase64 = '';
+                uploadedFilename = '';
+                uploadedMimeType = '';
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('videoUrl').value = '';
+                document.getElementById('vignetteType').value = '';
+                if (vignetteFileInput) vignetteFileInput.value = '';
+                vignettePreviewBox.classList.add('d-none');
+                vignettePreviewImg.src = '';
+                vignettePreviewImg.style.display = 'none';
+
+                const cat = document.getElementById('categorie').value;
+                document.getElementById('previewImgBox').innerHTML = `
+                <i class="bi bi-image display-4 text-muted opacity-50"></i>
+                <div class="position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+                </div>
+            `;
+            };
+
+            // ============================================================
+            // ③ INSERTION PHOTO / VIDÉO DANS L'ARTICLE (AU CURSEUR)
+            // ============================================================
+            const btnInsertArticleMedia = document.getElementById('btnInsertArticleMedia');
+            const articleMediaInput = document.getElementById('articleMediaInput');
+            const btnOpenVideoLinkModal = document.getElementById('btnOpenVideoLinkModal');
+            const articleVideoModalEl = document.getElementById('articleVideoModal');
+            const articleVideoModal = articleVideoModalEl ? new bootstrap.Modal(articleVideoModalEl) : null;
+
+            if (btnInsertArticleMedia && articleMediaInput) {
+                btnInsertArticleMedia.addEventListener('click', () => {
+                    const pwd = secretCodeInput.value.trim();
+                    if (!pwd) {
+                        secretCodeInput.focus();
+                        secretCodeInput.classList.add('is-invalid');
+                        setTimeout(() => secretCodeInput.classList.remove('is-invalid'), 2500);
+                        alert("Veuillez d'abord saisir le mot de passe de rédaction en haut de la page.");
+                        return;
+                    }
+                    articleMediaInput.click();
                 });
 
-                const text = await res.text();
-                let data = {};
-                try {
-                    data = JSON.parse(text);
-                } catch (err) {
-                    data = { success: true, message: "Actualité enregistrée avec succès !" };
+                articleMediaInput.addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const pwd = secretCodeInput.value.trim();
+                    if (!pwd) {
+                        alert("Mot de passe de rédaction manquant.");
+                        secretCodeInput.focus();
+                        return;
+                    }
+
+                    const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+
+                    if (isVideo) {
+                        // Upload vidéo pour l'article
+                        if (file.size > 26 * 1024 * 1024) {
+                            alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez utiliser un lien Drive/YouTube.`);
+                            articleMediaInput.value = '';
+                            return;
+                        }
+
+                        showMediaOverlay("Téléversement de la vidéo vers Google Drive...", "Enregistrement dans le dossier Videos site...");
+                        try {
+                            const base64Data = await readFileAsBase64(file);
+                            const res = await fetch(SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    action: 'uploadVideo',
+                                    videoBase64: base64Data,
+                                    videoName: file.name,
+                                    videoType: file.type || 'video/mp4',
+                                    secretCode: pwd
+                                })
+                            });
+
+                            const data = await res.json();
+                            if (data.success && data.url) {
+                                const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                                    ? lastQuillSelection.index
+                                    : quill.getLength();
+                                quill.insertEmbed(targetIndex, 'video', data.url);
+                                quill.insertText(targetIndex + 1, '\n');
+                                quill.setSelection(targetIndex + 2);
+                            } else {
+                                alert("❌ Erreur insertion vidéo : " + (data.message || "Erreur serveur"));
+                            }
+                        } catch (err) {
+                            console.error('Erreur vidéo:', err);
+                            alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
+                        } finally {
+                            hideMediaOverlay();
+                            articleMediaInput.value = '';
+                        }
+
+                    } else {
+                        // Upload photo pour l'article
+                        showMediaOverlay("Envoi de la photo vers Google Drive...", "Optimisation et enregistrement sur Drive...");
+                        try {
+                            const compressedDataUrl = await compressAndStoreImage(file);
+                            const base64Only = compressedDataUrl.split(',')[1];
+
+                            const res = await fetch(SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    action: 'uploadImage',
+                                    imageBase64: base64Only,
+                                    imageName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+                                    imageType: 'image/jpeg',
+                                    secretCode: pwd
+                                })
+                            });
+
+                            const data = await res.json();
+                            if (data.success && data.url) {
+                                const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                                    ? lastQuillSelection.index
+                                    : quill.getLength();
+                                quill.insertEmbed(targetIndex, 'image', data.url);
+                                quill.insertText(targetIndex + 1, '\n');
+                                quill.setSelection(targetIndex + 2);
+                            } else {
+                                alert("❌ Erreur insertion photo : " + (data.message || "Erreur serveur"));
+                            }
+                        } catch (err) {
+                            console.error('Erreur photo:', err);
+                            alert("❌ Erreur lors de l'envoi de la photo : " + err.message);
+                        } finally {
+                            hideMediaOverlay();
+                            articleMediaInput.value = '';
+                        }
+                    }
+                });
+            }
+
+            if (btnOpenVideoLinkModal && articleVideoModal) {
+                btnOpenVideoLinkModal.addEventListener('click', () => {
+                    articleVideoModal.show();
+                });
+            }
+
+            // Gestion de l'ancien modal vidéo si l'utilisateur colle un lien
+            const btnConfirmLinkVideo = document.getElementById('btnConfirmLinkVideo');
+            const modalVideoLinkInput = document.getElementById('modalVideoLinkInput');
+            if (btnConfirmLinkVideo) {
+                btnConfirmLinkVideo.addEventListener('click', () => {
+                    const rawUrl = (modalVideoLinkInput.value || '').trim();
+                    if (!rawUrl) {
+                        alert("Veuillez entrer une adresse URL.");
+                        return;
+                    }
+                    const formattedUrl = formatVideoEmbedUrl(rawUrl);
+                    const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                        ? lastQuillSelection.index
+                        : quill.getLength();
+                    quill.insertEmbed(targetIndex, 'video', formattedUrl);
+                    quill.insertText(targetIndex + 1, '\n');
+                    quill.setSelection(targetIndex + 2);
+                    modalVideoLinkInput.value = '';
+                    if (articleVideoModal) articleVideoModal.hide();
+                });
+            }
+
+            function formatVideoEmbedUrl(url) {
+                if (!url) return '';
+                let clean = url.trim();
+                const ytMatch = clean.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                if (ytMatch && ytMatch[1]) {
+                    return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}`;
+                }
+                const driveMatch = clean.match(/\/d\/([^/]+)/) || clean.match(/id=([^&]+)/);
+                if (driveMatch && driveMatch[1]) {
+                    return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+                }
+                return clean;
+            }
+
+            // ============================================================
+            // ⑤ APERÇU EN DIRECT
+            // ============================================================
+            function updatePreview() {
+                const t = document.getElementById('titre').value || "Titre de votre actualité";
+                const plainText = quill.getText().trim();
+                const d = plainText.length > 0
+                    ? plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '')
+                    : 'Le résumé sera généré automatiquement à partir du contenu...';
+                const c = document.getElementById('categorie').value;
+                const a = document.getElementById('auteur').value;
+
+                document.getElementById('previewTitle').textContent = t;
+                document.getElementById('previewDesc').textContent = d;
+                const badge = document.getElementById('previewBadge');
+                if (badge) badge.textContent = c;
+                document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
+            }
+
+            document.getElementById('titre').addEventListener('input', updatePreview);
+            document.getElementById('categorie').addEventListener('change', updatePreview);
+            document.getElementById('auteur').addEventListener('input', updatePreview);
+            quill.on('text-change', updatePreview);
+
+            // ============================================================
+            // ⑥ WORKFLOW DE PUBLICATION (AVEC POP-UP "À LA UNE")
+            // ============================================================
+            const confirmPublishModalEl = document.getElementById('confirmPublishModal');
+            const confirmPublishModal = confirmPublishModalEl ? new bootstrap.Modal(confirmPublishModalEl) : null;
+            const btnPublishFeatured = document.getElementById('btnPublishFeatured');
+            const btnPublishNormal = document.getElementById('btnPublishNormal');
+
+            // Validation du formulaire et affichage du pop-up "À la une"
+            document.getElementById('newsForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const title = document.getElementById('titre').value.trim();
+                const secretCode = secretCodeInput.value.trim();
+
+                if (!title) {
+                    alert("Veuillez renseigner un titre pour l'actualité.");
+                    document.getElementById('titre').focus();
+                    return;
                 }
 
-                if (data.success !== false) {
-                    alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = `
+                if (!secretCode) {
+                    alert("Veuillez renseigner le mot de passe de rédaction.");
+                    secretCodeInput.focus();
+                    return;
+                }
+
+                // Mémorisation du mot de passe
+                localStorage.setItem('cms_school_pwd', secretCode);
+
+                // Ouvrir le pop-up de choix "À la une"
+                if (confirmPublishModal) {
+                    confirmPublishModal.show();
+                } else {
+                    doPublishArticle(false);
+                }
+            });
+
+            // Choix 1 : Publier À LA UNE
+            if (btnPublishFeatured) {
+                btnPublishFeatured.addEventListener('click', () => {
+                    if (confirmPublishModal) confirmPublishModal.hide();
+                    doPublishArticle(true);
+                });
+            }
+
+            // Choix 2 : Publication standard
+            if (btnPublishNormal) {
+                btnPublishNormal.addEventListener('click', () => {
+                    if (confirmPublishModal) confirmPublishModal.hide();
+                    doPublishArticle(false);
+                });
+            }
+
+            // Exécution finale de l'envoi vers Google Apps Script
+            async function doPublishArticle(isFeatured) {
+                const submitBtn = document.getElementById('submitBtn');
+                const alertBox = document.getElementById('alertBox');
+                const secretCode = secretCodeInput.value.trim();
+                const articleTitle = document.getElementById('titre').value.trim();
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
+                alertBox.className = 'alert d-none';
+
+                // Auto-génération du résumé à partir du contenu Quill
+                const plainText = quill.getText().trim();
+                const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+
+                const payload = {
+                    action: 'publish',
+                    titre: articleTitle,
+                    categorie: document.getElementById('categorie').value,
+                    auteur: document.getElementById('auteur').value,
+                    secretCode: secretCode,
+                    date: document.getElementById('date').value,
+                    description: autoDescription,
+                    contenu: quill.root.innerHTML,
+                    imageUrl: document.getElementById('imageUrl').value,
+                    imageBase64: uploadedBase64,
+                    imageName: uploadedFilename,
+                    imageType: uploadedMimeType,
+                    videoUrl: document.getElementById('videoUrl').value,
+                    lien: document.getElementById('lien').value,
+                    epingle: isFeatured ? 'oui' : 'non'
+                };
+
+                try {
+                    const res = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        body: JSON.stringify(payload)
+                    });
+
+                    const text = await res.text();
+                    let data = {};
+                    try {
+                        data = JSON.parse(text);
+                    } catch (err) {
+                        data = { success: true, message: "Actualité enregistrée avec succès !" };
+                    }
+
+                    if (data.success !== false) {
+                        alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
+                        alertBox.innerHTML = `
                         <div class="d-flex align-items-center">
                             <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
                             <div>
                                 <h5 class="alert-heading fw-bold mb-1">🎉 Article publié avec succès !</h5>
-                                <p class="mb-0 small">Votre actualité <strong>« ${payload.titre} »</strong> a été enregistrée. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
+                                <p class="mb-0 small">Votre actualité <strong>« ${articleTitle} »</strong> a été enregistrée avec succès ${isFeatured ? '<strong>(À la une ⭐)</strong>' : ''}. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
                             </div>
                         </div>
                     `;
 
-                    // Réinitialisation complète du formulaire et de la photo
-                    document.getElementById('newsForm').reset();
-                    quill.setContents([]);
-                    document.getElementById('date').valueAsDate = new Date();
-                    removeUploadedPhoto();
-                    updatePreview();
-                } else {
+                        // Réinitialisation complète du formulaire et des médias
+                        document.getElementById('newsForm').reset();
+                        quill.setContents([]);
+                        document.getElementById('date').valueAsDate = new Date();
+                        // Restaurer le mot de passe mémorisé
+                        secretCodeInput.value = secretCode;
+                        removeVignette();
+                        updatePreview();
+                    } else {
+                        alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
+                        alertBox.innerHTML = `<strong>❌ Erreur d'accès :</strong> ${data.message || "Mot de passe de rédaction incorrect."}`;
+                    }
+                } catch (error) {
+                    console.error('Erreur soumission:', error);
                     alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = `<strong>❌ Erreur d'accès :</strong> ${data.message || "Mot de passe ou adresse email non autorisé."}`;
+                    alertBox.innerHTML = `<strong>❌ Erreur réseau :</strong> Impossible de contacter le serveur Google Apps Script (${error.message}). Vérifiez votre connexion.`;
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier sur le site de l\'école';
+                    window.scrollTo({ top: alertBox.offsetTop - 80, behavior: 'smooth' });
                 }
-            } catch (error) {
-                console.error('Erreur soumission:', error);
-                alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                alertBox.innerHTML = `<strong>❌ Erreur réseau :</strong> Impossible de contacter le serveur Google Apps Script (${error.message}). Vérifiez votre connexion.`;
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier sur le site de l\'école';
-                window.scrollTo({ top: alertBox.offsetTop - 80, behavior: 'smooth' });
             }
-        });
-    </script>
+        </script>
 </body>
 
 </html>

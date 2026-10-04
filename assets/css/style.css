@@ -1433,6 +1433,18 @@ section {
     height: auto;
     border-radius: 0.75rem;
     margin: 1rem 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.article-rich-text .ql-video,
+.article-rich-text iframe,
+.article-rich-text video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 0.75rem;
+    border: none;
+    margin: 1.25rem 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .article-rich-text ul, .article-rich-text ol {
