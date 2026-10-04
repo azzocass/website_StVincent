@@ -308,39 +308,12 @@ function getOrCreateSubfolder(parentFolder, subfolderName) {
 }
 
 /**
- * 7. Répertoire Drive « informatiques/Videos site » pour les vidéos
- */
-function getVideoFolder() {
-  var sharedFolderId = "17u6d4AJN-g4nAajGWyhkl3o9thWmDbon";
-  try {
-    var sharedFolder = DriveApp.getFolderById(sharedFolderId);
-    if (sharedFolder) {
-      return sharedFolder;
-    }
-  } catch (errShared) {
-    Logger.log("Dossier ID partagé non accessible directement, recherche par nom: " + errShared.toString());
-  }
-
-  var parentName = "Informatique";
-  var subName = "Videos site";
-
-  var parentFolders = DriveApp.getFoldersByName(parentName);
-  var parentFolder;
-  if (parentFolders.hasNext()) {
-    parentFolder = parentFolders.next();
-  } else {
-    parentFolder = DriveApp.createFolder(parentName);
-    parentFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  }
-
-  return getOrCreateSubfolder(parentFolder, subName);
-}
-
-/**
- * Sauvegarde une vidéo dans « informatiques/Videos site »
+ * 7. Sauvegarde d'une vidéo directement dans le dossier Vidéos par son ID
  */
 function saveVideoToDrive(base64Data, filename, mimeType) {
-  var folder = getVideoFolder();
+  var folderId = "1h74vhIZXKtAPfGTATjNNIqszivNM9OEe"; // 👈 ID de ton dossier Vidéos
+  var folder = DriveApp.getFolderById(folderId);
+  
   var decoded = Utilities.base64Decode(base64Data);
   var blob = Utilities.newBlob(decoded, mimeType || "video/mp4", filename || "video.mp4");
   var file = folder.createFile(blob);
@@ -354,20 +327,12 @@ function saveVideoToDrive(base64Data, filename, mimeType) {
 }
 
 /**
- * 8. Sauvegarde d'image sur Google Drive (« Photos Actualités École ») avec URL Thumbnail instantanée
+ * 8. Sauvegarde d'image directement dans le dossier Photos par son ID (avec URL Thumbnail instantanée)
  */
 function saveImageToDrive(base64Data, filename, mimeType) {
-  var folderName = "Photos Actualités École";
-  var folders = DriveApp.getFoldersByName(folderName);
-  var folder;
-
-  if (folders.hasNext()) {
-    folder = folders.next();
-  } else {
-    folder = DriveApp.createFolder(folderName);
-    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  }
-
+  var folderId = "1r4b1n2zQ-mjfpHYpzu75JqWTAV_wJdra"; // 👈 ID de ton dossier Photos
+  var folder = DriveApp.getFolderById(folderId);
+  
   var decoded = Utilities.base64Decode(base64Data);
   var blob = Utilities.newBlob(decoded, mimeType || "image/jpeg", filename || "photo.jpg");
   var file = folder.createFile(blob);
@@ -375,16 +340,6 @@ function saveImageToDrive(base64Data, filename, mimeType) {
 
   // URL Thumbnail immédiate (sans délai CDN)
   return "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1200";
-}
-
-/**
- * 9. Fonction pratique à exécuter UNE FOIS dans l'éditeur Google Apps Script
- * pour définir le mot de passe partagé en toute sécurité sans toucher à Git !
- */
-function configurerMotDePasseCMS(motDePasse) {
-  var pwd = motDePasse || "SaintVincent2026"; // 👈 Indiquez ici votre mot de passe et cliquez sur "Exécuter"
-  PropertiesService.getScriptProperties().setProperty("CMS_PASSWORD", pwd);
-  Logger.log("✅ Mot de passe CMS défini avec succès : " + pwd);
 }
 
 // Helper: Normalise le nom d'en-tête

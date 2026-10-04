@@ -582,214 +582,213 @@
         </div>
     </div>
 
-        <!-- Modal Confirmation "À la une" avant publication -->
-        <div class="modal fade" id="confirmPublishModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
-                <div class="modal-content rounded-4 border-0 shadow">
-                    <div class="modal-header border-0 pb-0 pt-4 px-4 text-center d-block">
-                        <div class="mx-auto mb-2 text-warning display-5">
-                            <i class="bi bi-star-fill"></i>
-                        </div>
-                        <h5 class="modal-title fw-bold text-royal">Mise en avant de l'actualité</h5>
+    <!-- Modal Confirmation "À la une" avant publication -->
+    <div class="modal fade" id="confirmPublishModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0 pt-4 px-4 text-center d-block">
+                    <div class="mx-auto mb-2 text-warning display-5">
+                        <i class="bi bi-star-fill"></i>
                     </div>
-                    <div class="modal-body px-4 py-3 text-center">
-                        <p class="text-muted small mb-0">
-                            Souhaitez-vous publier cet article <strong>« À la une »</strong> ?<br>
-                            Il apparaîtra en grand format tout en haut de la page d'accueil.
-                        </p>
-                    </div>
-                    <div class="modal-footer border-0 p-4 pt-1 d-flex flex-column gap-2">
-                        <button type="button"
-                            class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm text-dark"
-                            id="btnPublishFeatured">
-                            <i class="bi bi-pin-angle-fill me-1"></i>⭐ Oui, publier À LA UNE
-                        </button>
-                        <button type="button" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm"
-                            id="btnPublishNormal">
-                            <i class="bi bi-send me-1"></i>📰 Non, publication normale
-                        </button>
-                        <button type="button" class="btn btn-light w-100 rounded-pill py-2 text-muted small"
-                            data-bs-dismiss="modal">
-                            Annuler
-                        </button>
-                    </div>
+                    <h5 class="modal-title fw-bold text-royal">Mise en avant de l'actualité</h5>
+                </div>
+                <div class="modal-body px-4 py-3 text-center">
+                    <p class="text-muted small mb-0">
+                        Souhaitez-vous publier cet article <strong>« À la une »</strong> ?<br>
+                        Il apparaîtra en grand format tout en haut de la page d'accueil.
+                    </p>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-1 d-flex flex-column gap-2">
+                    <button type="button" class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm text-dark"
+                        id="btnPublishFeatured">
+                        <i class="bi bi-pin-angle-fill me-1"></i>⭐ Oui, publier À LA UNE
+                    </button>
+                    <button type="button" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm"
+                        id="btnPublishNormal">
+                        <i class="bi bi-send me-1"></i>📰 Non, publication normale
+                    </button>
+                    <button type="button" class="btn btn-light w-100 rounded-pill py-2 text-muted small"
+                        data-bs-dismiss="modal">
+                        Annuler
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Overlay de chargement / progression pour médias -->
-        <div id="mediaUploadOverlay"
-            class="position-fixed top-0 start-0 w-100 h-100 d-none flex-column align-items-center justify-content-center text-white text-center"
-            style="background: rgba(15,23,42,0.7); z-index: 10000; backdrop-filter: blur(5px);">
-            <div class="bg-white text-dark p-4 rounded-4 shadow-lg text-center" style="max-width: 380px;">
-                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
-                <h5 class="fw-bold text-royal mb-2" id="mediaOverlayTitle">Traitement en cours...</h5>
-                <p class="text-muted small mb-0" id="mediaOverlayDesc">Optimisation et téléversement vers Google Drive.
-                </p>
-            </div>
+    <!-- Overlay de chargement / progression pour médias -->
+    <div id="mediaUploadOverlay"
+        class="position-fixed top-0 start-0 w-100 h-100 d-none flex-column align-items-center justify-content-center text-white text-center"
+        style="background: rgba(15,23,42,0.7); z-index: 10000; backdrop-filter: blur(5px);">
+        <div class="bg-white text-dark p-4 rounded-4 shadow-lg text-center" style="max-width: 380px;">
+            <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+            <h5 class="fw-bold text-royal mb-2" id="mediaOverlayTitle">Traitement en cours...</h5>
+            <p class="text-muted small mb-0" id="mediaOverlayDesc">Optimisation et téléversement vers Google Drive.
+            </p>
         </div>
+    </div>
 
-        <!-- Footer -->
-        <footer class="py-3 bg-footer text-white text-center">
-            <div class="container">
-                <p class="mb-0 small opacity-75">École Saint Vincent — Espace Enseignants & Direction</p>
-            </div>
-        </footer>
+    <!-- Footer -->
+    <footer class="py-3 bg-footer text-white text-center">
+        <div class="container">
+            <p class="mb-0 small opacity-75">École Saint Vincent — Espace Enseignants & Direction</p>
+        </div>
+    </footer>
 
-        <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-        <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-        <script src="assets/js/theme.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="assets/js/theme.js"></script>
 
-        <script>
-            // URL du Google Apps Script Web App déployé
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlfEFCqkwHG6LB1o5V8qdBGl9vA7Rb3PBdTQfzEKmmMjvcYaxTF7e2rqjsirl9iBvLwA/exec';
+    <script>
+        // URL du Google Apps Script Web App déployé
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySrqEI8ivMv-ULaNvtA_cjOPgb1wrVEAB1s7Fn_H0raanWrRtFGWeG9B6TvEWsWaOuQQ/exec';
 
-            // Date du jour par défaut
-            document.getElementById('date').valueAsDate = new Date();
+        // Date du jour par défaut
+        document.getElementById('date').valueAsDate = new Date();
 
-            // Palette complète de 35+ couleurs pour texte et surlignage
-            const fullColorPalette = [
-                '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff',
-                '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666',
-                '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00',
-                '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600',
-                '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'
-            ];
+        // Palette complète de 35+ couleurs pour texte et surlignage
+        const fullColorPalette = [
+            '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff',
+            '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666',
+            '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00',
+            '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600',
+            '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'
+        ];
 
-            // Configuration de Quill avec palette étendue
-            const quill = new Quill('#editor', {
-                theme: 'snow',
-                placeholder: 'Rédigez ici le détail de votre article...',
-                modules: {
-                    toolbar: {
-                        container: [
-                            [{ 'header': [2, 3, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'color': fullColorPalette }, { 'background': fullColorPalette }],
-                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                            [{ 'align': [] }],
-                            ['blockquote', 'link'],
-                            ['clean']
-                        ]
-                    }
+        // Configuration de Quill avec palette étendue
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Rédigez ici le détail de votre article...',
+            modules: {
+                toolbar: {
+                    container: [
+                        [{ 'header': [2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': fullColorPalette }, { 'background': fullColorPalette }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['blockquote', 'link'],
+                        ['clean']
+                    ]
                 }
+            }
+        });
+
+        // ============================================================
+        // EMOJI PICKER MODERNE NATIF (WhatsApp / PC / Mac / Mobile)
+        // ============================================================
+        const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
+
+        // Ajout du bouton Emoji dans la barre d'outils Quill
+        function injectEmojiButtonInToolbar() {
+            const toolbar = document.querySelector('.ql-toolbar');
+            if (!toolbar) return;
+
+            const span = document.createElement('span');
+            span.className = 'ql-formats';
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'ql-emoji-btn';
+            btn.title = 'Insérer un émoji (PC / WhatsApp / Mobile)';
+            btn.innerHTML = '😊';
+            btn.style.fontSize = '1.15rem';
+            btn.style.lineHeight = '1';
+            btn.style.padding = '2px 4px';
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                emojiModal.show();
             });
+            span.appendChild(btn);
+            toolbar.appendChild(span);
+        }
+        setTimeout(injectEmojiButtonInToolbar, 150);
 
-            // ============================================================
-            // EMOJI PICKER MODERNE NATIF (WhatsApp / PC / Mac / Mobile)
-            // ============================================================
-            const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
+        // Insertion d'un émoji sélectionné dans le picker
+        document.addEventListener('emoji-click', (event) => {
+            const emojiChar = event.detail.unicode;
+            if (emojiChar) {
+                const range = quill.getSelection(true);
+                quill.insertText(range.index, emojiChar);
+                quill.setSelection(range.index + emojiChar.length);
+                emojiModal.hide();
+            }
+        });
 
-            // Ajout du bouton Emoji dans la barre d'outils Quill
-            function injectEmojiButtonInToolbar() {
-                const toolbar = document.querySelector('.ql-toolbar');
-                if (!toolbar) return;
+        // ============================================================
+        // INFOBULLES & PERSONNALISATION DE LA BARRE D'OUTILS
+        // ============================================================
+        function addToolbarTooltips() {
+            const tooltips = {
+                '.ql-header': 'Taille du titre',
+                '.ql-bold': 'Gras (Ctrl+B)',
+                '.ql-italic': 'Italique (Ctrl+I)',
+                '.ql-underline': 'Souligné (Ctrl+U)',
+                '.ql-strike': 'Barré',
+                '.ql-color': 'Couleur du texte',
+                '.ql-background': 'Couleur de surlignage',
+                '.ql-list[value="ordered"]': 'Liste numérotée',
+                '.ql-list[value="bullet"]': 'Liste à puces',
+                '.ql-align': 'Alignement du texte',
+                '.ql-blockquote': 'Citation mise en valeur',
+                '.ql-link': 'Insérer un lien web',
+                '.ql-emoji': 'Insérer un émoji',
+                '.ql-clean': 'Effacer toute la mise en forme (repasser en texte brut)'
+            };
 
-                const span = document.createElement('span');
-                span.className = 'ql-formats';
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'ql-emoji-btn';
-                btn.title = 'Insérer un émoji (PC / WhatsApp / Mobile)';
-                btn.innerHTML = '😊';
-                btn.style.fontSize = '1.15rem';
-                btn.style.lineHeight = '1';
-                btn.style.padding = '2px 4px';
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    emojiModal.show();
+            for (const [selector, tip] of Object.entries(tooltips)) {
+                document.querySelectorAll(selector).forEach(el => {
+                    el.setAttribute('title', tip);
                 });
-                span.appendChild(btn);
-                toolbar.appendChild(span);
             }
-            setTimeout(injectEmojiButtonInToolbar, 150);
+        }
+        setTimeout(addToolbarTooltips, 200);
 
-            // Insertion d'un émoji sélectionné dans le picker
-            document.addEventListener('emoji-click', (event) => {
-                const emojiChar = event.detail.unicode;
-                if (emojiChar) {
-                    const range = quill.getSelection(true);
-                    quill.insertText(range.index, emojiChar);
-                    quill.setSelection(range.index + emojiChar.length);
-                    emojiModal.hide();
-                }
-            });
+        // ============================================================
+        // SMART LINK (BOUTON LIEN AVEC OU SANS SÉLECTION DE TEXTE)
+        // ============================================================
+        let savedLinkRange = null;
+        const smartLinkModal = new bootstrap.Modal(document.getElementById('smartLinkModal'));
 
-            // ============================================================
-            // INFOBULLES & PERSONNALISATION DE LA BARRE D'OUTILS
-            // ============================================================
-            function addToolbarTooltips() {
-                const tooltips = {
-                    '.ql-header': 'Taille du titre',
-                    '.ql-bold': 'Gras (Ctrl+B)',
-                    '.ql-italic': 'Italique (Ctrl+I)',
-                    '.ql-underline': 'Souligné (Ctrl+U)',
-                    '.ql-strike': 'Barré',
-                    '.ql-color': 'Couleur du texte',
-                    '.ql-background': 'Couleur de surlignage',
-                    '.ql-list[value="ordered"]': 'Liste numérotée',
-                    '.ql-list[value="bullet"]': 'Liste à puces',
-                    '.ql-align': 'Alignement du texte',
-                    '.ql-blockquote': 'Citation mise en valeur',
-                    '.ql-link': 'Insérer un lien web',
-                    '.ql-emoji': 'Insérer un émoji',
-                    '.ql-clean': 'Effacer toute la mise en forme (repasser en texte brut)'
-                };
+        const toolbarModule = quill.getModule('toolbar');
+        toolbarModule.addHandler('link', function (value) {
+            if (value) {
+                const range = quill.getSelection(true);
+                savedLinkRange = range;
+                const selectedText = (range && range.length > 0) ? quill.getText(range.index, range.length) : '';
 
-                for (const [selector, tip] of Object.entries(tooltips)) {
-                    document.querySelectorAll(selector).forEach(el => {
-                        el.setAttribute('title', tip);
-                    });
-                }
+                document.getElementById('linkTextModal').value = selectedText;
+                document.getElementById('linkUrlModal').value = 'https://';
+                smartLinkModal.show();
+            } else {
+                quill.format('link', false);
             }
-            setTimeout(addToolbarTooltips, 200);
+        });
 
-            // ============================================================
-            // SMART LINK (BOUTON LIEN AVEC OU SANS SÉLECTION DE TEXTE)
-            // ============================================================
-            let savedLinkRange = null;
-            const smartLinkModal = new bootstrap.Modal(document.getElementById('smartLinkModal'));
+        document.getElementById('btnValidateLink').addEventListener('click', function () {
+            const textVal = document.getElementById('linkTextModal').value.trim() || 'Lien';
+            let urlVal = document.getElementById('linkUrlModal').value.trim();
+            if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
+                urlVal = 'https://' + urlVal;
+            }
 
-            const toolbarModule = quill.getModule('toolbar');
-            toolbarModule.addHandler('link', function (value) {
-                if (value) {
-                    const range = quill.getSelection(true);
-                    savedLinkRange = range;
-                    const selectedText = (range && range.length > 0) ? quill.getText(range.index, range.length) : '';
-
-                    document.getElementById('linkTextModal').value = selectedText;
-                    document.getElementById('linkUrlModal').value = 'https://';
-                    smartLinkModal.show();
+            if (savedLinkRange) {
+                if (savedLinkRange.length > 0) {
+                    quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
                 } else {
-                    quill.format('link', false);
+                    quill.insertText(savedLinkRange.index, textVal, 'link', urlVal);
+                    quill.setSelection(savedLinkRange.index + textVal.length);
                 }
-            });
+            }
+            smartLinkModal.hide();
+        });
 
-            document.getElementById('btnValidateLink').addEventListener('click', function () {
-                const textVal = document.getElementById('linkTextModal').value.trim() || 'Lien';
-                let urlVal = document.getElementById('linkUrlModal').value.trim();
-                if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
-                    urlVal = 'https://' + urlVal;
-                }
-
-                if (savedLinkRange) {
-                    if (savedLinkRange.length > 0) {
-                        quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
-                    } else {
-                        quill.insertText(savedLinkRange.index, textVal, 'link', urlVal);
-                        quill.setSelection(savedLinkRange.index + textVal.length);
-                    }
-                }
-                smartLinkModal.hide();
-            });
-
-            // ============================================================
-            // TEMPLATES 1-CLIC
-            // ============================================================
-            const templates = {
-                sortie: `
+        // ============================================================
+        // TEMPLATES 1-CLIC
+        // ============================================================
+        const templates = {
+            sortie: `
                 <h3>🚌 Notre belle journée de sortie scolaire</h3>
                 <p>Ce vendredi, les élèves ont eu la chance de participer à une sortie inoubliable.</p>
                 <h4>🌟 Les moments forts de la visite :</h4>
@@ -801,7 +800,7 @@
                 <blockquote>« C'était trop bien, on a appris plein de choses ! » — Un élève de la classe</blockquote>
                 <p>Un grand merci aux parents accompagnateurs pour leur aide précieuse tout au long de cette journée !</p>
             `,
-                projet: `
+            projet: `
                 <h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3>
                 <p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p>
                 <h4>📋 Ce que nous avons réalisé :</h4>
@@ -812,7 +811,7 @@
                 </ul>
                 <p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>
             `,
-                sport: `
+            sport: `
                 <h3>🏆 Rencontre sportive : Bravo à tous nos sportifs !</h3>
                 <p>Les élèves ont brillamment représenté l'École Saint Vincent lors de cette rencontre sportive inter-écoles.</p>
                 <h4>🏅 Au programme :</h4>
@@ -823,7 +822,7 @@
                 </ul>
                 <p>Félicitations à tous les enfants pour leur motivation, leurs sourires et leur fair-play !</p>
             `,
-                mot: `
+            mot: `
                 <h3>📢 Mot des enseignants : Informations importantes</h3>
                 <p>Chers parents,</p>
                 <p>Voici quelques informations utiles à noter pour les prochaines semaines :</p>
@@ -835,172 +834,314 @@
                 <p>Nous restons à votre disposition pour toute question via le carnet de liaison ou l'espace École Directe.</p>
                 <p>Bien cordialement,<br><em>L'équipe enseignante</em></p>
             `
-            };
+        };
 
-            function applyTemplate(key) {
-                if (templates[key]) {
-                    if (quill.getText().trim() !== '') {
-                        if (!confirm("Voulez-vous remplacer le texte actuel par ce modèle ?")) return;
-                    }
-                    quill.clipboard.dangerouslyPasteHTML(templates[key]);
-                    updatePreview();
+        function applyTemplate(key) {
+            if (templates[key]) {
+                if (quill.getText().trim() !== '') {
+                    if (!confirm("Voulez-vous remplacer le texte actuel par ce modèle ?")) return;
                 }
+                quill.clipboard.dangerouslyPasteHTML(templates[key]);
+                updatePreview();
             }
+        }
 
-            // ============================================================
-            // GESTION DU MOT DE PASSE UNIQUE (Persistance & Affichage)
-            // ============================================================
-            const secretCodeInput = document.getElementById('secretCode');
-            const savedPassword = localStorage.getItem('cms_school_pwd');
-            if (savedPassword && secretCodeInput) {
-                secretCodeInput.value = savedPassword;
-            }
+        // ============================================================
+        // GESTION DU MOT DE PASSE UNIQUE (Persistance & Affichage)
+        // ============================================================
+        const secretCodeInput = document.getElementById('secretCode');
+        const savedPassword = localStorage.getItem('cms_school_pwd');
+        if (savedPassword && secretCodeInput) {
+            secretCodeInput.value = savedPassword;
+        }
 
-            const togglePasswordBtn = document.getElementById('togglePasswordBtn');
-            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-            if (togglePasswordBtn && secretCodeInput) {
-                togglePasswordBtn.addEventListener('click', () => {
-                    if (secretCodeInput.type === 'password') {
-                        secretCodeInput.type = 'text';
-                        togglePasswordIcon.className = 'bi bi-eye-slash';
-                    } else {
-                        secretCodeInput.type = 'password';
-                        togglePasswordIcon.className = 'bi bi-eye';
-                    }
-                });
-            }
-
-            // ============================================================
-            // HELPERS FRILEREADER & OVERLAY DE CHARGEMENT
-            // ============================================================
-            function readFileAsBase64(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const result = reader.result;
-                        const base64 = result.split(',')[1];
-                        resolve(base64);
-                    };
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            // Compression canvas automatique d'une image (max 1200px, 80% qualité JPEG)
-            function compressAndStoreImage(file) {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const img = new Image();
-                        img.onload = function () {
-                            const canvas = document.createElement('canvas');
-                            let width = img.width;
-                            let height = img.height;
-                            const maxDim = 1200;
-
-                            if (width > maxDim || height > maxDim) {
-                                if (width > height) {
-                                    height = Math.round((height * maxDim) / width);
-                                    width = maxDim;
-                                } else {
-                                    width = Math.round((width * maxDim) / height);
-                                    height = maxDim;
-                                }
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                            resolve(compressedDataUrl);
-                        };
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            const mediaOverlay = document.getElementById('mediaUploadOverlay');
-            function showMediaOverlay(title, desc) {
-                if (mediaOverlay) {
-                    document.getElementById('mediaOverlayTitle').textContent = title || "Traitement en cours...";
-                    document.getElementById('mediaOverlayDesc').textContent = desc || "Téléversement vers Google Drive.";
-                    mediaOverlay.classList.remove('d-none');
-                    mediaOverlay.classList.add('d-flex');
-                }
-            }
-            function hideMediaOverlay() {
-                if (mediaOverlay) {
-                    mediaOverlay.classList.add('d-none');
-                    mediaOverlay.classList.remove('d-flex');
-                }
-            }
-
-            // Suivi de la position du curseur dans l'éditeur Quill
-            let lastQuillSelection = null;
-            quill.on('selection-change', function (range) {
-                if (range) {
-                    lastQuillSelection = range;
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        if (togglePasswordBtn && secretCodeInput) {
+            togglePasswordBtn.addEventListener('click', () => {
+                if (secretCodeInput.type === 'password') {
+                    secretCodeInput.type = 'text';
+                    togglePasswordIcon.className = 'bi bi-eye-slash';
+                } else {
+                    secretCodeInput.type = 'password';
+                    togglePasswordIcon.className = 'bi bi-eye';
                 }
             });
+        }
 
-            // ============================================================
-            // ① VIGNETTE D'ACCUEIL UNIFIÉE (PHOTO OU VIDÉO)
-            // ============================================================
-            let uploadedBase64 = '';
-            let uploadedFilename = '';
-            let uploadedMimeType = '';
+        // ============================================================
+        // HELPERS FRILEREADER & OVERLAY DE CHARGEMENT
+        // ============================================================
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = reader.result;
+                    const base64 = result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
 
-            const vignetteFileInput = document.getElementById('vignetteFileInput');
-            const vignetteDropZone = document.getElementById('vignetteDropZone');
-            const vignettePreviewBox = document.getElementById('vignettePreviewBox');
-            const vignettePreviewImg = document.getElementById('vignettePreviewImg');
-            const vignettePreviewLabel = document.getElementById('vignettePreviewLabel');
-            const vignetteVideoProgress = document.getElementById('vignetteVideoProgress');
+        // Compression canvas automatique d'une image (max 1200px, 80% qualité JPEG)
+        function compressAndStoreImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 1200;
 
-            // Drag & drop sur la vignette
-            window.handleVignetteDrop = function (event) {
-                event.preventDefault();
-                vignetteDropZone.classList.remove('drag-over');
-                if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-                    processVignetteFile(event.dataTransfer.files[0]);
-                }
-            };
+                        if (width > maxDim || height > maxDim) {
+                            if (width > height) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            } else {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
 
-            if (vignetteFileInput) {
-                vignetteFileInput.addEventListener('change', function (e) {
-                    if (e.target.files && e.target.files.length > 0) {
-                        processVignetteFile(e.target.files[0]);
-                    }
-                });
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        resolve(compressedDataUrl);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        const mediaOverlay = document.getElementById('mediaUploadOverlay');
+        function showMediaOverlay(title, desc) {
+            if (mediaOverlay) {
+                document.getElementById('mediaOverlayTitle').textContent = title || "Traitement en cours...";
+                document.getElementById('mediaOverlayDesc').textContent = desc || "Téléversement vers Google Drive.";
+                mediaOverlay.classList.remove('d-none');
+                mediaOverlay.classList.add('d-flex');
             }
+        }
+        function hideMediaOverlay() {
+            if (mediaOverlay) {
+                mediaOverlay.classList.add('d-none');
+                mediaOverlay.classList.remove('d-flex');
+            }
+        }
 
-            async function processVignetteFile(file) {
+        // Suivi de la position du curseur dans l'éditeur Quill
+        let lastQuillSelection = null;
+        quill.on('selection-change', function (range) {
+            if (range) {
+                lastQuillSelection = range;
+            }
+        });
+
+        // ============================================================
+        // ① VIGNETTE D'ACCUEIL UNIFIÉE (PHOTO OU VIDÉO)
+        // ============================================================
+        let uploadedBase64 = '';
+        let uploadedFilename = '';
+        let uploadedMimeType = '';
+
+        const vignetteFileInput = document.getElementById('vignetteFileInput');
+        const vignetteDropZone = document.getElementById('vignetteDropZone');
+        const vignettePreviewBox = document.getElementById('vignettePreviewBox');
+        const vignettePreviewImg = document.getElementById('vignettePreviewImg');
+        const vignettePreviewLabel = document.getElementById('vignettePreviewLabel');
+        const vignetteVideoProgress = document.getElementById('vignetteVideoProgress');
+
+        // Drag & drop sur la vignette
+        window.handleVignetteDrop = function (event) {
+            event.preventDefault();
+            vignetteDropZone.classList.remove('drag-over');
+            if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+                processVignetteFile(event.dataTransfer.files[0]);
+            }
+        };
+
+        if (vignetteFileInput) {
+            vignetteFileInput.addEventListener('change', function (e) {
+                if (e.target.files && e.target.files.length > 0) {
+                    processVignetteFile(e.target.files[0]);
+                }
+            });
+        }
+
+        async function processVignetteFile(file) {
+            if (!file) return;
+
+            const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+
+            if (isVideo) {
+                // --- VIGNETTE VIDÉO ---
+                const pwd = secretCodeInput.value.trim();
+                if (!pwd) {
+                    alert("Veuillez d'abord renseigner le mot de passe de rédaction en haut de la page.");
+                    secretCodeInput.focus();
+                    vignetteFileInput.value = '';
+                    return;
+                }
+
+                if (file.size > 26 * 1024 * 1024) {
+                    alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez la compresser ou utiliser un lien Drive/YouTube.`);
+                    vignetteFileInput.value = '';
+                    return;
+                }
+
+                vignetteVideoProgress.classList.remove('d-none');
+                vignettePreviewBox.classList.add('d-none');
+
+                try {
+                    const base64Data = await readFileAsBase64(file);
+                    const res = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'uploadVideo',
+                            videoBase64: base64Data,
+                            videoName: file.name,
+                            videoType: file.type || 'video/mp4',
+                            secretCode: pwd
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (data.success && data.url) {
+                        document.getElementById('videoUrl').value = data.url;
+                        document.getElementById('imageUrl').value = '';
+                        document.getElementById('vignetteType').value = 'video';
+                        uploadedBase64 = '';
+                        uploadedFilename = '';
+                        uploadedMimeType = '';
+
+                        vignettePreviewImg.style.display = 'none';
+                        vignettePreviewLabel.innerHTML = `<i class="bi bi-camera-reels-fill me-1"></i>Vidéo prête : ${file.name}`;
+                        vignettePreviewBox.classList.remove('d-none');
+
+                        // Mise à jour de l'aperçu en direct
+                        const cat = document.getElementById('categorie').value;
+                        document.getElementById('previewImgBox').innerHTML = `
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-dark text-white p-4">
+                                <i class="bi bi-play-circle-fill display-3 text-primary mb-2"></i>
+                                <span class="small fw-bold text-center">${file.name}</span>
+                            </div>
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+                            </div>
+                        `;
+                    } else {
+                        alert("❌ Erreur téléversement vidéo : " + (data.message || "Erreur serveur"));
+                    }
+                } catch (err) {
+                    console.error('Erreur téléversement vidéo vignette:', err);
+                    alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
+                } finally {
+                    vignetteVideoProgress.classList.add('d-none');
+                }
+
+            } else {
+                // --- VIGNETTE PHOTO ---
+                vignettePreviewLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Optimisation de la photo...';
+                vignettePreviewBox.classList.remove('d-none');
+                vignettePreviewImg.style.display = 'none';
+
+                uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+                uploadedMimeType = "image/jpeg";
+
+                const compressedDataUrl = await compressAndStoreImage(file);
+                uploadedBase64 = compressedDataUrl.split(',')[1];
+
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('videoUrl').value = '';
+                document.getElementById('vignetteType').value = 'image';
+
+                vignettePreviewImg.src = compressedDataUrl;
+                vignettePreviewImg.style.display = 'block';
+                vignettePreviewLabel.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>Photo prête : ${file.name} (optimisée)`;
+
+                const cat = document.getElementById('categorie').value;
+                document.getElementById('previewImgBox').innerHTML = `
+                    <img src="${compressedDataUrl}" alt="Aperçu vignette">
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+                    </div>
+                `;
+            }
+        }
+
+        window.removeVignette = function () {
+            uploadedBase64 = '';
+            uploadedFilename = '';
+            uploadedMimeType = '';
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('vignetteType').value = '';
+            if (vignetteFileInput) vignetteFileInput.value = '';
+            vignettePreviewBox.classList.add('d-none');
+            vignettePreviewImg.src = '';
+            vignettePreviewImg.style.display = 'none';
+
+            const cat = document.getElementById('categorie').value;
+            document.getElementById('previewImgBox').innerHTML = `
+                <i class="bi bi-image display-4 text-muted opacity-50"></i>
+                <div class="position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+                </div>
+            `;
+        };
+
+        // ============================================================
+        // ③ INSERTION PHOTO / VIDÉO DANS L'ARTICLE (AU CURSEUR)
+        // ============================================================
+        const btnInsertArticleMedia = document.getElementById('btnInsertArticleMedia');
+        const articleMediaInput = document.getElementById('articleMediaInput');
+        const btnOpenVideoLinkModal = document.getElementById('btnOpenVideoLinkModal');
+        const articleVideoModalEl = document.getElementById('articleVideoModal');
+        const articleVideoModal = articleVideoModalEl ? new bootstrap.Modal(articleVideoModalEl) : null;
+
+        if (btnInsertArticleMedia && articleMediaInput) {
+            btnInsertArticleMedia.addEventListener('click', () => {
+                const pwd = secretCodeInput.value.trim();
+                if (!pwd) {
+                    secretCodeInput.focus();
+                    secretCodeInput.classList.add('is-invalid');
+                    setTimeout(() => secretCodeInput.classList.remove('is-invalid'), 2500);
+                    alert("Veuillez d'abord saisir le mot de passe de rédaction en haut de la page.");
+                    return;
+                }
+                articleMediaInput.click();
+            });
+
+            articleMediaInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
                 if (!file) return;
+
+                const pwd = secretCodeInput.value.trim();
+                if (!pwd) {
+                    alert("Mot de passe de rédaction manquant.");
+                    secretCodeInput.focus();
+                    return;
+                }
 
                 const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
 
                 if (isVideo) {
-                    // --- VIGNETTE VIDÉO ---
-                    const pwd = secretCodeInput.value.trim();
-                    if (!pwd) {
-                        alert("Veuillez d'abord renseigner le mot de passe de rédaction en haut de la page.");
-                        secretCodeInput.focus();
-                        vignetteFileInput.value = '';
-                        return;
-                    }
-
+                    // Upload vidéo pour l'article
                     if (file.size > 26 * 1024 * 1024) {
-                        alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez la compresser ou utiliser un lien Drive/YouTube.`);
-                        vignetteFileInput.value = '';
+                        alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez utiliser un lien Drive/YouTube.`);
+                        articleMediaInput.value = '';
                         return;
                     }
 
-                    vignetteVideoProgress.classList.remove('d-none');
-                    vignettePreviewBox.classList.add('d-none');
-
+                    showMediaOverlay("Téléversement de la vidéo vers Google Drive...", "Enregistrement dans le dossier Videos site...");
                     try {
                         const base64Data = await readFileAsBase64(file);
                         const res = await fetch(SCRIPT_URL, {
@@ -1016,376 +1157,234 @@
 
                         const data = await res.json();
                         if (data.success && data.url) {
-                            document.getElementById('videoUrl').value = data.url;
-                            document.getElementById('imageUrl').value = '';
-                            document.getElementById('vignetteType').value = 'video';
-                            uploadedBase64 = '';
-                            uploadedFilename = '';
-                            uploadedMimeType = '';
-
-                            vignettePreviewImg.style.display = 'none';
-                            vignettePreviewLabel.innerHTML = `<i class="bi bi-camera-reels-fill me-1"></i>Vidéo prête : ${file.name}`;
-                            vignettePreviewBox.classList.remove('d-none');
-
-                            // Mise à jour de l'aperçu en direct
-                            const cat = document.getElementById('categorie').value;
-                            document.getElementById('previewImgBox').innerHTML = `
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-dark text-white p-4">
-                                <i class="bi bi-play-circle-fill display-3 text-primary mb-2"></i>
-                                <span class="small fw-bold text-center">${file.name}</span>
-                            </div>
-                            <div class="position-absolute top-0 start-0 m-2">
-                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-                            </div>
-                        `;
+                            const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                                ? lastQuillSelection.index
+                                : quill.getLength();
+                            quill.insertEmbed(targetIndex, 'video', data.url);
+                            quill.insertText(targetIndex + 1, '\n');
+                            quill.setSelection(targetIndex + 2);
                         } else {
-                            alert("❌ Erreur téléversement vidéo : " + (data.message || "Erreur serveur"));
+                            alert("❌ Erreur insertion vidéo : " + (data.message || "Erreur serveur"));
                         }
                     } catch (err) {
-                        console.error('Erreur téléversement vidéo vignette:', err);
+                        console.error('Erreur vidéo:', err);
                         alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
                     } finally {
-                        vignetteVideoProgress.classList.add('d-none');
+                        hideMediaOverlay();
+                        articleMediaInput.value = '';
                     }
 
                 } else {
-                    // --- VIGNETTE PHOTO ---
-                    vignettePreviewLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Optimisation de la photo...';
-                    vignettePreviewBox.classList.remove('d-none');
-                    vignettePreviewImg.style.display = 'none';
+                    // Upload photo pour l'article
+                    showMediaOverlay("Envoi de la photo vers Google Drive...", "Optimisation et enregistrement sur Drive...");
+                    try {
+                        const compressedDataUrl = await compressAndStoreImage(file);
+                        const base64Only = compressedDataUrl.split(',')[1];
 
-                    uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
-                    uploadedMimeType = "image/jpeg";
+                        const res = await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                action: 'uploadImage',
+                                imageBase64: base64Only,
+                                imageName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+                                imageType: 'image/jpeg',
+                                secretCode: pwd
+                            })
+                        });
 
-                    const compressedDataUrl = await compressAndStoreImage(file);
-                    uploadedBase64 = compressedDataUrl.split(',')[1];
-
-                    document.getElementById('imageUrl').value = '';
-                    document.getElementById('videoUrl').value = '';
-                    document.getElementById('vignetteType').value = 'image';
-
-                    vignettePreviewImg.src = compressedDataUrl;
-                    vignettePreviewImg.style.display = 'block';
-                    vignettePreviewLabel.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>Photo prête : ${file.name} (optimisée)`;
-
-                    const cat = document.getElementById('categorie').value;
-                    document.getElementById('previewImgBox').innerHTML = `
-                    <img src="${compressedDataUrl}" alt="Aperçu vignette">
-                    <div class="position-absolute top-0 start-0 m-2">
-                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-                    </div>
-                `;
-                }
-            }
-
-            window.removeVignette = function () {
-                uploadedBase64 = '';
-                uploadedFilename = '';
-                uploadedMimeType = '';
-                document.getElementById('imageUrl').value = '';
-                document.getElementById('videoUrl').value = '';
-                document.getElementById('vignetteType').value = '';
-                if (vignetteFileInput) vignetteFileInput.value = '';
-                vignettePreviewBox.classList.add('d-none');
-                vignettePreviewImg.src = '';
-                vignettePreviewImg.style.display = 'none';
-
-                const cat = document.getElementById('categorie').value;
-                document.getElementById('previewImgBox').innerHTML = `
-                <i class="bi bi-image display-4 text-muted opacity-50"></i>
-                <div class="position-absolute top-0 start-0 m-2">
-                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-                </div>
-            `;
-            };
-
-            // ============================================================
-            // ③ INSERTION PHOTO / VIDÉO DANS L'ARTICLE (AU CURSEUR)
-            // ============================================================
-            const btnInsertArticleMedia = document.getElementById('btnInsertArticleMedia');
-            const articleMediaInput = document.getElementById('articleMediaInput');
-            const btnOpenVideoLinkModal = document.getElementById('btnOpenVideoLinkModal');
-            const articleVideoModalEl = document.getElementById('articleVideoModal');
-            const articleVideoModal = articleVideoModalEl ? new bootstrap.Modal(articleVideoModalEl) : null;
-
-            if (btnInsertArticleMedia && articleMediaInput) {
-                btnInsertArticleMedia.addEventListener('click', () => {
-                    const pwd = secretCodeInput.value.trim();
-                    if (!pwd) {
-                        secretCodeInput.focus();
-                        secretCodeInput.classList.add('is-invalid');
-                        setTimeout(() => secretCodeInput.classList.remove('is-invalid'), 2500);
-                        alert("Veuillez d'abord saisir le mot de passe de rédaction en haut de la page.");
-                        return;
-                    }
-                    articleMediaInput.click();
-                });
-
-                articleMediaInput.addEventListener('change', async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-
-                    const pwd = secretCodeInput.value.trim();
-                    if (!pwd) {
-                        alert("Mot de passe de rédaction manquant.");
-                        secretCodeInput.focus();
-                        return;
-                    }
-
-                    const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
-
-                    if (isVideo) {
-                        // Upload vidéo pour l'article
-                        if (file.size > 26 * 1024 * 1024) {
-                            alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez utiliser un lien Drive/YouTube.`);
-                            articleMediaInput.value = '';
-                            return;
+                        const data = await res.json();
+                        if (data.success && data.url) {
+                            const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                                ? lastQuillSelection.index
+                                : quill.getLength();
+                            quill.insertEmbed(targetIndex, 'image', data.url);
+                            quill.insertText(targetIndex + 1, '\n');
+                            quill.setSelection(targetIndex + 2);
+                        } else {
+                            alert("❌ Erreur insertion photo : " + (data.message || "Erreur serveur"));
                         }
-
-                        showMediaOverlay("Téléversement de la vidéo vers Google Drive...", "Enregistrement dans le dossier Videos site...");
-                        try {
-                            const base64Data = await readFileAsBase64(file);
-                            const res = await fetch(SCRIPT_URL, {
-                                method: 'POST',
-                                body: JSON.stringify({
-                                    action: 'uploadVideo',
-                                    videoBase64: base64Data,
-                                    videoName: file.name,
-                                    videoType: file.type || 'video/mp4',
-                                    secretCode: pwd
-                                })
-                            });
-
-                            const data = await res.json();
-                            if (data.success && data.url) {
-                                const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                                    ? lastQuillSelection.index
-                                    : quill.getLength();
-                                quill.insertEmbed(targetIndex, 'video', data.url);
-                                quill.insertText(targetIndex + 1, '\n');
-                                quill.setSelection(targetIndex + 2);
-                            } else {
-                                alert("❌ Erreur insertion vidéo : " + (data.message || "Erreur serveur"));
-                            }
-                        } catch (err) {
-                            console.error('Erreur vidéo:', err);
-                            alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
-                        } finally {
-                            hideMediaOverlay();
-                            articleMediaInput.value = '';
-                        }
-
-                    } else {
-                        // Upload photo pour l'article
-                        showMediaOverlay("Envoi de la photo vers Google Drive...", "Optimisation et enregistrement sur Drive...");
-                        try {
-                            const compressedDataUrl = await compressAndStoreImage(file);
-                            const base64Only = compressedDataUrl.split(',')[1];
-
-                            const res = await fetch(SCRIPT_URL, {
-                                method: 'POST',
-                                body: JSON.stringify({
-                                    action: 'uploadImage',
-                                    imageBase64: base64Only,
-                                    imageName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
-                                    imageType: 'image/jpeg',
-                                    secretCode: pwd
-                                })
-                            });
-
-                            const data = await res.json();
-                            if (data.success && data.url) {
-                                const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                                    ? lastQuillSelection.index
-                                    : quill.getLength();
-                                quill.insertEmbed(targetIndex, 'image', data.url);
-                                quill.insertText(targetIndex + 1, '\n');
-                                quill.setSelection(targetIndex + 2);
-                            } else {
-                                alert("❌ Erreur insertion photo : " + (data.message || "Erreur serveur"));
-                            }
-                        } catch (err) {
-                            console.error('Erreur photo:', err);
-                            alert("❌ Erreur lors de l'envoi de la photo : " + err.message);
-                        } finally {
-                            hideMediaOverlay();
-                            articleMediaInput.value = '';
-                        }
+                    } catch (err) {
+                        console.error('Erreur photo:', err);
+                        alert("❌ Erreur lors de l'envoi de la photo : " + err.message);
+                    } finally {
+                        hideMediaOverlay();
+                        articleMediaInput.value = '';
                     }
-                });
-            }
-
-            if (btnOpenVideoLinkModal && articleVideoModal) {
-                btnOpenVideoLinkModal.addEventListener('click', () => {
-                    articleVideoModal.show();
-                });
-            }
-
-            // Gestion de l'ancien modal vidéo si l'utilisateur colle un lien
-            const btnConfirmLinkVideo = document.getElementById('btnConfirmLinkVideo');
-            const modalVideoLinkInput = document.getElementById('modalVideoLinkInput');
-            if (btnConfirmLinkVideo) {
-                btnConfirmLinkVideo.addEventListener('click', () => {
-                    const rawUrl = (modalVideoLinkInput.value || '').trim();
-                    if (!rawUrl) {
-                        alert("Veuillez entrer une adresse URL.");
-                        return;
-                    }
-                    const formattedUrl = formatVideoEmbedUrl(rawUrl);
-                    const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                        ? lastQuillSelection.index
-                        : quill.getLength();
-                    quill.insertEmbed(targetIndex, 'video', formattedUrl);
-                    quill.insertText(targetIndex + 1, '\n');
-                    quill.setSelection(targetIndex + 2);
-                    modalVideoLinkInput.value = '';
-                    if (articleVideoModal) articleVideoModal.hide();
-                });
-            }
-
-            function formatVideoEmbedUrl(url) {
-                if (!url) return '';
-                let clean = url.trim();
-                const ytMatch = clean.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-                if (ytMatch && ytMatch[1]) {
-                    return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}`;
-                }
-                const driveMatch = clean.match(/\/d\/([^/]+)/) || clean.match(/id=([^&]+)/);
-                if (driveMatch && driveMatch[1]) {
-                    return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-                }
-                return clean;
-            }
-
-            // ============================================================
-            // ⑤ APERÇU EN DIRECT
-            // ============================================================
-            function updatePreview() {
-                const t = document.getElementById('titre').value || "Titre de votre actualité";
-                const plainText = quill.getText().trim();
-                const d = plainText.length > 0
-                    ? plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '')
-                    : 'Le résumé sera généré automatiquement à partir du contenu...';
-                const c = document.getElementById('categorie').value;
-                const a = document.getElementById('auteur').value;
-
-                document.getElementById('previewTitle').textContent = t;
-                document.getElementById('previewDesc').textContent = d;
-                const badge = document.getElementById('previewBadge');
-                if (badge) badge.textContent = c;
-                document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
-            }
-
-            document.getElementById('titre').addEventListener('input', updatePreview);
-            document.getElementById('categorie').addEventListener('change', updatePreview);
-            document.getElementById('auteur').addEventListener('input', updatePreview);
-            quill.on('text-change', updatePreview);
-
-            // ============================================================
-            // ⑥ WORKFLOW DE PUBLICATION (AVEC POP-UP "À LA UNE")
-            // ============================================================
-            const confirmPublishModalEl = document.getElementById('confirmPublishModal');
-            const confirmPublishModal = confirmPublishModalEl ? new bootstrap.Modal(confirmPublishModalEl) : null;
-            const btnPublishFeatured = document.getElementById('btnPublishFeatured');
-            const btnPublishNormal = document.getElementById('btnPublishNormal');
-
-            // Validation du formulaire et affichage du pop-up "À la une"
-            document.getElementById('newsForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const title = document.getElementById('titre').value.trim();
-                const secretCode = secretCodeInput.value.trim();
-
-                if (!title) {
-                    alert("Veuillez renseigner un titre pour l'actualité.");
-                    document.getElementById('titre').focus();
-                    return;
-                }
-
-                if (!secretCode) {
-                    alert("Veuillez renseigner le mot de passe de rédaction.");
-                    secretCodeInput.focus();
-                    return;
-                }
-
-                // Mémorisation du mot de passe
-                localStorage.setItem('cms_school_pwd', secretCode);
-
-                // Ouvrir le pop-up de choix "À la une"
-                if (confirmPublishModal) {
-                    confirmPublishModal.show();
-                } else {
-                    doPublishArticle(false);
                 }
             });
+        }
 
-            // Choix 1 : Publier À LA UNE
-            if (btnPublishFeatured) {
-                btnPublishFeatured.addEventListener('click', () => {
-                    if (confirmPublishModal) confirmPublishModal.hide();
-                    doPublishArticle(true);
-                });
+        if (btnOpenVideoLinkModal && articleVideoModal) {
+            btnOpenVideoLinkModal.addEventListener('click', () => {
+                articleVideoModal.show();
+            });
+        }
+
+        // Gestion de l'ancien modal vidéo si l'utilisateur colle un lien
+        const btnConfirmLinkVideo = document.getElementById('btnConfirmLinkVideo');
+        const modalVideoLinkInput = document.getElementById('modalVideoLinkInput');
+        if (btnConfirmLinkVideo) {
+            btnConfirmLinkVideo.addEventListener('click', () => {
+                const rawUrl = (modalVideoLinkInput.value || '').trim();
+                if (!rawUrl) {
+                    alert("Veuillez entrer une adresse URL.");
+                    return;
+                }
+                const formattedUrl = formatVideoEmbedUrl(rawUrl);
+                const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                    ? lastQuillSelection.index
+                    : quill.getLength();
+                quill.insertEmbed(targetIndex, 'video', formattedUrl);
+                quill.insertText(targetIndex + 1, '\n');
+                quill.setSelection(targetIndex + 2);
+                modalVideoLinkInput.value = '';
+                if (articleVideoModal) articleVideoModal.hide();
+            });
+        }
+
+        function formatVideoEmbedUrl(url) {
+            if (!url) return '';
+            let clean = url.trim();
+            const ytMatch = clean.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            if (ytMatch && ytMatch[1]) {
+                return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}`;
+            }
+            const driveMatch = clean.match(/\/d\/([^/]+)/) || clean.match(/id=([^&]+)/);
+            if (driveMatch && driveMatch[1]) {
+                return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+            }
+            return clean;
+        }
+
+        // ============================================================
+        // ⑤ APERÇU EN DIRECT
+        // ============================================================
+        function updatePreview() {
+            const t = document.getElementById('titre').value || "Titre de votre actualité";
+            const plainText = quill.getText().trim();
+            const d = plainText.length > 0
+                ? plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '')
+                : 'Le résumé sera généré automatiquement à partir du contenu...';
+            const c = document.getElementById('categorie').value;
+            const a = document.getElementById('auteur').value;
+
+            document.getElementById('previewTitle').textContent = t;
+            document.getElementById('previewDesc').textContent = d;
+            const badge = document.getElementById('previewBadge');
+            if (badge) badge.textContent = c;
+            document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
+        }
+
+        document.getElementById('titre').addEventListener('input', updatePreview);
+        document.getElementById('categorie').addEventListener('change', updatePreview);
+        document.getElementById('auteur').addEventListener('input', updatePreview);
+        quill.on('text-change', updatePreview);
+
+        // ============================================================
+        // ⑥ WORKFLOW DE PUBLICATION (AVEC POP-UP "À LA UNE")
+        // ============================================================
+        const confirmPublishModalEl = document.getElementById('confirmPublishModal');
+        const confirmPublishModal = confirmPublishModalEl ? new bootstrap.Modal(confirmPublishModalEl) : null;
+        const btnPublishFeatured = document.getElementById('btnPublishFeatured');
+        const btnPublishNormal = document.getElementById('btnPublishNormal');
+
+        // Validation du formulaire et affichage du pop-up "À la une"
+        document.getElementById('newsForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById('titre').value.trim();
+            const secretCode = secretCodeInput.value.trim();
+
+            if (!title) {
+                alert("Veuillez renseigner un titre pour l'actualité.");
+                document.getElementById('titre').focus();
+                return;
             }
 
-            // Choix 2 : Publication standard
-            if (btnPublishNormal) {
-                btnPublishNormal.addEventListener('click', () => {
-                    if (confirmPublishModal) confirmPublishModal.hide();
-                    doPublishArticle(false);
-                });
+            if (!secretCode) {
+                alert("Veuillez renseigner le mot de passe de rédaction.");
+                secretCodeInput.focus();
+                return;
             }
 
-            // Exécution finale de l'envoi vers Google Apps Script
-            async function doPublishArticle(isFeatured) {
-                const submitBtn = document.getElementById('submitBtn');
-                const alertBox = document.getElementById('alertBox');
-                const secretCode = secretCodeInput.value.trim();
-                const articleTitle = document.getElementById('titre').value.trim();
+            // Mémorisation du mot de passe
+            localStorage.setItem('cms_school_pwd', secretCode);
 
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
-                alertBox.className = 'alert d-none';
+            // Ouvrir le pop-up de choix "À la une"
+            if (confirmPublishModal) {
+                confirmPublishModal.show();
+            } else {
+                doPublishArticle(false);
+            }
+        });
 
-                // Auto-génération du résumé à partir du contenu Quill
-                const plainText = quill.getText().trim();
-                const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+        // Choix 1 : Publier À LA UNE
+        if (btnPublishFeatured) {
+            btnPublishFeatured.addEventListener('click', () => {
+                if (confirmPublishModal) confirmPublishModal.hide();
+                doPublishArticle(true);
+            });
+        }
 
-                const payload = {
-                    action: 'publish',
-                    titre: articleTitle,
-                    categorie: document.getElementById('categorie').value,
-                    auteur: document.getElementById('auteur').value,
-                    secretCode: secretCode,
-                    date: document.getElementById('date').value,
-                    description: autoDescription,
-                    contenu: quill.root.innerHTML,
-                    imageUrl: document.getElementById('imageUrl').value,
-                    imageBase64: uploadedBase64,
-                    imageName: uploadedFilename,
-                    imageType: uploadedMimeType,
-                    videoUrl: document.getElementById('videoUrl').value,
-                    lien: document.getElementById('lien').value,
-                    epingle: isFeatured ? 'oui' : 'non'
-                };
+        // Choix 2 : Publication standard
+        if (btnPublishNormal) {
+            btnPublishNormal.addEventListener('click', () => {
+                if (confirmPublishModal) confirmPublishModal.hide();
+                doPublishArticle(false);
+            });
+        }
 
+        // Exécution finale de l'envoi vers Google Apps Script
+        async function doPublishArticle(isFeatured) {
+            const submitBtn = document.getElementById('submitBtn');
+            const alertBox = document.getElementById('alertBox');
+            const secretCode = secretCodeInput.value.trim();
+            const articleTitle = document.getElementById('titre').value.trim();
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
+            alertBox.className = 'alert d-none';
+
+            // Auto-génération du résumé à partir du contenu Quill
+            const plainText = quill.getText().trim();
+            const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+
+            const payload = {
+                action: 'publish',
+                titre: articleTitle,
+                categorie: document.getElementById('categorie').value,
+                auteur: document.getElementById('auteur').value,
+                secretCode: secretCode,
+                date: document.getElementById('date').value,
+                description: autoDescription,
+                contenu: quill.root.innerHTML,
+                imageUrl: document.getElementById('imageUrl').value,
+                imageBase64: uploadedBase64,
+                imageName: uploadedFilename,
+                imageType: uploadedMimeType,
+                videoUrl: document.getElementById('videoUrl').value,
+                lien: document.getElementById('lien').value,
+                epingle: isFeatured ? 'oui' : 'non'
+            };
+
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify(payload)
+                });
+
+                const text = await res.text();
+                let data = {};
                 try {
-                    const res = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        redirect: 'follow',
-                        body: JSON.stringify(payload)
-                    });
+                    data = JSON.parse(text);
+                } catch (err) {
+                    data = { success: true, message: "Actualité enregistrée avec succès !" };
+                }
 
-                    const text = await res.text();
-                    let data = {};
-                    try {
-                        data = JSON.parse(text);
-                    } catch (err) {
-                        data = { success: true, message: "Actualité enregistrée avec succès !" };
-                    }
-
-                    if (data.success !== false) {
-                        alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
-                        alertBox.innerHTML = `
+                if (data.success !== false) {
+                    alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
+                    alertBox.innerHTML = `
                         <div class="d-flex align-items-center">
                             <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
                             <div>
@@ -1395,29 +1394,29 @@
                         </div>
                     `;
 
-                        // Réinitialisation complète du formulaire et des médias
-                        document.getElementById('newsForm').reset();
-                        quill.setContents([]);
-                        document.getElementById('date').valueAsDate = new Date();
-                        // Restaurer le mot de passe mémorisé
-                        secretCodeInput.value = secretCode;
-                        removeVignette();
-                        updatePreview();
-                    } else {
-                        alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                        alertBox.innerHTML = `<strong>❌ Erreur d'accès :</strong> ${data.message || "Mot de passe de rédaction incorrect."}`;
-                    }
-                } catch (error) {
-                    console.error('Erreur soumission:', error);
+                    // Réinitialisation complète du formulaire et des médias
+                    document.getElementById('newsForm').reset();
+                    quill.setContents([]);
+                    document.getElementById('date').valueAsDate = new Date();
+                    // Restaurer le mot de passe mémorisé
+                    secretCodeInput.value = secretCode;
+                    removeVignette();
+                    updatePreview();
+                } else {
                     alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = `<strong>❌ Erreur réseau :</strong> Impossible de contacter le serveur Google Apps Script (${error.message}). Vérifiez votre connexion.`;
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier sur le site de l\'école';
-                    window.scrollTo({ top: alertBox.offsetTop - 80, behavior: 'smooth' });
+                    alertBox.innerHTML = `<strong>❌ Erreur d'accès :</strong> ${data.message || "Mot de passe de rédaction incorrect."}`;
                 }
+            } catch (error) {
+                console.error('Erreur soumission:', error);
+                alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
+                alertBox.innerHTML = `<strong>❌ Erreur réseau :</strong> Impossible de contacter le serveur Google Apps Script (${error.message}). Vérifiez votre connexion.`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier sur le site de l\'école';
+                window.scrollTo({ top: alertBox.offsetTop - 80, behavior: 'smooth' });
             }
-        </script>
+        }
+    </script>
 </body>
 
 </html>
