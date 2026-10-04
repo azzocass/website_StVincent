@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allNews = [];
     let currentCategory = 'all';
 
-    
+
     try {
         const rawData = await CsvLoader.fetchCsv(CSV_URL);
 
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // NOTIFICATION NOUVEL ARTICLE & LIGHTBOX
     // ============================================================
 
-    // Vérifie si un article date de moins de 14 jours
     function isRecentArticle(dateObj) {
         if (!dateObj || isNaN(dateObj.getTime()) || dateObj.getTime() === 0) return false;
         const now = new Date();
@@ -90,7 +89,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return diffDays >= -1 && diffDays <= 14;
     }
 
-    // Lightbox plein écran pour agrandir les images au clic
     window.openLightboxImage = function (src, caption) {
         if (!src) return;
         const lbModalEl = document.getElementById('imageLightboxModal');
@@ -108,51 +106,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!newsList || newsList.length === 0) return;
 
         const STORAGE_KEY = 'esv_last_seen_article_date';
-        const latestArticle = newsList[0]; // déjà trié par date desc
+        const latestArticle = newsList[0];
         const latestDateMs = latestArticle.date ? latestArticle.date.getTime() : 0;
         if (!latestDateMs) return;
 
         const lastSeenMs = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
         const isRecent = isRecentArticle(latestArticle.date);
 
-        // Afficher la pastille/toast si l'article est plus récent que la dernière visite OU récent (< 14j)
+        // Afficher uniquement si l'article est plus récent que la dernière visite enregistrée
         if (latestDateMs > lastSeenMs || (isRecent && lastSeenMs === 0)) {
             showNewArticleBadge(latestArticle, STORAGE_KEY, latestDateMs);
         }
     }
 
     function showNewArticleBadge(article, storageKey, latestDateMs) {
-        // 1. Pastille cloche animée bien espacée dans la navbar
         const navActu = document.querySelector('a[href="#actualites"].nav-link');
+
+        // Gérer le clic global sur le lien "Actualités" de la nav pour masquer définitivement la notif
+        if (navActu) {
+            navActu.addEventListener('click', () => markAsSeen(storageKey, latestDateMs));
+        }
+
         if (navActu && !document.getElementById('new-article-badge')) {
             navActu.style.position = 'relative';
             const badge = document.createElement('span');
             badge.id = 'new-article-badge';
-            badge.className = 'badge rounded-pill bg-danger ms-3 align-middle'; // 👈 Espacement accru (ms-3)
+            badge.className = 'badge rounded-pill bg-danger ms-3 align-middle';
             badge.style.fontSize = '0.75rem';
             badge.style.padding = '5px 8px';
             badge.style.boxShadow = '0 0 10px rgba(239,68,68,0.7)';
-            badge.innerHTML = '<i class="bi bi-bell-fill"></i>'; // 👈 Uniquement la cloche
+            badge.innerHTML = '<i class="bi bi-bell-fill"></i>';
             navActu.appendChild(badge);
 
-            // Injecter animation pulse discrète
             if (!document.getElementById('pulse-style')) {
                 const s = document.createElement('style');
                 s.id = 'pulse-style';
                 s.textContent = `@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.9}} #new-article-badge{animation:pulse-dot 1.5s infinite;}`;
                 document.head.appendChild(s);
             }
-
-            // Supprimer badge au clic sur "Actualités"
-            navActu.addEventListener('click', () => markAsSeen(storageKey, latestDateMs), { once: true });
         }
 
-        // 2. Toast Bootstrap positionné en bas à droite, responsive et non tronqué
+        // Toast mobile / desktop corrigé (taille fixe propre, centré sur mobile, coin bas-droit sur PC)
         const toastContainer = document.getElementById('toast-container-notif') || createToastContainer();
         const toastId = 'toast-new-article-' + Date.now();
         const prettyDate = article.date ? article.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
+
         toastContainer.insertAdjacentHTML('beforeend', `
-            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4" role="alert" aria-live="polite" data-bs-autohide="false" style="background:#1e3a5f;color:#fff;width:calc(100vw - 2rem);max-width:320px;">
+            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4" role="alert" aria-live="polite" data-bs-autohide="false" style="background:#1e3a5f;color:#fff;width:90vw;max-width:320px;margin: 0 auto 10px auto;">
                 <div class="d-flex">
                     <div class="toast-body py-3 px-3 w-100">
                         <div class="d-flex align-items-center mb-1">
@@ -179,24 +179,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         setTimeout(() => {
             const toastEl = document.getElementById(toastId);
-            if (toastEl) bootstrap.Toast.getOrCreateInstance(toastEl).show();
+            if (toastEl) {
+                const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl);
+                bsToast.show();
+            }
         }, 1000);
     }
 
     function createToastContainer() {
         const el = document.createElement('div');
         el.id = 'toast-container-notif';
-        // 👈 Forcé en bas à droite avec z-index maximal pour mobile
-        el.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        // Position fixe propre qui gère les marges sur mobile et le coin sur desktop
+        el.className = 'position-fixed bottom-0 start-0 end-0 p-3';
         el.style.zIndex = '10999';
+        el.style.pointerEvents = 'none'; // Laisse cliquer à travers le conteneur vide
         document.body.appendChild(el);
+
+        // On réactive les clics sur les enfants (le toast lui-même)
+        el.style.pointerEvents = 'auto';
         return el;
     }
 
     function markAsSeen(storageKey, dateMs) {
+        // Enregistre de manière définitive dans le navigateur que l'article a été vu
         localStorage.setItem(storageKey, String(dateMs));
+
+        // Supprime instantanément la cloche de la navbar
         const badge = document.getElementById('new-article-badge');
         if (badge) badge.remove();
+
+        // Masque tous les toasts actifs sur la page
+        document.querySelectorAll('.toast').forEach(t => {
+            const inst = bootstrap.Toast.getInstance(t);
+            if (inst) inst.hide();
+            else t.remove();
+        });
     }
 
     // ============================================================
