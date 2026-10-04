@@ -99,20 +99,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    function articleKey(a) {
+        return (a.titre || '').trim().toLowerCase() + '|' + (a.date ? a.date.getTime() : 0);
+    }
+
     function checkNewArticleNotification(newsList) {
         if (!newsList || newsList.length === 0) return;
 
-        const STORAGE_KEY = 'esv_last_seen_article_date';
-        const latestArticle = newsList[0];
-        const latestDateMs = latestArticle.date ? latestArticle.date.getTime() : 0;
-        if (!latestDateMs) return;
+        const STORAGE_KEY = 'esv_seen_articles';
+        let seen = null;
+        try { seen = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { }
 
-        const lastSeenMs = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
-        const isRecent = isRecentArticle(latestArticle.date);
+        const allKeys = newsList.map(articleKey);
+        const firstVisit = !Array.isArray(seen);
 
-        if (latestDateMs > lastSeenMs || (isRecent && lastSeenMs === 0)) {
-            showNewArticleBadge(latestArticle, STORAGE_KEY, latestDateMs);
-        }
+        // 1re visite sur cet appareil : on n'alerte que si l'article est récent.
+        // Ensuite : premier article jamais vu, même s'il est daté avant les autres.
+        const unseen = newsList.find(a =>
+            firstVisit ? isRecentArticle(a.date) : !seen.includes(articleKey(a))
+        );
+
+        if (unseen) showNewArticleBadge(unseen, STORAGE_KEY, allKeys);
     }
 
     function showNewArticleBadge(article, storageKey, latestDateMs) {
@@ -130,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             badge.innerHTML = '<i class="bi bi-bell-fill"></i>';
             navActu.appendChild(badge);
         }
-                // 2. Toast flottant (CSS via classe + media query, safe-area iOS)
+        // 2. Toast flottant (CSS via classe + media query, safe-area iOS)
         if (!document.getElementById('esv-toast-style')) {
             const st = document.createElement('style');
             st.id = 'esv-toast-style';
@@ -171,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const old = document.getElementById('esv-custom-toast');
         if (old) old.remove();
 
-        const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         const prettyDate = article.date ? article.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
 
         const toastEl = document.createElement('div');
@@ -208,8 +215,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => { if (document.body.contains(toastEl)) closeToast(false); }, 15000);
     }
 
-    function markAsSeen(storageKey, dateMs) {
-        localStorage.setItem(storageKey, String(dateMs));
+    function markAsSeen(storageKey, value) {
+        try { localStorage.setItem(storageKey, JSON.stringify(value)); } catch (e) { }
         const badge = document.getElementById('new-article-badge');
         if (badge) badge.remove();
     }
