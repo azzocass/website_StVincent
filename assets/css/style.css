@@ -213,7 +213,7 @@ section {
     font-family: var(--font-heading);
     border-radius: 12px;
 }
- 
+
 .date-box.primary {
     background-color: var(--color-primary);
     color: white;
@@ -1447,7 +1447,8 @@ section {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-.article-rich-text ul, .article-rich-text ol {
+.article-rich-text ul,
+.article-rich-text ol {
     padding-left: 1.5rem;
     margin-bottom: 1rem;
 }
@@ -1458,6 +1459,45 @@ section {
     font-style: italic;
     color: #64748b;
     margin: 1.2rem 0;
+}
+
+/* --- Correction définitive et compacte de la modale des actualités --- */
+#newsArticleModal .modal-body {
+    padding: 1.25rem 1.5rem !important;
+}
+
+#modal-article-content {
+    text-align: left !important;
+    line-height: 1.45 !important;
+    /* 👈 Plus resserré pour éviter l'effet aéré */
+    color: #334155 !important;
+    font-size: 0.95rem !important;
+}
+
+/* On supprime les marges excessives des paragraphes et on met juste un petit espacement naturel */
+#modal-article-content p {
+    margin-bottom: 0.6rem !important;
+    margin-top: 0 !important;
+}
+
+#modal-article-content img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 0.5rem !important;
+    margin: 0.75rem auto !important;
+    display: block !important;
+}
+
+/* Sur mobile */
+@media (max-width: 768px) {
+    #newsArticleModal .modal-body {
+        padding: 1rem !important;
+    }
+
+    #modal-article-content {
+        font-size: 0.9rem !important;
+        line-height: 1.4 !important;
+    }
 }
 
 /* Dark mode for News */
