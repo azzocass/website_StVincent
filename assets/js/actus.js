@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allNews = [];
     let currentCategory = 'all';
 
-
     try {
         const rawData = await CsvLoader.fetchCsv(CSV_URL);
 
@@ -113,7 +112,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const lastSeenMs = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
         const isRecent = isRecentArticle(latestArticle.date);
 
-        // Afficher uniquement si l'article est plus récent que la dernière visite enregistrée
         if (latestDateMs > lastSeenMs || (isRecent && lastSeenMs === 0)) {
             showNewArticleBadge(latestArticle, STORAGE_KEY, latestDateMs);
         }
@@ -145,13 +143,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // 👈 Utilisation d'un conteneur 100% stable basé sur les classes Bootstrap standard
         const toastContainer = document.getElementById('toast-container-notif') || createToastContainer();
         const toastId = 'toast-new-article-' + Date.now();
         const prettyDate = article.date ? article.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
 
         toastContainer.insertAdjacentHTML('beforeend', `
-            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4 show" role="alert" aria-live="assertive" aria-atomic="true" style="background:#1e3a5f;color:#fff;width:100%;max-width:320px;">
+            <div id="${toastId}" class="toast align-items-center border-0 shadow-lg rounded-4 show" role="alert" aria-live="assertive" aria-atomic="true" style="background:#1e3a5f;color:#fff;width:100%;">
                 <div class="d-flex">
                     <div class="toast-body py-3 px-3 w-100">
                         <div class="d-flex align-items-center mb-1">
@@ -183,41 +180,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const el = document.createElement('div');
         el.id = 'toast-container-notif';
-        // 👈 On utilise les classes utilitaires Bootstrap pour un positionnement fixe garanti sans bug de scroll
-        el.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+
+        // Utilisation de Flexbox Bootstrap pour centrer sur mobile et aligner à droite sur PC
+        el.className = 'position-fixed p-3 d-flex justify-content-center justify-content-md-end';
+        el.style.bottom = '15px';
+        el.style.left = '0';
+        el.style.right = '0';
         el.style.zIndex = '10999';
-
-        // Ajustement mobile pour centrer proprement le toast en bas sans qu'il colle aux bords
-        el.style.width = '100%';
-        el.style.maxWidth = '350px';
-        el.style.left = '50%';
-        el.style.transform = 'translateX(-50%)';
-
-        // Sur PC, on le remet sagement en bas à droite
-        if (window.innerWidth >= 768) {
-            el.style.left = 'auto';
-            el.style.transform = 'none';
-            el.style.right = '0';
-        }
+        el.style.pointerEvents = 'auto'; // Laisse cliquer à travers la zone invisible
 
         document.body.appendChild(el);
         return el;
     }
 
     function markAsSeen(storageKey, dateMs) {
-        // Enregistre de manière définitive dans le navigateur que l'article a été vu
         localStorage.setItem(storageKey, String(dateMs));
-
-        // Supprime instantanément la cloche de la navbar
         const badge = document.getElementById('new-article-badge');
         if (badge) badge.remove();
-
-        // Masque tous les toasts actifs sur la page
-        document.querySelectorAll('.toast').forEach(t => {
-            const inst = bootstrap.Toast.getInstance(t);
-            if (inst) inst.hide();
-            else t.remove();
-        });
+        document.querySelectorAll('.toast').forEach(t => t.remove());
     }
 
     // ============================================================
@@ -376,6 +356,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const catIcon = getCategoryIcon(pinnedArticle.categorie);
             const formattedDate = formatDisplayDate(pinnedArticle.date);
 
+            // Vérifier si le texte complet tient entièrement dans le résumé (ex: moins de 200 caractères)
+            const cleanContentText = (pinnedArticle.contenu || pinnedArticle.description || '').replace(/<[^>]*>?/gm, '').trim();
+            const showReadMoreHero = cleanContentText.length > 120;
+
             html += `
                 <div class="row mb-5">
                     <div class="col-12">
@@ -402,11 +386,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         </div>
                                         <h3 class="fw-bold text-royal mb-3 font-heading">${pinnedArticle.titre}</h3>
                                         <p class="text-muted mb-4" style="line-height: 1.6; color: #475569 !important;">
-                                            ${pinnedArticle.description || pinnedArticle.contenu.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...'}
+                                            ${pinnedArticle.description || cleanContentText}
                                         </p>
-                                        <button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm btn-open-news-modal" data-news-id="${pinnedArticle.id}">
-                                            Lire l'article complet <i class="bi bi-arrow-right ms-1"></i>
-                                        </button>
+                                        ${showReadMoreHero ? `
+                                            <button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm btn-open-news-modal" data-news-id="${pinnedArticle.id}">
+                                                Lire l'article complet <i class="bi bi-arrow-right ms-1"></i>
+                                            </button>
+                                        ` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -425,6 +411,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const badgeClass = getCategoryBadgeClass(news.categorie);
                 const catIcon = getCategoryIcon(news.categorie);
                 const formattedDate = formatDisplayDate(news.date);
+
+                // Masquer "Lire la suite" si le texte est très court (<= 120 caractères)
+                const cleanText = (news.description || news.contenu || '').replace(/<[^>]*>?/gm, '').trim();
+                const showReadMore = cleanText.length > 120;
 
                 html += `
                     <div class="col-12 col-md-6 col-lg-4">
@@ -447,13 +437,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     </div>
                                     <h5 class="fw-bold text-royal mb-2 font-heading" style="font-size: 1.15rem;">${news.titre}</h5>
                                     <p class="text-muted small mb-3" style="line-height: 1.5; color: #475569 !important;">
-                                        ${news.description || news.contenu.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...'}
+                                        ${news.description || cleanText.substring(0, 120) + (cleanText.length > 120 ? '...' : '')}
                                     </p>
                                 </div>
                                 <div>
-                                    <button class="btn btn-link text-primary fw-bold text-decoration-none p-0 small btn-open-news-modal" data-news-id="${news.id}">
-                                        Lire la suite <i class="bi bi-arrow-right"></i>
-                                    </button>
+                                    ${showReadMore ? `
+                                        <button class="btn btn-link text-primary fw-bold text-decoration-none p-0 small btn-open-news-modal" data-news-id="${news.id}">
+                                            Lire la suite <i class="bi bi-arrow-right"></i>
+                                        </button>
+                                    ` : ''}
                                 </div>
                             </div>
                         </div>
@@ -468,7 +460,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // GESTION DU MODAL DE DÉTAIL D'ARTICLE (Refondu & Aéré)
+    // GESTION DU MODAL DE DÉTAIL D'ARTICLE
     // ============================================================
 
     function attachModalOpeners() {
@@ -567,18 +559,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // 👈 Style aéré, texte justifié et marges propres pour le contenu de la modale
         if (contentEl) {
             contentEl.style.lineHeight = '1.6';
-            contentEl.style.textAlign = 'left'; // 👈 Aligné à gauche, bien plus propre visuellement
+            contentEl.style.textAlign = 'left';
             contentEl.style.color = '#334155';
             contentEl.style.fontSize = '1rem';
 
-            // Nettoyer les marges des paragraphes internes s'il y en a
             if (news.contenu && news.contenu.trim() !== '') {
                 contentEl.innerHTML = news.contenu;
             } else {
-                contentEl.innerHTML`<p>${news.description.replace(/\n/g, '<br>')}</p>`;
+                contentEl.innerHTML = `<p>${news.description.replace(/\n/g, '<br>')}</p>`;
             }
         }
 
