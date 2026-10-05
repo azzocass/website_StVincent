@@ -8,14 +8,37 @@ class CsvLoader {
      * @param {string} url - The URL of the CSV file.
      * @returns {Promise<Array>} - A promise that resolves to an array of objects.
      */
+       /** Google d'abord (6 s, 1 nouvelle tentative), puis copie locale. Lève une erreur si tout échoue. */
+    static async fetchCsvStrict(url, retries = 1) {
+        let lastError;
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 6000);
+            try {
+                const response = await fetch(url, { signal: controller.signal });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return this.parseCsv(await response.text());
+            } catch (err) {
+                lastError = err;
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+        // Repli : copie locale générée par la GitHub Action (identifiée par le gid de l'URL)
+        const gid = (url.match(/[?&]gid=(\d+)/) || [])[1];
+        if (gid) {
+            try {
+                const res = await fetch('assets/data/sheet-' + gid + '.csv', { cache: 'no-cache' });
+                if (res.ok) return this.parseCsv(await res.text());
+            } catch (e) { /* on lève l'erreur d'origine ci-dessous */ }
+        }
+        throw lastError;
+    }
+
+    /** Comportement historique : renvoie [] en cas d'échec (utilisé par agenda, cantine, tarifs). */
     static async fetchCsv(url) {
         try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch CSV: ${response.statusText}`);
-            }
-            const text = await response.text();
-            return this.parseCsv(text);
+            return await this.fetchCsvStrict(url);
         } catch (error) {
             console.error('Error loading CSV:', error);
             return [];

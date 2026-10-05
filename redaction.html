@@ -276,7 +276,7 @@
                     <div class="mb-3">
                         <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
                             <label class="form-label fw-bold text-royal mb-0">
-                                <i class="bi bi-magic me-1 text-primary"></i> Modèles prêts à l'emploi :
+                                <i class="bi bi-file-earmark-richtext me-1 text-primary"></i> Modèles prêts à l'emploi :
                             </label>
                             <span class="text-muted small">Cliquez pour pré-remplir l'éditeur</span>
                         </div>
@@ -384,8 +384,7 @@
                         <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
                             <button type="button" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm"
                                 id="btnInsertArticleMedia">
-                                <i class="bi bi-plus-circle-fill me-2"></i>+ Photo ou Vidéo (depuis l'ordinateur /
-                                mobile)
+                                <i class="bi bi-plus-circle-fill me-2"></i>+ Photo ou Vidéo
                             </button>
                             <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 small"
                                 id="btnOpenVideoLinkModal">
@@ -601,11 +600,11 @@
                 <div class="modal-footer border-0 p-4 pt-1 d-flex flex-column gap-2">
                     <button type="button" class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm text-dark"
                         id="btnPublishFeatured">
-                        <i class="bi bi-pin-angle-fill me-1"></i>⭐ Oui, publier À LA UNE
+                        <i class="bi bi-pin-angle-fill me-1"></i>Oui, publier À LA UNE
                     </button>
                     <button type="button" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm"
                         id="btnPublishNormal">
-                        <i class="bi bi-send me-1"></i>📰 Non, publication normale
+                        <i class="bi bi-send me-1"></i>Non, publication normale
                     </button>
                     <button type="button" class="btn btn-light w-100 rounded-pill py-2 text-muted small"
                         data-bs-dismiss="modal">
@@ -638,12 +637,13 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="assets/js/theme.js"></script>
 
     <script>
         // URL du Google Apps Script Web App déployé
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySrqEI8ivMv-ULaNvtA_cjOPgb1wrVEAB1s7Fn_H0raanWrRtFGWeG9B6TvEWsWaOuQQ/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqN93Fk6l6vGOkzqH_x0lmR2qHbuO-7Fhy5GqfvHseWns7ZvyHZtfggLQzZlGOg-AcJQ/exec';
 
         // Date du jour par défaut
         document.getElementById('date').valueAsDate = new Date();
@@ -662,6 +662,7 @@
             theme: 'snow',
             placeholder: 'Rédigez ici le détail de votre article...',
             modules: {
+                imageResize: { modules: ['Resize', 'DisplaySize', 'Toolbar'] },
                 toolbar: {
                     container: [
                         [{ 'header': [2, 3, false] }],
@@ -943,6 +944,107 @@
             if (range) {
                 lastQuillSelection = range;
             }
+        });
+
+        // ============================================================
+        // BARRE D'ACTIONS SUR UNE IMAGE (↑ ↓ ✕) + SUIVI DES ENVOIS DRIVE
+        // ============================================================
+        const Delta = Quill.import('delta');
+        const uploadedUrls = [];   // médias envoyés sur Drive pendant cette rédaction
+        function driveId(u) {
+            const m = String(u).match(/[?&]id=([\w-]+)/) || String(u).match(/\/d\/([\w-]+)/);
+            return m ? m[1] : null;
+        }
+
+        function moveImage(img, dir) {
+            const blot = Quill.find(img);
+            if (!blot) return null;
+            const idx = quill.getIndex(blot);
+            const [line] = quill.getLine(idx);
+            const lineStart = quill.getIndex(line);
+            const lineLen = line.length();
+            const alone = (lineLen === 2);                 // image seule sur sa ligne
+            const segStart = alone ? lineStart : idx;
+            const segLen = alone ? lineLen : 1;
+            const seg = quill.getContents(segStart, segLen);
+            const style = img.getAttribute('style');
+            let T, newIdx, delta, nextWasLast = false;
+            if (dir < 0) {
+                if (lineStart === 0) return null;
+                T = quill.getIndex(quill.getLine(lineStart - 1)[0]);
+                delta = new Delta().retain(T).concat(seg).retain(segStart - T).delete(segLen);
+                newIdx = T;
+            } else {
+                const next = line.next;
+                if (!next) return null;
+                nextWasLast = alone && !next.next;
+                T = alone ? lineStart + lineLen + next.length() : lineStart + lineLen;
+                delta = new Delta().retain(segStart).delete(segLen).retain(T - segStart - segLen).concat(seg);
+                newIdx = T - segLen;
+            }
+            quill.updateContents(delta, 'user');
+            if (nextWasLast) {                              // évite un paragraphe vide en fin d'article
+                const L = quill.getLength();
+                if (L > 2 && quill.getText(L - 2, 2) === '\n\n') quill.deleteText(L - 2, 1, 'user');
+            }
+            const leaf = quill.getLeaf(newIdx)[0];
+            const node = leaf && leaf.domNode;
+            if (node && node.tagName === 'IMG') {
+                if (style) node.setAttribute('style', style);   // retrouve float / marges
+                return node;
+            }
+            return null;
+        }
+
+        function removeImage(img) {
+            const blot = Quill.find(img);
+            if (!blot) return;
+            const idx = quill.getIndex(blot);
+            const [line] = quill.getLine(idx);
+            const lineStart = quill.getIndex(line);
+            const alone = line.length() === 2 && lineStart + 2 < quill.getLength();
+            quill.deleteText(alone ? lineStart : idx, alone ? 2 : 1, 'user');
+        }
+
+        // Mini-barre flottante sous l'image sélectionnée
+        const imgBar = document.createElement('div');
+        imgBar.style.cssText = 'position:fixed;z-index:1090;display:none;gap:4px;background:#fff;border:1px solid #cbd5e1;border-radius:999px;padding:3px 6px;box-shadow:0 4px 14px rgba(0,0,0,.18)';
+        imgBar.innerHTML = `
+  <button type="button" data-act="up"   class="btn btn-sm btn-light rounded-pill" title="Monter d'un paragraphe">↑</button>
+  <button type="button" data-act="down" class="btn btn-sm btn-light rounded-pill" title="Descendre d'un paragraphe">↓</button>
+  <button type="button" data-act="del"  class="btn btn-sm btn-light rounded-pill text-danger" title="Retirer l'image">✕</button>`;
+        document.body.appendChild(imgBar);
+        let barImg = null;
+
+        function placeImgBar() {
+            if (!barImg || !document.body.contains(barImg)) { imgBar.style.display = 'none'; barImg = null; return; }
+            const r = barImg.getBoundingClientRect();
+            imgBar.style.display = 'flex';
+            imgBar.style.top = Math.min(window.innerHeight - 44, Math.max(8, r.bottom + 6)) + 'px';
+            imgBar.style.left = Math.max(8, r.left) + 'px';
+        }
+        quill.root.addEventListener('click', (e) => {
+            barImg = (e.target.tagName === 'IMG') ? e.target : null;
+            placeImgBar();
+        });
+        document.addEventListener('mousedown', (e) => {
+            if (!imgBar.contains(e.target) && e.target.tagName !== 'IMG') { barImg = null; imgBar.style.display = 'none'; }
+        });
+        window.addEventListener('scroll', placeImgBar, true);
+        window.addEventListener('resize', placeImgBar);
+        imgBar.addEventListener('mousedown', (e) => e.preventDefault());
+        imgBar.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn || !barImg) return;
+            const resizer = quill.getModule('imageResize');
+            if (resizer && resizer.hide) resizer.hide();      // ferme les poignées de redimensionnement
+            if (btn.dataset.act === 'del') {
+                removeImage(barImg); barImg = null;
+            } else {
+                const moved = moveImage(barImg, btn.dataset.act === 'up' ? -1 : 1);
+                if (moved) barImg = moved;
+            }
+            requestAnimationFrame(placeImgBar);
         });
 
         // ============================================================
@@ -1388,11 +1490,22 @@
                         <div class="d-flex align-items-center">
                             <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
                             <div>
-                                <h5 class="alert-heading fw-bold mb-1">🎉 Article publié avec succès !</h5>
-                                <p class="mb-0 small">Votre actualité <strong>« ${articleTitle} »</strong> a été enregistrée avec succès ${isFeatured ? '<strong>(À la une ⭐)</strong>' : ''}. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
+                                <h5 class="alert-heading fw-bold mb-1">Article publié avec succès !</h5>
+                                <p class="mb-0 small">Votre actualité <strong>« ${articleTitle} »</strong> a été enregistrée avec succès ${isFeatured ? '<strong>(À la une)</strong>' : ''}. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
                             </div>
                         </div>
                     `;
+
+                    // Nettoyage Drive : médias envoyés mais retirés de l'article avant publication
+                    const finalHtml = payload.contenu + ' ' + payload.imageUrl + ' ' + payload.videoUrl;
+                    const orphanIds = uploadedUrls.map(driveId).filter(id => id && !finalHtml.includes(id));
+                    uploadedUrls.length = 0;
+                    if (orphanIds.length) {
+                        fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'deleteMedia', fileIds: orphanIds, secretCode: secretCode })
+                        }).catch(() => { });
+                    }
 
                     // Réinitialisation complète du formulaire et des médias
                     document.getElementById('newsForm').reset();

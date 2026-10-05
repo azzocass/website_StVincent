@@ -1470,6 +1470,54 @@ section {
     margin: 1.2rem 0;
 }
 
+/* Contient les images flottantes (évite qu'elles débordent en bas de la fenêtre) */
+.article-rich-text::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* Alignement du texte (classes générées par Quill) */
+.article-rich-text .ql-align-center {
+    text-align: center;
+}
+
+.article-rich-text .ql-align-right {
+    text-align: right;
+}
+
+.article-rich-text .ql-align-justify {
+    text-align: justify;
+}
+
+/* Taille et retrait (si tu les ajoutes à la barre d'outils) */
+.article-rich-text .ql-size-small {
+    font-size: .85em;
+}
+
+.article-rich-text .ql-size-large {
+    font-size: 1.3em;
+}
+
+.article-rich-text .ql-indent-1 {
+    padding-left: 3em;
+}
+
+.article-rich-text .ql-indent-2 {
+    padding-left: 6em;
+}
+
+/* Mobile : plus d'habillage de texte, image pleine largeur et centrée */
+@media (max-width: 576px) {
+    .article-rich-text img {
+        float: none !important;
+        display: block !important;
+        margin: 1rem auto !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+
 /* --- Correction définitive et compacte de la modale des actualités --- */
 #newsArticleModal .modal-body {
     padding: 1.25rem 1.5rem !important;
@@ -1507,6 +1555,18 @@ section {
         font-size: 0.9rem !important;
         line-height: 1.4 !important;
     }
+}
+
+.article-rich-text .ql-align-center {
+    text-align: center;
+}
+
+.article-rich-text .ql-align-right {
+    text-align: right;
+}
+
+.article-rich-text .ql-align-justify {
+    text-align: justify;
 }
 
 /* Dark mode for News */

@@ -16,10 +16,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentCategory = 'all';
 
     try {
-        const rawData = await CsvLoader.fetchCsv(CSV_URL);
+        const rawData = await CsvLoader.fetchCsvStrict(CSV_URL, 1);
 
         if (!rawData || rawData.length === 0) {
-            renderEmptyState();
+            renderErrorState();
             return;
         }
 
@@ -211,8 +211,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Apparition (double rAF = la transition démarre bien sur mobile)
         requestAnimationFrame(() => requestAnimationFrame(() => toastEl.classList.add('show')));
 
-        // Disparition auto après 15 s, sans marquer « vu » (il reviendra à la prochaine visite)
-        setTimeout(() => { if (document.body.contains(toastEl)) closeToast(false); }, 15000);
+        // Disparition auto après 60 s, sans marquer « vu » (il reviendra à la prochaine visite)
+        setTimeout(() => { if (document.body.contains(toastEl)) closeToast(false); }, 60000);
     }
 
     function markAsSeen(storageKey, value) {
@@ -676,6 +676,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             </div>
         `;
+    }
+
+    function renderErrorState() {
+        const html = `
+            <div class="text-center py-5">
+                <i class="bi bi-wifi-off fs-1 text-muted"></i>
+                <h5 class="fw-bold text-muted mt-2">Impossible de charger les actualités</h5>
+                <p class="small text-muted">Vérifiez votre connexion ou réessayez dans un instant.</p>
+                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Réessayer
+                </button>
+            </div>`;
+        if (sectionContent) sectionContent.innerHTML = html;
+        if (offcanvasBody) offcanvasBody.innerHTML = html;
     }
 
     function renderEmptyState() {
