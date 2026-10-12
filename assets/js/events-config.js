@@ -6,7 +6,7 @@
 //
 //  THÈMES :
 //    apel        → Événements APEL  (apéros, soirée familles…)
-//    ogec        → Kermesse
+//    ogec        → Kermesse + Marché de Noël
 //    fournitures → Rentrée scolaire / Fournitures
 //
 //  Pour AFFICHER un bandeau  → visible: true
@@ -44,11 +44,25 @@ const BANNERS_CONFIG = {
                 url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/apero-des-mamans-2026-1"
             },
             {
-                visible: true,
+                visible: false,
                 label: "Vente Gâteaux Bijou",
                 icon: "🍪",
                 color: "#d721a9ff",
                 url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/vente-gateaux-bijou-rentree-2026-2027"
+            },
+            {
+                visible: true,
+                label: "Vente Chocolat de noël",
+                icon: "🍫",
+                color: "#b68f5dff",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/vente-jeff-de-bruges-2-1"
+            },
+            {
+                visible: true,
+                label: "Vente Sapin de noël",
+                icon: "🌲",
+                color: "#487a51ff",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/sapins-de-noel-2026"
             },
             {
                 visible: false,
@@ -61,13 +75,13 @@ const BANNERS_CONFIG = {
     },
 
     // -------------------------------------------------------
-    //  OGEC — Kermesse et autres événements
+    //  OGEC — Kermesse + Marché de Noël
     // -------------------------------------------------------
     ogec: {
-        visible: false,
+        visible: true,
         heading: "OGEC",
         headingIcon: "bi-ticket-perforated-fill",
-        style: { bg: "#ffe8a1", text: "#856404", border: "#f59e0b" },
+        style: { bg: "#fff5f5", text: "#7f1d1d", border: "#b91c1c" },
         events: [
             {
                 visible: false,
@@ -75,6 +89,13 @@ const BANNERS_CONFIG = {
                 icon: "🎪",
                 color: "#3cbdecff",
                 url: "kermesse.html"
+            },
+            {
+                visible: true,
+                label: "Marché de Noël – Bénévoles",
+                icon: "🎄",
+                color: "#b91c1c",
+                url: "marche-noel.html"
             },
         ]
     },
