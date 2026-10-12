@@ -371,7 +371,7 @@
                         <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
                             <button type="button" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm"
                                 id="btnInsertArticleMedia">
-                                <i class="bi bi-plus-circle-fill me-2"></i>+ Photo ou Vidéo
+                                <i class="bi bi-plus-circle-fill me-2"></i>Photo ou Vidéo
                             </button>
                             <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 small"
                                 id="btnOpenVideoLinkModal">
@@ -1083,45 +1083,49 @@
         const articleVideoModal = articleVideoModalEl ? new bootstrap.Modal(articleVideoModalEl) : null;
 
         async function postToScript(payload) {
-        let lastErr;
-        for (let attempt = 0; attempt < 2; attempt++) {
-            try {
-                const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const text = await res.text();
+            let lastErr;
+            for (let attempt = 0; attempt < 2; attempt++) {
                 try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    const snippet = text.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]*>/g, ' ')
-                                        .replace(/\s+/g, ' ').trim().substring(0, 200);
-                    throw new Error('Réponse inattendue de Google : ' + (snippet || 'page vide'));
+                    const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+                    const text = await res.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        const snippet = text.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]*>/g, ' ')
+                            .replace(/\s+/g, ' ').trim().substring(0, 200);
+                        throw new Error('Réponse inattendue de Google : ' + (snippet || 'page vide'));
+                    }
+                } catch (err) {
+                    lastErr = err;
+                    if (attempt === 0) await new Promise(r => setTimeout(r, 1500));
                 }
-            } catch (err) {
-                lastErr = err;
-                if (attempt === 0) await new Promise(r => setTimeout(r, 1500));
             }
+            throw lastErr;
         }
-        throw lastErr;
-    }
 
         async function uploadArticleFile(file, pwd) {
-        const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
-        const uploadId = Math.random().toString(36).slice(2, 10);
-        let payload;
-        if (isVideo) {
-            if (file.size > 26 * 1024 * 1024) throw new Error(`« ${file.name} » dépasse 25 Mo (utilisez un lien YouTube).`);
-            payload = { action: 'uploadVideo', uploadId, videoBase64: await readFileAsBase64(file),
-                        videoName: file.name, videoType: file.type || 'video/mp4', secretCode: pwd };
-        } else {
-            const dataUrl = await compressAndStoreImage(file);
-            payload = { action: 'uploadImage', uploadId, imageBase64: dataUrl.split(',')[1],
-                        imageName: file.name.replace(/\.[^/.]+$/, '') + '.jpg', imageType: 'image/jpeg', secretCode: pwd };
+            const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+            const uploadId = Math.random().toString(36).slice(2, 10);
+            let payload;
+            if (isVideo) {
+                if (file.size > 26 * 1024 * 1024) throw new Error(`« ${file.name} » dépasse 25 Mo (utilisez un lien YouTube).`);
+                payload = {
+                    action: 'uploadVideo', uploadId, videoBase64: await readFileAsBase64(file),
+                    videoName: file.name, videoType: file.type || 'video/mp4', secretCode: pwd
+                };
+            } else {
+                const dataUrl = await compressAndStoreImage(file);
+                payload = {
+                    action: 'uploadImage', uploadId, imageBase64: dataUrl.split(',')[1],
+                    imageName: file.name.replace(/\.[^/.]+$/, '') + '.jpg', imageType: 'image/jpeg', secretCode: pwd
+                };
+            }
+            const data = await postToScript(payload);
+            if (isAuthError(data)) { const e = new Error('Mot de passe refusé : ressaisissez-le.'); e.auth = true; throw e; }
+            if (!data.success || !data.url) throw new Error(data.message || 'Erreur serveur');
+            rememberPassword(pwd);
+            return { type: isVideo ? 'video' : 'image', url: data.url };
         }
-        const data = await postToScript(payload);
-        if (isAuthError(data)) { const e = new Error('Mot de passe refusé : ressaisissez-le.'); e.auth = true; throw e; }
-        if (!data.success || !data.url) throw new Error(data.message || 'Erreur serveur');
-        rememberPassword(pwd);
-        return { type: isVideo ? 'video' : 'image', url: data.url };
-    }
 
         if (btnInsertArticleMedia && articleMediaInput) {
             btnInsertArticleMedia.addEventListener('click', () => {
