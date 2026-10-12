@@ -66,6 +66,13 @@ const BANNERS_CONFIG = {
             },
             {
                 visible: false,
+                label: "Marché de Noël – Bénévoles",
+                icon: "🎄🎅🏻",
+                color: "#b91c1c",
+                url: "marche-noel.html"
+            },
+            {
+                visible: false,
                 label: "Soirée des Familles",
                 icon: "🎉",
                 color: "#8b5cf6",
@@ -90,13 +97,6 @@ const BANNERS_CONFIG = {
                 color: "#3cbdecff",
                 url: "kermesse.html"
             },
-            {
-                visible: true,
-                label: "Marché de Noël – Bénévoles",
-                icon: "🎄",
-                color: "#b91c1c",
-                url: "marche-noel.html"
-            },
         ]
     },
 
@@ -117,7 +117,7 @@ const BANNERS_CONFIG = {
                 url: "#fournituresModal"
             },
             {
-                visible: true,
+                visible: false,
                 label: "Commander en ligne (Code : 26RH1H3)",
                 icon: "🛒",
                 color: "#166534",

@@ -1557,6 +1557,16 @@ section {
     }
 }
 
+@media (max-width: 576px) {
+  .article-rich-text .ql-video,
+  .article-rich-text iframe { 
+    aspect-ratio: 16 / 9; 
+    width: 100%;
+    max-height: 260px;
+    border-radius: 12px;
+  }
+}
+
 .article-rich-text .ql-align-center {
     text-align: center;
 }

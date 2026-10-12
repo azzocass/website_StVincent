@@ -494,6 +494,48 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    function convertDriveIframes(root) {
+        if (!root) return;
+        root.querySelectorAll('iframe').forEach(frame => {
+            const src = frame.src || '';
+            const m = src.match(/drive\.google\.com\/file\/d\/([\w-]+)\/preview/);
+            if (!m) return;
+            const fileId = m[1];
+            const container = document.createElement('div');
+            container.className = 'ratio ratio-16x9 rounded-3 overflow-hidden shadow-sm my-3 bg-dark position-relative';
+            container.innerHTML = `
+                <img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Vidéo"
+                     style="object-fit:cover;width:100%;height:100%;margin:0;border-radius:0;box-shadow:none"
+                     onerror="this.style.display='none'">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center" 
+                     style="background:rgba(0,0,0,.35);cursor:pointer;" role="button" aria-label="Lire la vidéo">
+                    <i class="bi bi-play-circle-fill text-white" style="font-size:3.8rem;filter:drop-shadow(0 3px 8px rgba(0,0,0,.6));transition:transform .2s ease;"></i>
+                    <span class="text-white small fw-bold mt-2 px-3 py-1 rounded-pill" style="background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);">
+                        <i class="bi bi-play-fill me-1"></i>Lire la vidéo
+                    </span>
+                </div>
+            `;
+            container.querySelector('[role="button"]').addEventListener('click', () => {
+                // Remplace le poster par le lecteur interactif avec autoplay pour lecture immédiate
+                const player = document.createElement('iframe');
+                player.src = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1`;
+                player.allow = 'autoplay; encrypted-media; fullscreen';
+                player.allowFullscreen = true;
+                player.style.cssText = 'border:0;width:100%;height:100%;position:absolute;top:0;left:0;';
+                container.innerHTML = '';
+                container.appendChild(player);
+
+                // Ajout du bouton Agrandir plein écran
+                const bar = document.createElement('div');
+                bar.className = 'text-end mt-2 mb-3';
+                bar.innerHTML = '<button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-arrows-fullscreen me-1"></i>Plein écran</button>';
+                bar.querySelector('button').addEventListener('click', () => openVideoOverlay(src));
+                container.insertAdjacentElement('afterend', bar);
+            });
+            frame.replaceWith(container);
+        });
+    }
+
     function openNewsModal(news) {
         const modalEl = document.getElementById('newsArticleModal');
         if (!modalEl) return;
@@ -532,31 +574,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (mediaContainer) {
             mediaContainer.innerHTML = '';
             let hasTopMedia = false;
-            const imgUrl = resolveImageUrl(news);
+            // Si une image de couverture dédiée existe, on l'utilise en haut.
+            // Sinon, si le contenu a déjà des images, on n'affiche PAS de doublon en haut de modal !
+            const explicitCover = news.image ? convertDriveUrl(news.image) : null;
+            const contentHasImages = news.contenu && /<img[^>]+src=/i.test(news.contenu);
+            const topImgUrl = explicitCover || (!contentHasImages ? resolveImageUrl(news) : null);
             const videoUrl = news.video;
 
-            if (imgUrl && videoUrl) {
+            if (topImgUrl) {
                 mediaContainer.innerHTML = `
-                    <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-3">
-                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" style="max-height: 320px; object-fit: cover;">
-                    </div>
-                `;
-                mediaContainer.classList.remove('d-none');
-                hasTopMedia = true;
-
-                if (bottomMediaContainer) {
-                    bottomMediaContainer.innerHTML = `
-                        <div class="pt-3 border-top mt-4">
-                            <h6 class="fw-bold text-royal mb-2"><i class="bi bi-camera-reels-fill text-primary me-2"></i>Vidéo associée :</h6>
-                            ${buildVideoEmbedHtml(videoUrl)}
-                        </div>
-                    `;
-                    bottomMediaContainer.classList.remove('d-none');
-                }
-            } else if (imgUrl) {
-                mediaContainer.innerHTML = `
-                    <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-3">
-                        <img src="${imgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block" style="max-height: 320px; object-fit: cover;">
+                    <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-3" style="cursor: pointer;" title="Cliquer pour agrandir la photo">
+                        <img src="${topImgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block modal-zoomable-img" style="max-height: 320px; object-fit: cover;">
                     </div>
                 `;
                 mediaContainer.classList.remove('d-none');
@@ -565,6 +593,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 mediaContainer.innerHTML = buildVideoEmbedHtml(videoUrl);
                 mediaContainer.classList.remove('d-none');
                 hasTopMedia = true;
+            }
+
+            if (bottomMediaContainer) {
+                if (topImgUrl && videoUrl) {
+                    bottomMediaContainer.innerHTML = `
+                        <div class="pt-3 border-top mt-4">
+                            <h6 class="fw-bold text-royal mb-2"><i class="bi bi-camera-reels-fill text-primary me-2"></i>Vidéo associée :</h6>
+                            ${buildVideoEmbedHtml(videoUrl)}
+                        </div>
+                    `;
+                    bottomMediaContainer.classList.remove('d-none');
+                } else {
+                    bottomMediaContainer.innerHTML = '';
+                    bottomMediaContainer.classList.add('d-none');
+                }
             }
 
             if (!hasTopMedia) mediaContainer.classList.add('d-none');
@@ -586,6 +629,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 externalLinkBtn.classList.add('d-none');
             }
         }
+
+        convertDriveIframes(modalEl);
+        addExpandButtons(modalEl);
+
+        // Agrandissement lightbox au clic sur les images de l'article dans la modale
+        modalEl.querySelectorAll('img').forEach(img => {
+            if (img.closest('.modal-footer') || img.id === 'lightboxImage' || img.closest('.ratio')) return;
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.openLightboxImage(img.src, news.titre);
+            });
+        });
 
         if (window.bootstrap && bootstrap.Modal) {
             const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -710,4 +766,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         }
     }
+
+    window.openVideoOverlay = function (src) {
+    let ov = document.getElementById('video-overlay');
+    if (!ov) {
+        ov = document.createElement('div');
+        ov.id = 'video-overlay';
+        ov.style.cssText = 'position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,.94);display:none;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)';
+        ov.innerHTML = `
+            <button type="button" style="align-self:flex-end;margin:calc(env(safe-area-inset-top,0px) + 12px) 12px 8px;padding:8px 16px;border:0;border-radius:999px;font-weight:700;background:#fff;color:#003459">✕ Fermer</button>
+            <iframe allow="autoplay; encrypted-media; fullscreen" allowfullscreen style="flex:1;border:0;width:100%;min-height:0"></iframe>`;
+        document.body.appendChild(ov);
+        ov.querySelector('button').addEventListener('click', () => {
+            ov.style.display = 'none';
+            ov.querySelector('iframe').src = 'about:blank';
+        });
+    }
+    ov.querySelector('iframe').src = src;
+    ov.style.display = 'flex';
+};
+
+function addExpandButtons(root) {
+    if (!root) return;
+    root.querySelectorAll('iframe').forEach(frame => {
+        if (frame.dataset.expandReady) return;
+        frame.dataset.expandReady = '1';
+        const anchor = frame.closest('.ratio') || frame;
+        const bar = document.createElement('div');
+        bar.className = 'text-end mb-3';
+        bar.innerHTML = '<button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-arrows-fullscreen me-1"></i>Agrandir la vidéo</button>';
+        bar.querySelector('button').addEventListener('click', () => openVideoOverlay(frame.src));
+        anchor.insertAdjacentElement('afterend', bar);
+    });
+}
+
 });

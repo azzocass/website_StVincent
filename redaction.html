@@ -253,6 +253,7 @@
                                     <span class="input-group-text bg-white border-end-0"><i
                                             class="bi bi-lock text-muted"></i></span>
                                     <input type="password" class="form-control border-start-0" id="secretCode"
+                                        autocomplete="current-password"
                                         placeholder="Entrez le mot de passe de l'école..." required>
                                     <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn"
                                         title="Afficher/Masquer le mot de passe">
@@ -300,7 +301,7 @@
                                 <h6 class="fw-bold text-royal mb-0">
                                     <i class="bi bi-stars text-primary me-2"></i>Vignette d'accueil
                                 </h6>
-                                <span class="text-muted small">Facultatif — photo ou vidéo affichée en tête de l'article
+                                <span class="text-muted small">Facultatif — photo affichée en tête de l'article
                                     sur la page d'accueil</span>
                             </div>
                             <span
@@ -314,23 +315,9 @@
                             onclick="document.getElementById('vignetteFileInput').click()">
                             <i class="bi bi-cloud-arrow-up fs-2 text-primary mb-1 d-block"></i>
                             <span class="fw-bold d-block small text-royal" id="vignetteFileLabel">Choisir ou glisser une
-                                photo / vidéo</span>
-                            <span class="small text-muted" style="font-size:.75rem">JPG, PNG, MP4, AVI, MOV… (photo
-                                optimisée auto)</span>
-                            <input type="file" id="vignetteFileInput" accept="image/*,video/*,.avi,.mov,.mp4,.mkv,.webm"
-                                class="d-none">
-                        </div>
-
-                        <!-- Progression upload vignette vidéo -->
-                        <div id="vignetteVideoProgress" class="d-none my-2 p-2 bg-light rounded-2 border">
-                            <div class="d-flex align-items-center small text-primary mb-1">
-                                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-                                <span id="vignetteProgressText">Téléversement de la vidéo vers Google Drive...</span>
-                            </div>
-                            <div class="progress" style="height:6px">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
-                                    style="width:100%"></div>
-                            </div>
+                                photo</span>
+                            <span class="small text-muted" style="font-size:.75rem">JPG, PNG</span>
+                            <input type="file" id="vignetteFileInput" accept="image/*" class="d-none">
                         </div>
 
                         <!-- Aperçu / Confirmation vignette -->
@@ -392,14 +379,7 @@
                             </button>
                         </div>
                         <input type="file" id="articleMediaInput" accept="image/*,video/*,.avi,.mov,.mp4,.mkv,.webm"
-                            class="d-none">
-                    </div>
-
-                    <!-- ④ LIEN EXTERNE -->
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-royal small mb-1">Lien externe « En savoir plus »
-                            (optionnel)</label>
-                        <input type="url" class="form-control rounded-3" id="lien" placeholder="https://...">
+                            multiple class="d-none">
                     </div>
 
                     <!-- ⑤ APERÇU EN DIRECT -->
@@ -502,80 +482,26 @@
         </div>
     </div>
 
-    <!-- Modal Insertion Vidéo dans l'article -->
+    <!-- Modal Insertion Vidéo dans l'article (lien) -->
     <div class="modal fade" id="articleVideoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
             <div class="modal-content rounded-4 border-0 shadow">
                 <div class="modal-header border-0 pb-0 pt-4 px-4">
                     <h5 class="modal-title fw-bold text-royal"><i
-                            class="bi bi-camera-video-fill text-primary me-2"></i>Insérer une vidéo dans l'article</h5>
+                            class="bi bi-camera-video-fill text-primary me-2"></i>Insérer une vidéo par lien</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <ul class="nav nav-pills nav-fill mb-3 p-1 bg-light rounded-3" id="videoModalTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active rounded-pill fw-bold small py-2" id="tab-upload-video"
-                                data-bs-toggle="pill" data-bs-target="#pane-upload-video" type="button" role="tab">
-                                <i class="bi bi-cloud-arrow-up-fill me-1"></i>Téléverser (Drive)
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill fw-bold small py-2" id="tab-link-video"
-                                data-bs-toggle="pill" data-bs-target="#pane-link-video" type="button" role="tab">
-                                <i class="bi bi-link-45deg me-1"></i>Lien YouTube / Drive
-                            </button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content">
-                        <!-- Onglet 1 : Upload direct vers Drive informatiques/Videos site -->
-                        <div class="tab-pane fade show active" id="pane-upload-video" role="tabpanel">
-                            <p class="text-muted small mb-3">
-                                Sélectionnez un fichier vidéo depuis votre ordinateur ou téléphone (mp4, mov, webm).
-                                Elle sera automatiquement stockée sur Google Drive dans
-                                <code>informatiques/Videos site</code>.
-                            </p>
-                            <div class="upload-zone py-4 mb-3"
-                                onclick="document.getElementById('modalVideoFileInput').click()">
-                                <i class="bi bi-camera-reels display-6 text-primary mb-2 d-block"></i>
-                                <span class="fw-bold d-block small text-royal" id="modalVideoFileName">Choisir un
-                                    fichier vidéo</span>
-                                <span class="small text-muted" style="font-size: 0.75rem;">Recommandé &le; 25 Mo pour un
-                                    envoi fluide</span>
-                                <input type="file" id="modalVideoFileInput" accept="video/*" class="d-none">
-                            </div>
-
-                            <div id="modalVideoProgressBox" class="d-none my-2 p-2 bg-light rounded-2 border">
-                                <div class="d-flex align-items-center small text-primary mb-1">
-                                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-                                    <span>Téléversement vers Drive en cours...</span>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
-                                        style="width: 100%"></div>
-                                </div>
-                            </div>
-
-                            <button type="button" class="btn btn-primary rounded-pill w-100 fw-bold py-2"
-                                id="btnConfirmUploadVideo" disabled>
-                                <i class="bi bi-cloud-upload me-1"></i>Téléverser & Insérer dans l'article
-                            </button>
-                        </div>
-
-                        <!-- Onglet 2 : Lien externe -->
-                        <div class="tab-pane fade" id="pane-link-video" role="tabpanel">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-royal small">Adresse URL de la vidéo :</label>
-                                <input type="url" class="form-control rounded-3" id="modalVideoLinkInput"
-                                    placeholder="https://www.youtube.com/watch?v=... ou Drive">
-                                <div class="form-text small">YouTube ou lien de partage Google Drive.</div>
-                            </div>
-                            <button type="button" class="btn btn-primary rounded-pill w-100 fw-bold py-2"
-                                id="btnConfirmLinkVideo">
-                                <i class="bi bi-check-circle me-1"></i>Insérer la vidéo dans le texte
-                            </button>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-royal small">Adresse URL de la vidéo :</label>
+                        <input type="url" class="form-control rounded-3" id="modalVideoLinkInput"
+                            placeholder="https://www.youtube.com/watch?v=... ou Drive">
+                        <div class="form-text small">YouTube ou lien de partage Google Drive.</div>
                     </div>
+                    <button type="button" class="btn btn-primary rounded-pill w-100 fw-bold py-2"
+                        id="btnConfirmLinkVideo">
+                        <i class="bi bi-check-circle me-1"></i>Insérer la vidéo dans le texte
+                    </button>
                 </div>
             </div>
         </div>
@@ -643,7 +569,7 @@
 
     <script>
         // URL du Google Apps Script Web App déployé
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqN93Fk6l6vGOkzqH_x0lmR2qHbuO-7Fhy5GqfvHseWns7ZvyHZtfggLQzZlGOg-AcJQ/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzo7mSBxneHWSR1qi0Tgme_0HYDiy8o6oyCcGTeM0yzF_gxPEWbGXEWv6jLUFu1xD72tw/exec';
 
         // Date du jour par défaut
         document.getElementById('date').valueAsDate = new Date();
@@ -856,6 +782,19 @@
             secretCodeInput.value = savedPassword;
         }
 
+        const PWD_KEY = 'cms_school_pwd';
+        function rememberPassword(p) { try { localStorage.setItem(PWD_KEY, p); } catch (e) { } }
+        function forgetPassword() {
+            try { localStorage.removeItem(PWD_KEY); } catch (e) { }
+            secretCodeInput.value = '';
+            secretCodeInput.classList.add('is-invalid');
+            secretCodeInput.focus();
+            setTimeout(() => secretCodeInput.classList.remove('is-invalid'), 4000);
+        }
+        function isAuthError(data) {
+            return !!data && data.success === false && /acc[eè]s refus/i.test(data.message || '');
+        }
+
         const togglePasswordBtn = document.getElementById('togglePasswordBtn');
         const togglePasswordIcon = document.getElementById('togglePasswordIcon');
         if (togglePasswordBtn && secretCodeInput) {
@@ -888,7 +827,7 @@
 
         // Compression canvas automatique d'une image (max 1200px, 80% qualité JPEG)
         function compressAndStoreImage(file) {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const img = new Image();
@@ -916,6 +855,7 @@
                         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                         resolve(compressedDataUrl);
                     };
+                    img.onerror = () => reject(new Error('Image illisible (format non supporté ?)'));
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -950,11 +890,6 @@
         // BARRE D'ACTIONS SUR UNE IMAGE (↑ ↓ ✕) + SUIVI DES ENVOIS DRIVE
         // ============================================================
         const Delta = Quill.import('delta');
-        const uploadedUrls = [];   // médias envoyés sur Drive pendant cette rédaction
-        function driveId(u) {
-            const m = String(u).match(/[?&]id=([\w-]+)/) || String(u).match(/\/d\/([\w-]+)/);
-            return m ? m[1] : null;
-        }
 
         function moveImage(img, dir) {
             const blot = Quill.find(img);
@@ -1028,7 +963,9 @@
             placeImgBar();
         });
         document.addEventListener('mousedown', (e) => {
-            if (!imgBar.contains(e.target) && e.target.tagName !== 'IMG') { barImg = null; imgBar.style.display = 'none'; }
+            if (!imgBar.contains(e.target) && !quill.container.contains(e.target)) {
+                barImg = null; imgBar.style.display = 'none';
+            }
         });
         window.addEventListener('scroll', placeImgBar, true);
         window.addEventListener('resize', placeImgBar);
@@ -1059,7 +996,6 @@
         const vignettePreviewBox = document.getElementById('vignettePreviewBox');
         const vignettePreviewImg = document.getElementById('vignettePreviewImg');
         const vignettePreviewLabel = document.getElementById('vignettePreviewLabel');
-        const vignetteVideoProgress = document.getElementById('vignetteVideoProgress');
 
         // Drag & drop sur la vignette
         window.handleVignetteDrop = function (event) {
@@ -1082,101 +1018,44 @@
             if (!file) return;
 
             const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
-
             if (isVideo) {
-                // --- VIGNETTE VIDÉO ---
-                const pwd = secretCodeInput.value.trim();
-                if (!pwd) {
-                    alert("Veuillez d'abord renseigner le mot de passe de rédaction en haut de la page.");
-                    secretCodeInput.focus();
-                    vignetteFileInput.value = '';
-                    return;
-                }
-
-                if (file.size > 26 * 1024 * 1024) {
-                    alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez la compresser ou utiliser un lien Drive/YouTube.`);
-                    vignetteFileInput.value = '';
-                    return;
-                }
-
-                vignetteVideoProgress.classList.remove('d-none');
-                vignettePreviewBox.classList.add('d-none');
-
-                try {
-                    const base64Data = await readFileAsBase64(file);
-                    const res = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: 'uploadVideo',
-                            videoBase64: base64Data,
-                            videoName: file.name,
-                            videoType: file.type || 'video/mp4',
-                            secretCode: pwd
-                        })
-                    });
-
-                    const data = await res.json();
-                    if (data.success && data.url) {
-                        document.getElementById('videoUrl').value = data.url;
-                        document.getElementById('imageUrl').value = '';
-                        document.getElementById('vignetteType').value = 'video';
-                        uploadedBase64 = '';
-                        uploadedFilename = '';
-                        uploadedMimeType = '';
-
-                        vignettePreviewImg.style.display = 'none';
-                        vignettePreviewLabel.innerHTML = `<i class="bi bi-camera-reels-fill me-1"></i>Vidéo prête : ${file.name}`;
-                        vignettePreviewBox.classList.remove('d-none');
-
-                        // Mise à jour de l'aperçu en direct
-                        const cat = document.getElementById('categorie').value;
-                        document.getElementById('previewImgBox').innerHTML = `
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-dark text-white p-4">
-                                <i class="bi bi-play-circle-fill display-3 text-primary mb-2"></i>
-                                <span class="small fw-bold text-center">${file.name}</span>
-                            </div>
-                            <div class="position-absolute top-0 start-0 m-2">
-                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-                            </div>
-                        `;
-                    } else {
-                        alert("❌ Erreur téléversement vidéo : " + (data.message || "Erreur serveur"));
-                    }
-                } catch (err) {
-                    console.error('Erreur téléversement vidéo vignette:', err);
-                    alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
-                } finally {
-                    vignetteVideoProgress.classList.add('d-none');
-                }
-
-            } else {
-                // --- VIGNETTE PHOTO ---
-                vignettePreviewLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Optimisation de la photo...';
-                vignettePreviewBox.classList.remove('d-none');
-                vignettePreviewImg.style.display = 'none';
-
-                uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
-                uploadedMimeType = "image/jpeg";
-
-                const compressedDataUrl = await compressAndStoreImage(file);
-                uploadedBase64 = compressedDataUrl.split(',')[1];
-
-                document.getElementById('imageUrl').value = '';
-                document.getElementById('videoUrl').value = '';
-                document.getElementById('vignetteType').value = 'image';
-
-                vignettePreviewImg.src = compressedDataUrl;
-                vignettePreviewImg.style.display = 'block';
-                vignettePreviewLabel.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>Photo prête : ${file.name} (optimisée)`;
-
-                const cat = document.getElementById('categorie').value;
-                document.getElementById('previewImgBox').innerHTML = `
-                    <img src="${compressedDataUrl}" alt="Aperçu vignette">
-                    <div class="position-absolute top-0 start-0 m-2">
-                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-                    </div>
-                `;
+                alert("La vignette doit être une photo. Pour une vidéo, utilisez « + Photo ou Vidéo » sous l'éditeur ou collez un lien YouTube.");
+                if (vignetteFileInput) vignetteFileInput.value = '';
+                return;
             }
+
+            vignettePreviewLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Optimisation de la photo...';
+            vignettePreviewBox.classList.remove('d-none');
+            vignettePreviewImg.style.display = 'none';
+
+            uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+            uploadedMimeType = "image/jpeg";
+
+            let compressedDataUrl;
+            try {
+                compressedDataUrl = await compressAndStoreImage(file);
+            } catch (err) {
+                alert('❌ ' + err.message);
+                removeVignette();
+                return;
+            }
+            uploadedBase64 = compressedDataUrl.split(',')[1];
+
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('vignetteType').value = 'image';
+
+            vignettePreviewImg.src = compressedDataUrl;
+            vignettePreviewImg.style.display = 'block';
+            vignettePreviewLabel.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>Photo prête : ${file.name} (optimisée)`;
+
+            const cat = document.getElementById('categorie').value;
+            document.getElementById('previewImgBox').innerHTML = `
+            <img src="${compressedDataUrl}" alt="Aperçu vignette">
+            <div class="position-absolute top-0 start-0 m-2">
+                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
+            </div>
+        `;
         }
 
         window.removeVignette = function () {
@@ -1191,13 +1070,7 @@
             vignettePreviewImg.src = '';
             vignettePreviewImg.style.display = 'none';
 
-            const cat = document.getElementById('categorie').value;
-            document.getElementById('previewImgBox').innerHTML = `
-                <i class="bi bi-image display-4 text-muted opacity-50"></i>
-                <div class="position-absolute top-0 start-0 m-2">
-                    <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-                </div>
-            `;
+            updatePreview();
         };
 
         // ============================================================
@@ -1208,6 +1081,47 @@
         const btnOpenVideoLinkModal = document.getElementById('btnOpenVideoLinkModal');
         const articleVideoModalEl = document.getElementById('articleVideoModal');
         const articleVideoModal = articleVideoModalEl ? new bootstrap.Modal(articleVideoModalEl) : null;
+
+        async function postToScript(payload) {
+        let lastErr;
+        for (let attempt = 0; attempt < 2; attempt++) {
+            try {
+                const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const text = await res.text();
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    const snippet = text.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]*>/g, ' ')
+                                        .replace(/\s+/g, ' ').trim().substring(0, 200);
+                    throw new Error('Réponse inattendue de Google : ' + (snippet || 'page vide'));
+                }
+            } catch (err) {
+                lastErr = err;
+                if (attempt === 0) await new Promise(r => setTimeout(r, 1500));
+            }
+        }
+        throw lastErr;
+    }
+
+        async function uploadArticleFile(file, pwd) {
+        const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+        const uploadId = Math.random().toString(36).slice(2, 10);
+        let payload;
+        if (isVideo) {
+            if (file.size > 26 * 1024 * 1024) throw new Error(`« ${file.name} » dépasse 25 Mo (utilisez un lien YouTube).`);
+            payload = { action: 'uploadVideo', uploadId, videoBase64: await readFileAsBase64(file),
+                        videoName: file.name, videoType: file.type || 'video/mp4', secretCode: pwd };
+        } else {
+            const dataUrl = await compressAndStoreImage(file);
+            payload = { action: 'uploadImage', uploadId, imageBase64: dataUrl.split(',')[1],
+                        imageName: file.name.replace(/\.[^/.]+$/, '') + '.jpg', imageType: 'image/jpeg', secretCode: pwd };
+        }
+        const data = await postToScript(payload);
+        if (isAuthError(data)) { const e = new Error('Mot de passe refusé : ressaisissez-le.'); e.auth = true; throw e; }
+        if (!data.success || !data.url) throw new Error(data.message || 'Erreur serveur');
+        rememberPassword(pwd);
+        return { type: isVideo ? 'video' : 'image', url: data.url };
+    }
 
         if (btnInsertArticleMedia && articleMediaInput) {
             btnInsertArticleMedia.addEventListener('click', () => {
@@ -1223,96 +1137,30 @@
             });
 
             articleMediaInput.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
+                const files = Array.from(e.target.files || []);
+                if (!files.length) return;
                 const pwd = secretCodeInput.value.trim();
-                if (!pwd) {
-                    alert("Mot de passe de rédaction manquant.");
-                    secretCodeInput.focus();
-                    return;
-                }
+                if (!pwd) { alert("Mot de passe de rédaction manquant."); secretCodeInput.focus(); return; }
 
-                const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+                let at = (lastQuillSelection && lastQuillSelection.index !== undefined)
+                    ? lastQuillSelection.index : quill.getLength() - 1;
 
-                if (isVideo) {
-                    // Upload vidéo pour l'article
-                    if (file.size > 26 * 1024 * 1024) {
-                        alert(`⚠️ La vidéo (${(file.size / (1024 * 1024)).toFixed(1)} Mo) dépasse 25 Mo.\nVeuillez utiliser un lien Drive/YouTube.`);
-                        articleMediaInput.value = '';
-                        return;
-                    }
-
-                    showMediaOverlay("Téléversement de la vidéo vers Google Drive...", "Enregistrement dans le dossier Videos site...");
+                for (let i = 0; i < files.length; i++) {
+                    showMediaOverlay(`Envoi ${i + 1} / ${files.length}…`, files[i].name);
                     try {
-                        const base64Data = await readFileAsBase64(file);
-                        const res = await fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                action: 'uploadVideo',
-                                videoBase64: base64Data,
-                                videoName: file.name,
-                                videoType: file.type || 'video/mp4',
-                                secretCode: pwd
-                            })
-                        });
-
-                        const data = await res.json();
-                        if (data.success && data.url) {
-                            const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                                ? lastQuillSelection.index
-                                : quill.getLength();
-                            quill.insertEmbed(targetIndex, 'video', data.url);
-                            quill.insertText(targetIndex + 1, '\n');
-                            quill.setSelection(targetIndex + 2);
-                        } else {
-                            alert("❌ Erreur insertion vidéo : " + (data.message || "Erreur serveur"));
-                        }
+                        const r = await uploadArticleFile(files[i], pwd);
+                        quill.insertEmbed(at, r.type, r.url);
+                        quill.insertText(at + 1, '\n');
+                        at += 2;
                     } catch (err) {
-                        console.error('Erreur vidéo:', err);
-                        alert("❌ Erreur lors de l'envoi de la vidéo vers Google Drive : " + err.message);
-                    } finally {
-                        hideMediaOverlay();
-                        articleMediaInput.value = '';
-                    }
-
-                } else {
-                    // Upload photo pour l'article
-                    showMediaOverlay("Envoi de la photo vers Google Drive...", "Optimisation et enregistrement sur Drive...");
-                    try {
-                        const compressedDataUrl = await compressAndStoreImage(file);
-                        const base64Only = compressedDataUrl.split(',')[1];
-
-                        const res = await fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                action: 'uploadImage',
-                                imageBase64: base64Only,
-                                imageName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
-                                imageType: 'image/jpeg',
-                                secretCode: pwd
-                            })
-                        });
-
-                        const data = await res.json();
-                        if (data.success && data.url) {
-                            const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                                ? lastQuillSelection.index
-                                : quill.getLength();
-                            quill.insertEmbed(targetIndex, 'image', data.url);
-                            quill.insertText(targetIndex + 1, '\n');
-                            quill.setSelection(targetIndex + 2);
-                        } else {
-                            alert("❌ Erreur insertion photo : " + (data.message || "Erreur serveur"));
-                        }
-                    } catch (err) {
-                        console.error('Erreur photo:', err);
-                        alert("❌ Erreur lors de l'envoi de la photo : " + err.message);
-                    } finally {
-                        hideMediaOverlay();
-                        articleMediaInput.value = '';
+                        if (err.auth) { forgetPassword(); alert('🔒 ' + err.message); break; }
+                        alert('❌ ' + err.message);
                     }
                 }
+                hideMediaOverlay();
+                articleMediaInput.value = '';
+                quill.setSelection(at);
+                updatePreview();
             });
         }
 
@@ -1375,6 +1223,38 @@
             const badge = document.getElementById('previewBadge');
             if (badge) badge.textContent = c;
             document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
+
+            // Gestion de l'image d'aperçu :
+            // 1. Si une vignette de couverture est définie (uploadedBase64 ou image preview)
+            // 2. Sinon repli automatique sur la 1ère photo insérée dans le texte de l'article !
+            const previewBox = document.getElementById('previewImgBox');
+            if (previewBox) {
+                if (uploadedBase64 && vignettePreviewImg && vignettePreviewImg.src) {
+                    previewBox.innerHTML = `
+                        <img src="${vignettePreviewImg.src}" alt="Aperçu vignette">
+                        <div class="position-absolute top-0 start-0 m-2">
+                            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${c}</span>
+                        </div>
+                    `;
+                } else {
+                    const firstQuillImg = quill.root.querySelector('img');
+                    if (firstQuillImg && firstQuillImg.src) {
+                        previewBox.innerHTML = `
+                            <img src="${firstQuillImg.src}" alt="Aperçu photo article">
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${c}</span>
+                            </div>
+                        `;
+                    } else {
+                        previewBox.innerHTML = `
+                            <i class="bi bi-image display-4 text-muted opacity-50"></i>
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${c}</span>
+                            </div>
+                        `;
+                    }
+                }
+            }
         }
 
         document.getElementById('titre').addEventListener('input', updatePreview);
@@ -1408,9 +1288,6 @@
                 secretCodeInput.focus();
                 return;
             }
-
-            // Mémorisation du mot de passe
-            localStorage.setItem('cms_school_pwd', secretCode);
 
             // Ouvrir le pop-up de choix "À la une"
             if (confirmPublishModal) {
@@ -1447,7 +1324,6 @@
             submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
             alertBox.className = 'alert d-none';
 
-            // Auto-génération du résumé à partir du contenu Quill
             const plainText = quill.getText().trim();
             const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
 
@@ -1465,7 +1341,6 @@
                 imageName: uploadedFilename,
                 imageType: uploadedMimeType,
                 videoUrl: document.getElementById('videoUrl').value,
-                lien: document.getElementById('lien').value,
                 epingle: isFeatured ? 'oui' : 'non'
             };
 
@@ -1481,43 +1356,35 @@
                 try {
                     data = JSON.parse(text);
                 } catch (err) {
-                    data = { success: true, message: "Actualité enregistrée avec succès !" };
+                    data = { success: false, message: "Réponse inattendue du serveur : " + text.substring(0, 200) };
                 }
 
                 if (data.success !== false) {
+                    rememberPassword(secretCode);
                     alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
                     alertBox.innerHTML = `
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
-                            <div>
-                                <h5 class="alert-heading fw-bold mb-1">Article publié avec succès !</h5>
-                                <p class="mb-0 small">Votre actualité <strong>« ${articleTitle} »</strong> a été enregistrée avec succès ${isFeatured ? '<strong>(À la une)</strong>' : ''}. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
-                            </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
+                        <div>
+                            <h5 class="alert-heading fw-bold mb-1">Article publié avec succès !</h5>
+                            <p class="mb-0 small">Votre actualité <strong>« ${articleTitle} »</strong> a été enregistrée avec succès ${isFeatured ? '<strong>(À la une)</strong>' : ''}. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
                         </div>
-                    `;
+                    </div>
+                `;
 
-                    // Nettoyage Drive : médias envoyés mais retirés de l'article avant publication
-                    const finalHtml = payload.contenu + ' ' + payload.imageUrl + ' ' + payload.videoUrl;
-                    const orphanIds = uploadedUrls.map(driveId).filter(id => id && !finalHtml.includes(id));
-                    uploadedUrls.length = 0;
-                    if (orphanIds.length) {
-                        fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({ action: 'deleteMedia', fileIds: orphanIds, secretCode: secretCode })
-                        }).catch(() => { });
-                    }
-
-                    // Réinitialisation complète du formulaire et des médias
                     document.getElementById('newsForm').reset();
                     quill.setContents([]);
                     document.getElementById('date').valueAsDate = new Date();
-                    // Restaurer le mot de passe mémorisé
                     secretCodeInput.value = secretCode;
                     removeVignette();
                     updatePreview();
                 } else {
+                    const authErr = isAuthError(data);
+                    if (authErr) forgetPassword();
                     alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = `<strong>❌ Erreur d'accès :</strong> ${data.message || "Mot de passe de rédaction incorrect."}`;
+                    alertBox.innerHTML = authErr
+                        ? `<strong>🔒 Mot de passe refusé :</strong> il a peut-être été changé. Saisissez le nouveau mot de passe puis republiez.`
+                        : `<strong>❌ Erreur :</strong> ${data.message || 'Erreur inconnue'}`;
                 }
             } catch (error) {
                 console.error('Erreur soumission:', error);
