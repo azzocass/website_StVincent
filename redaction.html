@@ -253,11 +253,40 @@
                             <label class="form-label fw-bold text-royal mb-0">Texte de l'article</label>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-template py-1 px-2"
-                                    onclick="applyTemplate('sortie')">🚌 Sortie</button>
+                                    onclick="applyTemplate('sortie')">🚌 Sortie / Voyage</button>
                                 <button type="button" class="btn btn-template py-1 px-2"
-                                    onclick="applyTemplate('projet')">🎨 Projet</button>
+                                    onclick="applyTemplate('projet')">🎨 Projet / Atelier</button>
                             </div>
                         </div>
+
+                        <!-- Modèles prêts à l'emploi -->
+                        <div class="mb-3 p-3 bg-light rounded-4 border">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="fw-bold text-royal small"><i
+                                        class="bi bi-magic text-primary me-2"></i>Modèles prêts à l'emploi :</span>
+                                <span class="small text-muted" style="font-size: 0.75rem;">Cliquez pour pré-remplir
+                                    l'éditeur</span>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill template-btn"
+                                    onclick="applyTemplate('sortie')">
+                                    🚌 Sortie / Voyage
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill template-btn"
+                                    onclick="applyTemplate('projet')">
+                                    🎨 Projet / Atelier
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill template-btn"
+                                    onclick="applyTemplate('sport')">
+                                    🏆 Événement sportif
+                                </button>
+                                <button type="button" class="btn btn-outline-previous btn-sm rounded-pill template-btn"
+                                    onclick="applyTemplate('annonce')">
+                                    📢 Annonce / Mot aux parents
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="editor-container-box shadow-sm">
                             <div id="editor"></div>
                         </div>
@@ -527,15 +556,10 @@
         // TEMPLATES
         const templates = {
             sortie: `<h3>🚌 Notre belle journée de sortie scolaire</h3><p>Ce vendredi, les élèves ont eu la chance de participer à une sortie inoubliable.</p><h4>🌟 Les moments forts de la visite :</h4><ul><li>Découverte et ateliers pratiques avec les animateurs</li><li>Pique-nique convivial tous ensemble sous le soleil</li><li>Jeux de piste et énigmes résolues en petits groupes</li></ul><blockquote>« C'était trop bien, on a appris plein de choses ! » — Un élève de la classe</blockquote><p>Un grand merci aux parents accompagnateurs pour leur aide précieuse tout au long de cette journée !</p>`,
-            projet: `<h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3><p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p><h4>📋 Ce que nous avons réalisé :</h4><ul><li>Recherches documentaires et esquisses préparatoires</li><li>Mise en couleur et manipulation de différentes matières</li><li>Présentation orale de chaque œuvre devant les camarades</li></ul><p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>`
+            projet: `<h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3><p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p><h4>📋 Ce que nous avons réalisé :</h4><ul><li>Recherches documentaires et esquisses préparatoires</li><li>Mise en couleur et manipulation de différentes matières</li><li>Présentation orale de chaque œuvre devant les camarades</li></ul><p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>`,
+            sport: `<h3>🏆 Super tournoi sportif à l'école !</h3><p>Nos élèves ont donné le meilleur d'eux-mêmes lors de notre journée sportive inter-classes.</p><h4>🏅 Au programme :</h4><ul><li>Épreuves d'endurance et parcours de motricité</li><li>Jeux collectifs basés sur l'esprit d'équipe et le fair-play</li><li>Remise des médailles sous les applaudissements</li></ul><p>Bravo à tous les enfants pour leur énergie et leur enthousiasme !</p>`,
+            annonce: `<h3>📢 Information importante pour les familles</h3><p>Chers parents,</p><p>Nous souhaitons vous communiquer quelques informations essentielles concernant la vie de l'école pour les semaines à venir.</p><h4>📌 Points à retenir :</h4><ul><li>Rappel des dates importantes et des échéances à venir</li><li>Organisation pratique (sorties, matériel, inscriptions)</li></ul><p>Nous vous remercions pour votre collaboration et reste à votre disposition pour tout renseignement complémentaire.</p>`
         };
-        function applyTemplate(key) {
-            if (templates[key]) {
-                if (quill.getText().trim() !== '' && !confirm("Remplacer le texte actuel par ce modèle ?")) return;
-                quill.clipboard.dangerouslyPasteHTML(templates[key]);
-                updatePreview();
-            }
-        }
 
         // MOT DE PASSE
         const secretCodeInput = document.getElementById('secretCode');

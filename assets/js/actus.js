@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (fileId) {
             return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
         }
-        
+
         return cleanUrl;
     }
 
@@ -267,8 +267,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const fileId = videoUrl.match(/\/d\/([\w-]+)/)?.[1];
             if (fileId) {
                 return `
-                    <div class="ratio ratio-16x9 w-100 rounded-3 overflow-hidden shadow-sm mb-4" style="min-height: 250px;">
-                        <iframe src="https://drive.google.com/file/d/${fileId}/preview" allow="autoplay; encrypted-media" allowfullscreen style="border:none; width:100%; height:100%;"></iframe>
+                    <div class="ratio ratio-16x9 w-100 rounded-4 overflow-hidden shadow-sm mb-4 position-relative bg-black" style="min-height: 250px;">
+                        <iframe src="https://drive.google.com/file/d/${fileId}/preview" allow="autoplay; encrypted-media" allowfullscreen style="border:none; width:100%; height:100%; position:absolute; top:0; left:0;"></iframe>
                     </div>
                 `;
             }
@@ -277,8 +277,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ytMatch = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
         if (ytMatch && ytMatch[1]) {
             return `
-                <div class="ratio ratio-16x9 w-100 rounded-3 overflow-hidden shadow-sm mb-4" style="min-height: 250px;">
-                    <iframe src="https://www.youtube-nocookie.com/embed/${ytMatch[1]}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border:none; width:100%; height:100%;"></iframe>
+                <div class="ratio ratio-16x9 w-100 rounded-4 overflow-hidden shadow-sm mb-4 position-relative bg-black" style="min-height: 250px;">
+                    <iframe src="https://www.youtube-nocookie.com/embed/${ytMatch[1]}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border:none; width:100%; height:100%; position:absolute; top:0; left:0;"></iframe>
                 </div>
             `;
         }
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const filtered = currentCategory === 'all'
             ? items
             : items.filter(item => item.categorie.toLowerCase() === currentCategory.toLowerCase());
-     
+        console.log("TEST URL IMAGE :", resolveImageUrl(filtered[0]));
         if (filtered.length === 0) {
             sectionContent.innerHTML = `
                 <div class="text-center py-5">
