@@ -1,7 +1,7 @@
 /**
  * News / Actualités Logic
  * Loads news from Google Sheet CSV, renders modern interactive cards,
- * category filters, pinned articles, and rich modal viewer (HTML, images, videos).
+ * category filters, pinned articles, automatic photo carousels, and rich modal viewer.
  */
 document.addEventListener('DOMContentLoaded', async () => {
     // URL de publication CSV du Google Sheet (onglet Actualités)
@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Nettoyer et normaliser les données du Sheet
         allNews = rawData.map((item, index) => {
             const dateStr = item.Date || '';
             const titre = item.Titre || 'Actualité';
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         }).filter(item => item.titre.trim() !== '');
 
-        // Trier par date décroissante (les plus récentes en premier)
         allNews.sort((a, b) => b.date - a.date);
 
         if (allNews.length === 0) {
@@ -61,12 +59,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Rendu initial
         renderNewsSection(allNews);
         renderNewsOffcanvas(allNews);
         if (previewCard) renderNewsPreview(allNews[0]);
 
-        // Configuration des filtres et notification
         setupCategoryFilters();
         checkNewArticleNotification(allNews);
 
@@ -113,8 +109,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const allKeys = newsList.map(articleKey);
         const firstVisit = !Array.isArray(seen);
 
-        // 1re visite sur cet appareil : on n'alerte que si l'article est récent.
-        // Ensuite : premier article jamais vu, même s'il est daté avant les autres.
         const unseen = newsList.find(a =>
             firstVisit ? isRecentArticle(a.date) : !seen.includes(articleKey(a))
         );
@@ -137,39 +131,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             badge.innerHTML = '<i class="bi bi-bell-fill"></i>';
             navActu.appendChild(badge);
         }
-        // 2. Toast flottant (CSS via classe + media query, safe-area iOS)
+
         if (!document.getElementById('esv-toast-style')) {
             const st = document.createElement('style');
             st.id = 'esv-toast-style';
             st.textContent = `
                 #esv-custom-toast {
-                    position: fixed;
-                    z-index: 10999;
-                    right: 30px;
-                    bottom: 30px;
-                    width: 340px;
-                    box-sizing: border-box;
-                    background: linear-gradient(135deg, #1e3a5f, #00618a);
-                    color: #fff;
-                    border-radius: 16px;
-                    padding: 1.2rem;
-                    box-shadow: 0 10px 30px rgba(0,52,89,.4);
-                    display: flex;
-                    align-items: flex-start;
-                    gap: 12px;
-                    opacity: 0;
-                    transform: translateY(20px);
-                    transition: opacity .4s ease, transform .4s ease;
+                    position: fixed; z-index: 10999; right: 30px; bottom: 30px; width: 340px; box-sizing: border-box;
+                    background: linear-gradient(135deg, #1e3a5f, #00618a); color: #fff; border-radius: 16px; padding: 1.2rem;
+                    box-shadow: 0 10px 30px rgba(0,52,89,.4); display: flex; align-items: flex-start; gap: 12px;
+                    opacity: 0; transform: translateY(20px); transition: opacity .4s ease, transform .4s ease;
                 }
                 #esv-custom-toast.show { opacity: 1; transform: translateY(0); }
                 @media (max-width: 767px) {
-                    #esv-custom-toast {
-                        left: 12px;
-                        right: 12px;
-                        width: auto;
-                        /* au-dessus de la barre iOS/Android ; augmente si un autre bouton flottant est en bas */
-                        bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
-                    }
+                    #esv-custom-toast { left: 12px; right: 12px; width: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
                 }
             `;
             document.head.appendChild(st);
@@ -205,13 +180,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             toastEl.classList.remove('show');
             setTimeout(() => toastEl.remove(), 400);
         };
-        toastEl.querySelectorAll('[data-esv-close]').forEach(el =>
-            el.addEventListener('click', () => closeToast(true)));
+        toastEl.querySelectorAll('[data-esv-close]').forEach(el => el.addEventListener('click', () => closeToast(true)));
 
-        // Apparition (double rAF = la transition démarre bien sur mobile)
         requestAnimationFrame(() => requestAnimationFrame(() => toastEl.classList.add('show')));
-
-        // Disparition auto après 60 s, sans marquer « vu » (il reviendra à la prochaine visite)
         setTimeout(() => { if (document.body.contains(toastEl)) closeToast(false); }, 60000);
     }
 
@@ -234,48 +205,70 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function formatDisplayDate(dateObj) {
         if (!dateObj || isNaN(dateObj.getTime()) || dateObj.getTime() === 0) return '';
-        return dateObj.toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
+        return dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
-    function resolveImageUrl(news) {
-        if (news.image) return convertDriveUrl(news.image);
-        if (news.contenu) {
-            const match = news.contenu.match(/<img[^>]+src=["']([^"']+)["']/i);
-            if (match && match[1]) return convertDriveUrl(match[1]);
-        }
-        return null;
-    }
-
+    // Extraction et conversion propre des URL Google Drive
     function convertDriveUrl(url) {
-        if (!url) return '';
+        if (!url || typeof url !== 'string' || url.trim() === '') return '';
+        if (url.startsWith('data:image')) return url;
+
+        const cleanUrl = url.replace(/&amp;/g, '&');
+
+        // Si c'est déjà un lien direct de thumbnail Google, on le renvoie proprement
+        if (cleanUrl.includes('drive.google.com/thumbnail') || cleanUrl.includes('googleusercontent.com/d/')) {
+            return cleanUrl;
+        }
+
+        // Sinon, extraction de l'ID
         let fileId = null;
-        if (url.includes('drive.google.com/file/d/')) {
-            fileId = url.match(/\/d\/([^/]+)/)?.[1];
-        } else if (url.includes('drive.google.com/open?id=')) {
-            fileId = url.match(/id=([^&]+)/)?.[1];
-        } else if (url.includes('googleusercontent.com/d/')) {
-            fileId = url.match(/\/d\/([^/]+)/)?.[1];
+        if (cleanUrl.includes('drive.google.com/file/d/')) {
+            fileId = cleanUrl.match(/\/d\/([^/]+)/)?.[1];
+        } else if (cleanUrl.includes('id=')) {
+            fileId = cleanUrl.match(/id=([^&]+)/)?.[1];
         }
 
         if (fileId) {
             return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
         }
-        return url;
+        
+        return cleanUrl;
+    }
+
+    // Version ultra robuste : cherche d'abord dans la colonne Image, 
+    // et si vide, prend AUTOMATIQUEMENT la première image du contenu HTML !
+    function resolveImageUrl(news) {
+        // 1. Si le champ "Image" est rempli dans le Sheet
+        if (news.image && news.image.trim() !== '' && !news.image.startsWith('http') === false) {
+            // Si c'est juste l'URL brute collée en bas de ton message :
+            if (news.image.startsWith('http')) return convertDriveUrl(news.image);
+        }
+
+        // 2. Sinon, on va piocher directement la première image <img> dans le texte HTML de l'article
+        if (news.contenu) {
+            const match = news.contenu.match(/<img[^>]+src=["']([^"']+)["']/i);
+            if (match && match[1]) {
+                return convertDriveUrl(match[1]);
+            }
+        }
+
+        // 3. Secours ultime si l'URL est texte brut à la fin comme dans ton exemple
+        if (news.image && news.image.includes('drive.google.com')) {
+            return convertDriveUrl(news.image);
+        }
+
+        return null;
     }
 
     function buildVideoEmbedHtml(videoUrl) {
         if (!videoUrl) return '';
 
         if (videoUrl.includes('drive.google.com/file/d/')) {
-            const fileId = videoUrl.match(/\/d\/([^/]+)/)?.[1];
+            const fileId = videoUrl.match(/\/d\/([\w-]+)/)?.[1];
             if (fileId) {
                 return `
-                    <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow-sm my-3 border">
-                        <iframe src="https://drive.google.com/file/d/${fileId}/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <div class="ratio ratio-16x9 w-100 rounded-3 overflow-hidden shadow-sm mb-4" style="min-height: 250px;">
+                        <iframe src="https://drive.google.com/file/d/${fileId}/preview" allow="autoplay; encrypted-media" allowfullscreen style="border:none; width:100%; height:100%;"></iframe>
                     </div>
                 `;
             }
@@ -284,19 +277,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ytMatch = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
         if (ytMatch && ytMatch[1]) {
             return `
-                <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow-sm my-3">
-                    <iframe src="https://www.youtube-nocookie.com/embed/${ytMatch[1]}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            `;
-        }
-
-        if (videoUrl.match(/\.(mp4|webm|ogg)($|\?)/i)) {
-            return `
-                <div class="my-3 rounded-3 overflow-hidden shadow-sm">
-                    <video controls class="w-100 d-block">
-                        <source src="${videoUrl}">
-                        Votre navigateur ne supporte pas la lecture de cette vidéo.
-                    </video>
+                <div class="ratio ratio-16x9 w-100 rounded-3 overflow-hidden shadow-sm mb-4" style="min-height: 250px;">
+                    <iframe src="https://www.youtube-nocookie.com/embed/${ytMatch[1]}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border:none; width:100%; height:100%;"></iframe>
                 </div>
             `;
         }
@@ -312,18 +294,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function getCategoryBadgeClass(category) {
         const cat = (category || '').toLowerCase();
-        if (cat.includes('classe') || cat.includes('maternelle') || cat.includes('élémentaire') || cat.includes('cm') || cat.includes('ce') || cat.includes('cp')) {
-            return 'badge-cat-classe';
-        }
-        if (cat.includes('événe') || cat.includes('evene') || cat.includes('fête') || cat.includes('matinée') || cat.includes('kermesse')) {
-            return 'badge-cat-evenement';
-        }
-        if (cat.includes('sport') || cat.includes('course') || cat.includes('sortie') || cat.includes('voyage')) {
-            return 'badge-cat-sport';
-        }
-        if (cat.includes('pastoral') || cat.includes('célébration') || cat.includes('noël') || cat.includes('pâques')) {
-            return 'badge-cat-pastoral';
-        }
+        if (cat.includes('classe') || cat.includes('maternelle') || cat.includes('élémentaire') || cat.includes('cm') || cat.includes('ce') || cat.includes('cp')) return 'badge-cat-classe';
+        if (cat.includes('événe') || cat.includes('evene') || cat.includes('fête') || cat.includes('matinée') || cat.includes('kermesse')) return 'badge-cat-evenement';
+        if (cat.includes('sport') || cat.includes('course') || cat.includes('sortie') || cat.includes('voyage')) return 'badge-cat-sport';
+        if (cat.includes('pastoral') || cat.includes('célébration') || cat.includes('noël') || cat.includes('pâques')) return 'badge-cat-pastoral';
         return 'badge-cat-default';
     }
 
@@ -346,13 +320,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const filtered = currentCategory === 'all'
             ? items
             : items.filter(item => item.categorie.toLowerCase() === currentCategory.toLowerCase());
-
+     
         if (filtered.length === 0) {
             sectionContent.innerHTML = `
                 <div class="text-center py-5">
                     <div class="mb-3 text-muted display-4"><i class="bi bi-inbox"></i></div>
                     <h5 class="text-muted fw-bold">Aucune actualité dans cette catégorie pour l'instant.</h5>
-                    <p class="small text-muted">Sélectionnez une autre catégorie ci-dessus.</p>
                 </div>
             `;
             return;
@@ -367,13 +340,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             pinnedArticle = regularArticles.splice(pinnedIndex, 1)[0];
         }
 
-        // 1. Article Épinglé / Hero
         if (pinnedArticle) {
             const heroImg = resolveImageUrl(pinnedArticle);
             const badgeClass = getCategoryBadgeClass(pinnedArticle.categorie);
             const catIcon = getCategoryIcon(pinnedArticle.categorie);
             const formattedDate = formatDisplayDate(pinnedArticle.date);
-
             const cleanDesc = (pinnedArticle.description || '').trim();
             const cleanContent = (pinnedArticle.contenu || '').replace(/<[^>]*>?/gm, '').trim();
             const showReadMoreHero = cleanContent.length > cleanDesc.length && cleanContent !== cleanDesc;
@@ -385,32 +356,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div class="row g-0 align-items-center">
                                 <div class="col-lg-6">
                                     <div class="news-hero-img-wrapper">
-                                        ${heroImg
-                    ? `<img src="${heroImg}" alt="${pinnedArticle.titre}" loading="lazy" onerror="this.src='assets/images/banner1.jpg'">`
-                    : `<div class="news-card-placeholder"><i class="bi ${catIcon} display-1 opacity-25"></i></div>`
-                }
+                                        ${heroImg ? `<img src="${heroImg}" alt="${pinnedArticle.titre}" loading="lazy" onerror="this.outerHTML='<div class=\\'news-card-placeholder d-flex align-items-center justify-content-center h-100 bg-light\\'><i class=\\'bi ${catIcon} display-1 opacity-25\\'></i></div>'">` : `<div class="news-card-placeholder"><i class="bi ${catIcon} display-1 opacity-25"></i></div>`}    
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="p-4 p-md-5">
                                         <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
-                                            <span class="badge bg-danger rounded-pill px-3 py-1 fw-bold">
-                                                <i class="bi bi-pin-angle-fill me-1"></i>À la une
-                                            </span>
-                                            <span class="badge ${badgeClass} rounded-pill px-3 py-1 fw-bold">
-                                                <i class="bi ${catIcon} me-1"></i>${pinnedArticle.categorie}
-                                            </span>
+                                            <span class="badge bg-danger rounded-pill px-3 py-1 fw-bold"><i class="bi bi-pin-angle-fill me-1"></i>À la une</span>
+                                            <span class="badge ${badgeClass} rounded-pill px-3 py-1 fw-bold"><i class="bi ${catIcon} me-1"></i>${pinnedArticle.categorie}</span>
                                             ${formattedDate ? `<span class="text-muted small"><i class="bi bi-clock me-1"></i>${formattedDate}</span>` : ''}
                                         </div>
                                         <h3 class="fw-bold text-royal mb-3 font-heading">${pinnedArticle.titre}</h3>
-                                        <p class="text-muted mb-4" style="line-height: 1.6; color: #475569 !important;">
-                                            ${pinnedArticle.description || cleanContent}
-                                        </p>
-                                        ${showReadMoreHero ? `
-                                            <button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm btn-open-news-modal" data-news-id="${pinnedArticle.id}">
-                                                Lire l'article complet <i class="bi bi-arrow-right ms-1"></i>
-                                            </button>
-                                        ` : ''}
+                                        <p class="text-muted mb-4" style="line-height: 1.6;">${pinnedArticle.description || cleanContent}</p>
+                                        ${showReadMoreHero ? `<button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm btn-open-news-modal" data-news-id="${pinnedArticle.id}">Lire l'article complet <i class="bi bi-arrow-right ms-1"></i></button>` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -420,9 +378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         }
 
-        // 2. Grille des autres articles
         const displayList = regularArticles.slice(0, 6);
-
         if (displayList.length > 0) {
             html += '<div class="row g-4">';
             displayList.forEach(news => {
@@ -430,8 +386,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const badgeClass = getCategoryBadgeClass(news.categorie);
                 const catIcon = getCategoryIcon(news.categorie);
                 const formattedDate = formatDisplayDate(news.date);
-
-                // Condition "Lire la suite" : affiché uniquement si le contenu dépasse la description
                 const cleanDesc = (news.description || '').trim();
                 const cleanContent = (news.contenu || '').replace(/<[^>]*>?/gm, '').trim();
                 const showReadMore = cleanContent.length > cleanDesc.length && cleanContent !== cleanDesc;
@@ -440,14 +394,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="news-card shadow-sm">
                             <div class="news-card-img-wrapper">
-                                ${imgUrl
-                        ? `<img src="${imgUrl}" alt="${news.titre}" loading="lazy" onerror="this.src='assets/images/banner1.jpg'">`
-                        : `<div class="news-card-placeholder"><i class="bi ${catIcon} display-2 opacity-25"></i></div>`
-                    }
+                                ${imgUrl ? `<img src="${imgUrl}" alt="${news.titre}" loading="lazy" onerror="this.outerHTML='<div class=\\'news-card-placeholder d-flex align-items-center justify-content-center h-100 bg-light\\'><i class=\\'bi ${catIcon} display-2 opacity-25\\'></i></div>'">` : `<div class="news-card-placeholder"><i class="bi ${catIcon} display-2 opacity-25"></i></div>`}
                                 <div class="position-absolute top-0 start-0 m-3">
-                                    <span class="badge ${badgeClass} rounded-pill px-3 py-1 shadow-sm">
-                                        <i class="bi ${catIcon} me-1"></i>${news.categorie}
-                                    </span>
+                                    <span class="badge ${badgeClass} rounded-pill px-3 py-1 shadow-sm"><i class="bi ${catIcon} me-1"></i>${news.categorie}</span>
                                 </div>
                             </div>
                             <div class="card-body p-4 d-flex flex-column justify-content-between flex-grow-1">
@@ -456,16 +405,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         ${formattedDate ? `<span><i class="bi bi-calendar3 me-1"></i>${formattedDate}</span>` : ''}
                                     </div>
                                     <h5 class="fw-bold text-royal mb-2 font-heading" style="font-size: 1.15rem;">${news.titre}</h5>
-                                    <p class="text-muted small mb-3" style="line-height: 1.5; color: #475569 !important;">
-                                        ${news.description || cleanContent.substring(0, 120) + '...'}
-                                    </p>
+                                    <p class="text-muted small mb-3" style="line-height: 1.5;">${news.description || cleanContent.substring(0, 120) + '...'}</p>
                                 </div>
                                 <div>
-                                    ${showReadMore ? `
-                                        <button class="btn btn-link text-primary fw-bold text-decoration-none p-0 small btn-open-news-modal" data-news-id="${news.id}">
-                                            Lire la suite <i class="bi bi-arrow-right"></i>
-                                        </button>
-                                    ` : ''}
+                                    ${showReadMore ? `<button class="btn btn-link text-primary fw-bold text-decoration-none p-0 small btn-open-news-modal" data-news-id="${news.id}">Lire la suite <i class="bi bi-arrow-right"></i></button>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -480,7 +423,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ============================================================
-    // GESTION DE LA MODALE D'ARTICLE
+    // GESTION DE LA MODALE D'ARTICLE AVEC CARROUSEL
     // ============================================================
 
     function attachModalOpeners() {
@@ -494,48 +437,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function convertDriveIframes(root) {
-        if (!root) return;
-        root.querySelectorAll('iframe').forEach(frame => {
-            const src = frame.src || '';
-            const m = src.match(/drive\.google\.com\/file\/d\/([\w-]+)\/preview/);
-            if (!m) return;
-            const fileId = m[1];
-            const container = document.createElement('div');
-            container.className = 'ratio ratio-16x9 rounded-3 overflow-hidden shadow-sm my-3 bg-dark position-relative';
-            container.innerHTML = `
-                <img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w800" alt="Vidéo"
-                     style="object-fit:cover;width:100%;height:100%;margin:0;border-radius:0;box-shadow:none"
-                     onerror="this.style.display='none'">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center" 
-                     style="background:rgba(0,0,0,.35);cursor:pointer;" role="button" aria-label="Lire la vidéo">
-                    <i class="bi bi-play-circle-fill text-white" style="font-size:3.8rem;filter:drop-shadow(0 3px 8px rgba(0,0,0,.6));transition:transform .2s ease;"></i>
-                    <span class="text-white small fw-bold mt-2 px-3 py-1 rounded-pill" style="background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);">
-                        <i class="bi bi-play-fill me-1"></i>Lire la vidéo
-                    </span>
-                </div>
-            `;
-            container.querySelector('[role="button"]').addEventListener('click', () => {
-                // Remplace le poster par le lecteur interactif avec autoplay pour lecture immédiate
-                const player = document.createElement('iframe');
-                player.src = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1`;
-                player.allow = 'autoplay; encrypted-media; fullscreen';
-                player.allowFullscreen = true;
-                player.style.cssText = 'border:0;width:100%;height:100%;position:absolute;top:0;left:0;';
-                container.innerHTML = '';
-                container.appendChild(player);
-
-                // Ajout du bouton Agrandir plein écran
-                const bar = document.createElement('div');
-                bar.className = 'text-end mt-2 mb-3';
-                bar.innerHTML = '<button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-arrows-fullscreen me-1"></i>Plein écran</button>';
-                bar.querySelector('button').addEventListener('click', () => openVideoOverlay(src));
-                container.insertAdjacentElement('afterend', bar);
-            });
-            frame.replaceWith(container);
-        });
-    }
-
     function openNewsModal(news) {
         const modalEl = document.getElementById('newsArticleModal');
         if (!modalEl) return;
@@ -546,78 +447,130 @@ document.addEventListener('DOMContentLoaded', async () => {
         const badgeEl = document.getElementById('modal-article-badge');
         const mediaContainer = document.getElementById('modal-article-media');
         const contentEl = document.getElementById('modal-article-content');
+        const bottomMediaContainer = document.getElementById('modal-article-bottom-media');
         const externalLinkBtn = document.getElementById('modal-article-external-link');
 
+        // En-tête
         if (titleEl) titleEl.textContent = news.titre;
         if (dateEl) dateEl.innerHTML = `<i class="bi bi-calendar3 me-1"></i>${formatDisplayDate(news.date)}`;
-
         if (authorEl) {
-            if (news.auteur) {
-                authorEl.innerHTML = `<i class="bi bi-person me-1"></i>${news.auteur}`;
-                authorEl.classList.remove('d-none');
-            } else {
-                authorEl.classList.add('d-none');
-            }
+            if (news.auteur) { authorEl.innerHTML = `<i class="bi bi-person me-1"></i>${news.auteur}`; authorEl.classList.remove('d-none'); }
+            else { authorEl.classList.add('d-none'); }
         }
-
         if (badgeEl) {
             badgeEl.className = `badge ${getCategoryBadgeClass(news.categorie)} rounded-pill px-3 py-1 fw-bold`;
             badgeEl.innerHTML = `<i class="bi ${getCategoryIcon(news.categorie)} me-1"></i>${news.categorie}`;
         }
 
-        const bottomMediaContainer = document.getElementById('modal-article-bottom-media');
-        if (bottomMediaContainer) {
-            bottomMediaContainer.innerHTML = '';
-            bottomMediaContainer.classList.add('d-none');
+        // 1. EXTRACTION DE TOUTES LES PHOTOS ET NETTOYAGE DU TEXTE
+        let articleImages = [];
+
+        // Photo de couverture (champ Image du Sheet)
+        if (news.image && news.image.trim() !== '') {
+            const coverUrl = convertDriveUrl(news.image);
+            if (coverUrl) articleImages.push(coverUrl);
         }
 
+        // Extraction des photos insérées dans le contenu HTML
+        let rawHtml = news.contenu && news.contenu.trim() !== ''
+            ? news.contenu
+            : `<p>${(news.description || '').replace(/\n/g, '<br>')}</p>`;
+
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = rawHtml;
+
+        tempDiv.querySelectorAll('img').forEach(img => {
+            const src = img.getAttribute('src');
+            if (src) {
+                const formattedUrl = convertDriveUrl(src);
+                if (formattedUrl && !articleImages.includes(formattedUrl)) {
+                    articleImages.push(formattedUrl);
+                }
+            }
+            img.remove(); // Retire l'image du corps du texte
+        });
+
+        // Nettoyage des paragraphes vides laissés après retrait des images
+        tempDiv.querySelectorAll('p').forEach(p => {
+            if (!p.textContent.trim() && !p.querySelector('*')) {
+                p.remove();
+            }
+        });
+
+        if (contentEl) {
+            contentEl.innerHTML = tempDiv.innerHTML;
+        }
+
+        // 2. RENDU DU MÉDIA EN HAUT (IMAGE UNIQUE OU CARROUSEL)
         if (mediaContainer) {
             mediaContainer.innerHTML = '';
-            let hasTopMedia = false;
-            // Si une image de couverture dédiée existe, on l'utilise en haut.
-            // Sinon, si le contenu a déjà des images, on n'affiche PAS de doublon en haut de modal !
-            const explicitCover = news.image ? convertDriveUrl(news.image) : null;
-            const contentHasImages = news.contenu && /<img[^>]+src=/i.test(news.contenu);
-            const topImgUrl = explicitCover || (!contentHasImages ? resolveImageUrl(news) : null);
-            const videoUrl = news.video;
 
-            if (topImgUrl) {
+            if (articleImages.length === 0) {
+                mediaContainer.classList.add('d-none');
+            } else if (articleImages.length === 1) {
+                // 1 seule photo -> Bannière élégante
                 mediaContainer.innerHTML = `
-                    <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-3" style="cursor: pointer;" title="Cliquer pour agrandir la photo">
-                        <img src="${topImgUrl}" alt="${news.titre}" class="img-fluid w-100 d-block modal-zoomable-img" style="max-height: 320px; object-fit: cover;">
+                    <div class="position-relative overflow-hidden rounded-4 shadow-sm bg-light mb-4 text-center">
+                        <img src="${articleImages[0]}" alt="${news.titre}" class="img-fluid rounded-4 w-100 modal-zoomable-img" style="max-height: 380px; object-fit: cover; cursor: zoom-in;">
                     </div>
                 `;
                 mediaContainer.classList.remove('d-none');
-                hasTopMedia = true;
-            } else if (videoUrl) {
-                mediaContainer.innerHTML = buildVideoEmbedHtml(videoUrl);
-                mediaContainer.classList.remove('d-none');
-                hasTopMedia = true;
-            }
+            } else {
+                // 2+ photos -> Carrousel interactif Bootstrap
+                const carouselId = `carousel-news-${news.id}`;
+                let indicatorsHtml = '';
+                let itemsHtml = '';
 
-            if (bottomMediaContainer) {
-                if (topImgUrl && videoUrl) {
-                    bottomMediaContainer.innerHTML = `
-                        <div class="pt-3 border-top mt-4">
-                            <h6 class="fw-bold text-royal mb-2"><i class="bi bi-camera-reels-fill text-primary me-2"></i>Vidéo associée :</h6>
-                            ${buildVideoEmbedHtml(videoUrl)}
+                articleImages.forEach((imgUrl, idx) => {
+                    const activeClass = idx === 0 ? 'active' : '';
+                    const ariaCurrent = idx === 0 ? 'aria-current="true"' : '';
+
+                    indicatorsHtml += `
+                        <button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${idx}" class="${activeClass}" ${ariaCurrent} aria-label="Photo ${idx + 1}"></button>
+                    `;
+
+                    itemsHtml += `
+                        <div class="carousel-item ${activeClass}">
+                            <img src="${imgUrl}" alt="${news.titre} - Photo ${idx + 1}" class="d-block w-100 modal-zoomable-img" style="max-height: 400px; object-fit: cover; cursor: zoom-in;">
                         </div>
                     `;
-                    bottomMediaContainer.classList.remove('d-none');
-                } else {
-                    bottomMediaContainer.innerHTML = '';
-                    bottomMediaContainer.classList.add('d-none');
-                }
-            }
+                });
 
-            if (!hasTopMedia) mediaContainer.classList.add('d-none');
+                mediaContainer.innerHTML = `
+                    <div id="${carouselId}" class="carousel slide rounded-4 overflow-hidden shadow-sm mb-4" data-bs-ride="carousel">
+                        <div class="carousel-indicators mb-2">
+                            ${indicatorsHtml}
+                        </div>
+                        <div class="carousel-inner">
+                            ${itemsHtml}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon rounded-circle bg-dark bg-opacity-50 p-3" aria-hidden="true"></span>
+                            <span class="visually-hidden">Précédent</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon rounded-circle bg-dark bg-opacity-50 p-3" aria-hidden="true"></span>
+                            <span class="visually-hidden">Suivant</span>
+                        </button>
+                    </div>
+                `;
+                mediaContainer.classList.remove('d-none');
+            }
         }
 
-        if (contentEl) {
-            if (news.contenu && news.contenu.trim() !== '') {
-                contentEl.innerHTML = news.contenu;
+        // 3. RENDU DE LA VIDÉO EN BAS
+        if (bottomMediaContainer) {
+            if (news.video) {
+                bottomMediaContainer.innerHTML = `
+                    <div class="mt-4 pt-3 border-top">
+                        <h6 class="fw-bold text-royal mb-3"><i class="bi bi-camera-reels-fill text-primary me-2"></i>Vidéo associée :</h6>
+                        ${buildVideoEmbedHtml(news.video)}
+                    </div>
+                `;
+                bottomMediaContainer.classList.remove('d-none');
             } else {
-                contentEl.innerHTML = `<p>${news.description.replace(/\n/g, '<br>')}</p>`;
+                bottomMediaContainer.innerHTML = '';
+                bottomMediaContainer.classList.add('d-none');
             }
         }
 
@@ -630,12 +583,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        convertDriveIframes(modalEl);
-        addExpandButtons(modalEl);
-
-        // Agrandissement lightbox au clic sur les images de l'article dans la modale
+        // Activation du zoom Lightbox sur les images (y compris celles du carrousel)
         modalEl.querySelectorAll('img').forEach(img => {
-            if (img.closest('.modal-footer') || img.id === 'lightboxImage' || img.closest('.ratio')) return;
+            if (img.closest('.modal-footer') || img.id === 'lightboxImage') return;
             img.style.cursor = 'zoom-in';
             img.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -656,13 +606,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     function setupCategoryFilters() {
         filterButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                filterButtons.forEach(b => {
-                    b.classList.remove('active', 'btn-primary');
-                    b.classList.add('btn-outline-primary');
-                });
-                btn.classList.add('active', 'btn-primary');
-                btn.classList.remove('btn-outline-primary');
-
+                filterButtons.forEach(b => { b.classList.remove('active', 'btn-primary'); b.classList.add('btn-outline-primary'); });
+                btn.classList.add('active', 'btn-primary'); btn.classList.remove('btn-outline-primary');
                 currentCategory = btn.getAttribute('data-category') || 'all';
                 renderNewsSection(allNews);
             });
@@ -672,12 +617,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderNewsOffcanvas(newsArray) {
         if (!offcanvasBody) return;
         let html = '<div class="list-group list-group-flush">';
-
         newsArray.forEach(news => {
             const formattedDate = formatDisplayDate(news.date);
             const badgeClass = getCategoryBadgeClass(news.categorie);
             const imgUrl = resolveImageUrl(news);
-
             html += `
                 <div class="list-group-item px-0 py-3 border-bottom">
                     <div class="d-flex align-items-start gap-3">
@@ -697,10 +640,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             `;
         });
-
         html += '</div>';
         offcanvasBody.innerHTML = html;
-
         offcanvasBody.querySelectorAll('.btn-open-news-modal').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -739,10 +680,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="text-center py-5">
                 <i class="bi bi-wifi-off fs-1 text-muted"></i>
                 <h5 class="fw-bold text-muted mt-2">Impossible de charger les actualités</h5>
-                <p class="small text-muted">Vérifiez votre connexion ou réessayez dans un instant.</p>
-                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="location.reload()">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Réessayer
-                </button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="location.reload()"><i class="bi bi-arrow-clockwise me-1"></i>Réessayer</button>
             </div>`;
         if (sectionContent) sectionContent.innerHTML = html;
         if (offcanvasBody) offcanvasBody.innerHTML = html;
@@ -750,54 +688,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderEmptyState() {
         if (sectionContent) {
-            sectionContent.innerHTML = `
-                <div class="text-center py-5">
-                    <i class="bi bi-newspaper fs-1 text-muted"></i>
-                    <h5 class="fw-bold text-muted mt-2">Aucune actualité pour le moment</h5>
-                    <p class="small text-muted">Les prochains événements et projets de l'école seront affichés ici très bientôt.</p>
-                </div>
-            `;
+            sectionContent.innerHTML = `<div class="text-center py-5"><i class="bi bi-newspaper fs-1 text-muted"></i><h5 class="fw-bold text-muted mt-2">Aucune actualité pour le moment</h5></div>`;
         }
         if (offcanvasBody) {
-            offcanvasBody.innerHTML = `
-                <div class="alert alert-info border-0 rounded-3">
-                    <i class="bi bi-info-circle me-2"></i>Aucune actualité disponible pour le moment.
-                </div>
-            `;
+            offcanvasBody.innerHTML = `<div class="alert alert-info border-0 rounded-3"><i class="bi bi-info-circle me-2"></i>Aucune actualité disponible pour le moment.</div>`;
         }
     }
-
-    window.openVideoOverlay = function (src) {
-    let ov = document.getElementById('video-overlay');
-    if (!ov) {
-        ov = document.createElement('div');
-        ov.id = 'video-overlay';
-        ov.style.cssText = 'position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,.94);display:none;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)';
-        ov.innerHTML = `
-            <button type="button" style="align-self:flex-end;margin:calc(env(safe-area-inset-top,0px) + 12px) 12px 8px;padding:8px 16px;border:0;border-radius:999px;font-weight:700;background:#fff;color:#003459">✕ Fermer</button>
-            <iframe allow="autoplay; encrypted-media; fullscreen" allowfullscreen style="flex:1;border:0;width:100%;min-height:0"></iframe>`;
-        document.body.appendChild(ov);
-        ov.querySelector('button').addEventListener('click', () => {
-            ov.style.display = 'none';
-            ov.querySelector('iframe').src = 'about:blank';
-        });
-    }
-    ov.querySelector('iframe').src = src;
-    ov.style.display = 'flex';
-};
-
-function addExpandButtons(root) {
-    if (!root) return;
-    root.querySelectorAll('iframe').forEach(frame => {
-        if (frame.dataset.expandReady) return;
-        frame.dataset.expandReady = '1';
-        const anchor = frame.closest('.ratio') || frame;
-        const bar = document.createElement('div');
-        bar.className = 'text-end mb-3';
-        bar.innerHTML = '<button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-arrows-fullscreen me-1"></i>Agrandir la vidéo</button>';
-        bar.querySelector('button').addEventListener('click', () => openVideoOverlay(frame.src));
-        anchor.insertAdjacentElement('afterend', bar);
-    });
-}
-
 });

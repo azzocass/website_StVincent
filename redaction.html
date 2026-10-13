@@ -7,7 +7,7 @@
     <meta name="description" content="Espace Rédaction et Publication d'Actualités — École Saint Vincent">
     <title>Espace Enseignants — Rédiger une Actualité | École Saint Vincent</title>
 
-    <!-- Google Fonts: Outfit & Nunito -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -22,7 +22,7 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="assets/css/style.css?v=9" rel="stylesheet">
+    <link href="assets/css/style.css?v=11" rel="stylesheet">
     <link rel="icon" href="assets/images/favicon.png" type="image/png">
 
     <style>
@@ -42,19 +42,17 @@
 
         .ql-container.ql-snow {
             border: none !important;
-            min-height: 250px;
+            min-height: 220px;
             font-family: 'Nunito', sans-serif;
             font-size: 1.05rem;
             line-height: 1.7;
             color: #334155;
         }
 
-        /* Tooltip custom styling on clear formatting button */
         .ql-clean {
             position: relative;
         }
 
-        /* Templates buttons */
         .btn-template {
             border-radius: 0.75rem;
             padding: 0.5rem 0.85rem;
@@ -73,7 +71,6 @@
             transform: translateY(-2px);
         }
 
-        /* Upload zone */
         .upload-zone {
             border: 2px dashed #cbd5e1;
             border-radius: 1rem;
@@ -84,12 +81,12 @@
             transition: all 0.2s ease;
         }
 
-        .upload-zone:hover {
+        .upload-zone:hover,
+        .upload-zone.drag-over {
             border-color: var(--color-primary);
             background-color: #f0f9ff;
         }
 
-        /* Live Preview Card */
         .preview-card {
             border-radius: 1.25rem;
             border: 1px solid rgba(0, 52, 89, 0.1);
@@ -120,23 +117,24 @@
             object-fit: cover;
         }
 
-        /* Color picker helper in toolbar */
-        .custom-color-wrapper {
-            display: inline-flex;
-            align-items: center;
-            margin-left: 6px;
-            vertical-align: middle;
+        .photo-thumbnail {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .custom-color-input {
-            width: 26px;
-            height: 26px;
+        .btn-remove-photo {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
             padding: 0;
-            border: none;
+            line-height: 1;
             border-radius: 50%;
-            cursor: pointer;
-            overflow: hidden;
-            background: none;
+            font-size: 12px;
         }
 
         [data-theme="dark"] .editor-container-box,
@@ -161,43 +159,33 @@
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
-                <img src="assets/images/logo.webp" alt="Logo École Saint Vincent" height="50"
-                    class="me-2 d-inline-block align-text-top">
+                <img src="assets/images/logo.webp" alt="Logo" height="50" class="me-2 d-inline-block align-text-top">
                 <span class="navbar-brand-text">École St Vincent</span>
             </a>
             <div class="d-flex align-items-center gap-2">
-                <a href="index.html#actualites" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold">
-                    <i class="bi bi-arrow-left me-1"></i> Retour au site
-                </a>
+                <a href="index.html#actualites" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold"><i
+                        class="bi bi-arrow-left me-1"></i> Retour au site</a>
                 <button id="theme-toggle" class="btn btn-sm btn-outline-secondary rounded-circle"
-                    style="width: 38px; height: 38px;" title="Changer le thème">
-                    <i id="theme-icon" class="bi bi-moon-fill"></i>
-                </button>
+                    style="width: 38px; height: 38px;"><i id="theme-icon" class="bi bi-moon-fill"></i></button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="py-5">
         <div class="container" style="max-width: 960px;">
 
             <!-- Header -->
             <div class="text-center mb-4">
-                <span class="badge bg-royal-light text-royal rounded-pill px-3 py-2 fw-bold mb-2">
-                    <i class="bi bi-pencil-square me-1"></i> Espace Rédaction Enseignants
-                </span>
+                <span class="badge bg-royal-light text-royal rounded-pill px-3 py-2 fw-bold mb-2"><i
+                        class="bi bi-pencil-square me-1"></i> Espace Rédaction</span>
                 <h1 class="display-6 font-heading text-royal">Rédiger & Publier une Actualité</h1>
-                <p class="text-muted mx-auto" style="max-width: 650px;">
-                    Partagez la vie de votre classe, une sortie, un projet ou une annonce. L'actualité apparaîtra
-                    automatiquement sur la page d'accueil du site de l'école.
-                </p>
+                <p class="text-muted mx-auto" style="max-width: 650px;">Partagez la vie de votre classe, une sortie, un
+                    projet ou une annonce.</p>
                 <div class="sep-line mx-auto mt-3"></div>
             </div>
 
-            <!-- Alert notification box -->
             <div id="alertBox" class="alert d-none rounded-4 mb-4 shadow-sm" role="alert"></div>
 
-            <!-- Form Card -->
             <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 mb-5"
                 style="background-color: var(--color-bg-card, #ffffff);">
                 <form id="newsForm">
@@ -208,7 +196,7 @@
                             <label class="form-label fw-bold text-royal">Titre de l'actualité <span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control rounded-3 py-2" id="titre"
-                                placeholder="Ex: Sortie nature des élèves de CP et CE1" required>
+                                placeholder="Ex: Sortie nature des CP et CE1" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold text-royal">Catégorie <span
@@ -231,162 +219,108 @@
                                 placeholder="Ex: Mme Martin / Classe de CM2" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold text-royal">Date de l'événement / publication</label>
+                            <label class="form-label fw-bold text-royal">Date de l'événement</label>
                             <input type="date" class="form-control rounded-3 py-2" id="date">
                         </div>
                     </div>
 
-                    <!-- Ligne 3 : Contrôle d'accès : Mot de passe unique de rédaction -->
+                    <!-- Ligne 3 : Mot de passe -->
                     <div class="p-3 bg-light rounded-3 border mb-4">
-                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-shield-lock-fill text-primary fs-5 me-2"></i>
-                                <span class="fw-bold text-royal">Mot de passe de rédaction</span>
-                            </div>
-                            <span class="badge bg-primary-subtle text-primary small">
-                                <i class="bi bi-key-fill me-1"></i>Mot de passe unique équipe
-                            </span>
-                        </div>
                         <div class="row g-2 align-items-center">
                             <div class="col-md-7 col-sm-12">
+                                <label class="form-label fw-bold text-royal small"><i
+                                        class="bi bi-shield-lock-fill text-primary me-1"></i>Mot de passe de
+                                    rédaction</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white border-end-0"><i
                                             class="bi bi-lock text-muted"></i></span>
                                     <input type="password" class="form-control border-start-0" id="secretCode"
-                                        autocomplete="current-password"
-                                        placeholder="Entrez le mot de passe de l'école..." required>
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn"
-                                        title="Afficher/Masquer le mot de passe">
-                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
-                                    </button>
+                                        autocomplete="current-password" placeholder="Mot de passe école..." required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn"><i
+                                            class="bi bi-eye" id="togglePasswordIcon"></i></button>
                                 </div>
                             </div>
-                            <div class="col-md-5 col-sm-12">
-                                <div class="form-text small text-muted my-0">
-                                    <i class="bi bi-info-circle me-1"></i>Mot de passe partagé communiqué par la
-                                    direction. Mémorisé sur cet appareil.
-                                </div>
+                            <div class="col-md-5 col-sm-12 d-flex align-items-end">
+                                <div class="form-text small text-muted mb-1"><i class="bi bi-info-circle me-1"></i>Mot
+                                    de passe mémorisé sur cet appareil.</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Résumé auto-généré -->
-                    <input type="hidden" id="description" value="">
-
-                    <!-- Modèles d'articles 1-clic -->
-                    <div class="mb-3">
-                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-                            <label class="form-label fw-bold text-royal mb-0">
-                                <i class="bi bi-file-earmark-richtext me-1 text-primary"></i> Modèles prêts à l'emploi :
-                            </label>
-                            <span class="text-muted small">Cliquez pour pré-remplir l'éditeur</span>
-                        </div>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('sortie')">🚌 Sortie /
-                                Voyage</button>
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('projet')">🎨 Projet /
-                                Atelier</button>
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('sport')">🏆 Événement
-                                sportif</button>
-                            <button type="button" class="btn btn-template" onclick="applyTemplate('mot')">📢 Annonce /
-                                Mot aux parents</button>
-                        </div>
-                    </div>
-
-                    <!-- ① VIGNETTE D'ACCUEIL (avant le texte) -->
-                    <div class="card border rounded-4 p-3 p-md-4 mb-4"
-                        style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);">
-                        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-                            <div>
-                                <h6 class="fw-bold text-royal mb-0">
-                                    <i class="bi bi-stars text-primary me-2"></i>Vignette d'accueil
-                                </h6>
-                                <span class="text-muted small">Facultatif — photo affichée en tête de l'article
-                                    sur la page d'accueil</span>
-                            </div>
-                            <span
-                                class="badge bg-secondary-subtle text-secondary small px-3 py-1 rounded-pill">Facultatif</span>
-                        </div>
-
-                        <!-- Zone unique photo + vidéo -->
-                        <div class="upload-zone py-4" id="vignetteDropZone"
-                            ondragover="event.preventDefault();this.classList.add('drag-over')"
-                            ondragleave="this.classList.remove('drag-over')" ondrop="handleVignetteDrop(event)"
-                            onclick="document.getElementById('vignetteFileInput').click()">
-                            <i class="bi bi-cloud-arrow-up fs-2 text-primary mb-1 d-block"></i>
-                            <span class="fw-bold d-block small text-royal" id="vignetteFileLabel">Choisir ou glisser une
-                                photo</span>
-                            <span class="small text-muted" style="font-size:.75rem">JPG, PNG</span>
-                            <input type="file" id="vignetteFileInput" accept="image/*" class="d-none">
-                        </div>
-
-                        <!-- Aperçu / Confirmation vignette -->
-                        <div id="vignettePreviewBox" class="d-none mt-3">
-                            <div
-                                class="d-flex align-items-center justify-content-between p-2 bg-success-subtle rounded-3">
-                                <span class="small fw-bold text-success" id="vignettePreviewLabel"><i
-                                        class="bi bi-check-circle-fill me-1"></i>Vignette prête</span>
-                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill py-0 px-2"
-                                    onclick="removeVignette()"><i class="bi bi-x-circle me-1"></i>Retirer</button>
-                            </div>
-                            <img id="vignettePreviewImg" src="" alt="" class="img-fluid rounded-3 mt-2 shadow-sm"
-                                style="max-height:180px;object-fit:cover;width:100%;display:none">
-                        </div>
-
-                        <!-- Champs cachés (URL image/vidéo finale) -->
-                        <input type="hidden" id="imageUrl" value="">
-                        <input type="hidden" id="videoUrl" value="">
-                        <input type="hidden" id="vignetteType" value=""><!-- 'image' | 'video' -->
-                    </div>
-
-                    <!-- ② CONTENU DE L'ARTICLE (Quill + insertion média) -->
+                    <!-- Ligne 4 : Editeur de Texte -->
                     <div class="mb-4">
                         <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-                            <label class="form-label fw-bold text-royal mb-0">Contenu de l'article</label>
-                            <span class="text-muted small"><i class="bi bi-info-circle me-1"></i>Rédigez votre texte,
-                                puis insérez des médias au fil de la lecture</span>
+                            <label class="form-label fw-bold text-royal mb-0">Texte de l'article</label>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-template py-1 px-2"
+                                    onclick="applyTemplate('sortie')">🚌 Sortie</button>
+                                <button type="button" class="btn btn-template py-1 px-2"
+                                    onclick="applyTemplate('projet')">🎨 Projet</button>
+                            </div>
                         </div>
                         <div class="editor-container-box shadow-sm">
                             <div id="editor"></div>
                         </div>
-
                     </div>
 
-                    <!-- ③ AJOUT PHOTO / VIDÉO DANS L'ARTICLE (zone unique) -->
-                    <div class="card border rounded-4 p-3 mb-4 bg-light">
-                        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-                            <div>
-                                <label class="form-label fw-bold text-royal mb-0">
-                                    <i class="bi bi-paperclip text-primary me-2"></i>Insérer une photo ou une vidéo dans
-                                    l'article
-                                </label>
-                                <span class="d-block small text-muted mt-1">
-                                    📍 <strong>Emplacement :</strong> Le média s'insère directement dans le texte à
-                                    l'endroit exact où se trouve votre curseur (ou tout à la fin de l'article si vous
-                                    n'avez pas cliqué dans le texte).
-                                </span>
+                    <!-- Ligne 5 : Gestion des Médias (Photos & Vidéo Séparées) -->
+                    <div class="card border border-primary-subtle rounded-4 p-4 mb-4 bg-light">
+                        <h5 class="fw-bold text-royal mb-4"><i class="bi bi-images text-primary me-2"></i>Médias de
+                            l'article (Optionnel)</h5>
+
+                        <div class="row g-4">
+                            <!-- Colonne Photos -->
+                            <div class="col-md-6 border-end">
+                                <label class="form-label fw-bold text-royal"><i
+                                        class="bi bi-camera me-1"></i>Photos</label>
+                                <p class="small text-muted mb-2">Sélectionnez vos photos. Elles s'afficheront en
+                                    diaporama en haut de l'article.</p>
+
+                                <div class="upload-zone py-3 mb-3" id="photosDropZone"
+                                    onclick="document.getElementById('photosInput').click()"
+                                    ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                                    ondragleave="this.classList.remove('drag-over')" ondrop="handlePhotosDrop(event)">
+                                    <i class="bi bi-cloud-arrow-up fs-3 text-primary mb-1 d-block"></i>
+                                    <span class="fw-bold d-block small text-royal">Glisser ou cliquer pour ajouter des
+                                        photos</span>
+                                </div>
+                                <input type="file" id="photosInput" multiple accept="image/*" class="d-none">
+
+                                <!-- Grille miniature des photos uploadées -->
+                                <div id="photosPreviewGrid" class="d-flex flex-wrap gap-2"></div>
+                            </div>
+
+                            <!-- Colonne Vidéo -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-royal"><i
+                                        class="bi bi-camera-video me-1"></i>Vidéo associée</label>
+                                <p class="small text-muted mb-2">Elle s'affichera tout en bas de votre article.</p>
+
+                                <div class="input-group mb-3 shadow-sm">
+                                    <span class="input-group-text bg-white"><i class="bi bi-link-45deg"></i></span>
+                                    <input type="url" id="videoLinkInput" class="form-control"
+                                        placeholder="Lien YouTube ou Drive..." oninput="checkVideoLink()">
+                                    <button class="btn btn-outline-danger d-none" type="button" id="btnRemoveVideo"
+                                        onclick="removeVideo()" title="Retirer la vidéo"><i
+                                            class="bi bi-trash"></i></button>
+                                </div>
+
+                                <div class="text-center mb-2"><span class="small text-muted fw-bold">OU</span></div>
+
+                                <button type="button" class="btn btn-outline-primary w-100 rounded-pill shadow-sm"
+                                    onclick="document.getElementById('videoInput').click()">
+                                    <i class="bi bi-upload me-2"></i>Uploader un fichier vidéo (MP4)
+                                </button>
+                                <input type="file" id="videoInput" accept="video/*" class="d-none">
                             </div>
                         </div>
-
-                        <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
-                            <button type="button" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm"
-                                id="btnInsertArticleMedia">
-                                <i class="bi bi-plus-circle-fill me-2"></i>Photo ou Vidéo
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 small"
-                                id="btnOpenVideoLinkModal">
-                                <i class="bi bi-link-45deg me-1"></i>Ou coller un lien (YouTube / Drive)
-                            </button>
-                        </div>
-                        <input type="file" id="articleMediaInput" accept="image/*,video/*,.avi,.mov,.mp4,.mkv,.webm"
-                            multiple class="d-none">
                     </div>
 
-                    <!-- ⑤ APERÇU EN DIRECT -->
+                    <!-- Aperçu en direct -->
                     <div class="mb-4">
                         <button class="btn btn-sm btn-outline-secondary rounded-pill mb-3" type="button"
                             data-bs-toggle="collapse" data-bs-target="#previewCollapse">
-                            <i class="bi bi-eye me-1"></i>Afficher / Masquer l'aperçu en direct
+                            <i class="bi bi-eye me-1"></i>Afficher / Masquer l'aperçu de la carte
                         </button>
                         <div class="collapse show" id="previewCollapse">
                             <div class="row">
@@ -409,9 +343,7 @@
                                             <h6 class="fw-bold text-royal mb-2 font-heading" id="previewTitle">Titre de
                                                 votre actualité</h6>
                                             <p class="small mb-2" id="previewDesc" style="color:#475569">Le résumé sera
-                                                généré automatiquement à partir du contenu...</p>
-                                            <span class="text-primary fw-bold small">Lire la suite <i
-                                                    class="bi bi-arrow-right"></i></span>
+                                                généré automatiquement...</p>
                                         </div>
                                     </div>
                                 </div>
@@ -419,60 +351,55 @@
                         </div>
                     </div>
 
-                    <!-- ⑥ BOUTON PUBLICATION -->
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3"
                             id="submitBtn">
-                            <i class="bi bi-send-fill me-2"></i>Publier sur le site de l'école
+                            <i class="bi bi-send-fill me-2"></i>Publier l'article
                         </button>
                     </div>
 
-                    <!-- Champ caché epingle (défini par le pop-up de confirmation) -->
-                    <input type="hidden" id="epingle" value="non">
-
                 </form>
             </div>
-
         </div>
     </main>
 
-    <!-- Modal d'insertion de lien personnalisé (si aucun texte n'est sélectionné) -->
+    <!-- Modal Insertion Lien -->
     <div class="modal fade" id="smartLinkModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 450px;">
             <div class="modal-content rounded-4 border-0 shadow">
                 <div class="modal-header border-0 pb-0 pt-4 px-4">
                     <h5 class="modal-title fw-bold text-royal"><i class="bi bi-link-45deg text-primary me-2"></i>Insérer
-                        un lien</h5>
+                        un lien web</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-royal small">Texte à afficher dans l'article :</label>
+                        <label class="form-label fw-bold text-royal small">Texte à afficher :</label>
                         <input type="text" class="form-control rounded-3" id="linkTextModal"
-                            placeholder="Ex: Consulter les informations">
+                            placeholder="Ex: Cliquez ici">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-royal small">Adresse URL du lien :</label>
+                        <label class="form-label fw-bold text-royal small">Adresse URL :</label>
                         <input type="url" class="form-control rounded-3" id="linkUrlModal" placeholder="https://...">
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-between">
                     <button type="button" class="btn btn-light rounded-pill px-3"
                         data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold" id="btnValidateLink">Insérer
-                        le lien</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold"
+                        id="btnValidateLink">Insérer</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Emoji Picker Natif (Identique à PC / WhatsApp / Mobile) -->
+    <!-- Modal Emoji -->
     <div class="modal fade" id="emojiModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
             <div class="modal-content rounded-4 border-0 shadow overflow-hidden">
                 <div class="modal-header border-0 pb-0 pt-3 px-3">
-                    <h6 class="modal-title fw-bold text-royal"><i
-                            class="bi bi-emoji-smile text-primary me-2"></i>Choisir un émoji</h6>
+                    <h6 class="modal-title fw-bold text-royal"><i class="bi bi-emoji-smile text-primary me-2"></i>Émojis
+                    </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-2 text-center">
@@ -482,113 +409,57 @@
         </div>
     </div>
 
-    <!-- Modal Insertion Vidéo dans l'article (lien) -->
-    <div class="modal fade" id="articleVideoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
-            <div class="modal-content rounded-4 border-0 shadow">
-                <div class="modal-header border-0 pb-0 pt-4 px-4">
-                    <h5 class="modal-title fw-bold text-royal"><i
-                            class="bi bi-camera-video-fill text-primary me-2"></i>Insérer une vidéo par lien</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-royal small">Adresse URL de la vidéo :</label>
-                        <input type="url" class="form-control rounded-3" id="modalVideoLinkInput"
-                            placeholder="https://www.youtube.com/watch?v=... ou Drive">
-                        <div class="form-text small">YouTube ou lien de partage Google Drive.</div>
-                    </div>
-                    <button type="button" class="btn btn-primary rounded-pill w-100 fw-bold py-2"
-                        id="btnConfirmLinkVideo">
-                        <i class="bi bi-check-circle me-1"></i>Insérer la vidéo dans le texte
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Confirmation "À la une" avant publication -->
+    <!-- Modal Confirmation "À la une" -->
     <div class="modal fade" id="confirmPublishModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
             <div class="modal-content rounded-4 border-0 shadow">
                 <div class="modal-header border-0 pb-0 pt-4 px-4 text-center d-block">
-                    <div class="mx-auto mb-2 text-warning display-5">
-                        <i class="bi bi-star-fill"></i>
-                    </div>
+                    <div class="mx-auto mb-2 text-warning display-5"><i class="bi bi-star-fill"></i></div>
                     <h5 class="modal-title fw-bold text-royal">Mise en avant de l'actualité</h5>
                 </div>
                 <div class="modal-body px-4 py-3 text-center">
-                    <p class="text-muted small mb-0">
-                        Souhaitez-vous publier cet article <strong>« À la une »</strong> ?<br>
-                        Il apparaîtra en grand format tout en haut de la page d'accueil.
-                    </p>
+                    <p class="text-muted small mb-0">Souhaitez-vous publier cet article <strong>« À la une »</strong>
+                        ?<br>Il apparaîtra en grand format tout en haut.</p>
                 </div>
                 <div class="modal-footer border-0 p-4 pt-1 d-flex flex-column gap-2">
                     <button type="button" class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm text-dark"
-                        id="btnPublishFeatured">
-                        <i class="bi bi-pin-angle-fill me-1"></i>Oui, publier À LA UNE
-                    </button>
+                        id="btnPublishFeatured"><i class="bi bi-pin-angle-fill me-1"></i>Oui, publier À LA UNE</button>
                     <button type="button" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm"
-                        id="btnPublishNormal">
-                        <i class="bi bi-send me-1"></i>Non, publication normale
-                    </button>
+                        id="btnPublishNormal"><i class="bi bi-send me-1"></i>Non, publication normale</button>
                     <button type="button" class="btn btn-light w-100 rounded-pill py-2 text-muted small"
-                        data-bs-dismiss="modal">
-                        Annuler
-                    </button>
+                        data-bs-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Overlay de chargement / progression pour médias -->
+    <!-- Overlay Chargement -->
     <div id="mediaUploadOverlay"
         class="position-fixed top-0 start-0 w-100 h-100 d-none flex-column align-items-center justify-content-center text-white text-center"
-        style="background: rgba(15,23,42,0.7); z-index: 10000; backdrop-filter: blur(5px);">
+        style="background: rgba(15,23,42,0.85); z-index: 10000; backdrop-filter: blur(5px);">
         <div class="bg-white text-dark p-4 rounded-4 shadow-lg text-center" style="max-width: 380px;">
             <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
-            <h5 class="fw-bold text-royal mb-2" id="mediaOverlayTitle">Traitement en cours...</h5>
-            <p class="text-muted small mb-0" id="mediaOverlayDesc">Optimisation et téléversement vers Google Drive.
-            </p>
+            <h5 class="fw-bold text-royal mb-2" id="mediaOverlayTitle">Traitement...</h5>
+            <p class="text-muted small mb-0" id="mediaOverlayDesc">Envoi vers le cloud.</p>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="py-3 bg-footer text-white text-center">
-        <div class="container">
-            <p class="mb-0 small opacity-75">École Saint Vincent — Espace Enseignants & Direction</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="assets/js/theme.js"></script>
 
     <script>
-        // URL du Google Apps Script Web App déployé
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzo7mSBxneHWSR1qi0Tgme_0HYDiy8o6oyCcGTeM0yzF_gxPEWbGXEWv6jLUFu1xD72tw/exec';
-
-        // Date du jour par défaut
         document.getElementById('date').valueAsDate = new Date();
 
-        // Palette complète de 35+ couleurs pour texte et surlignage
-        const fullColorPalette = [
-            '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff',
-            '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666',
-            '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00',
-            '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600',
-            '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'
-        ];
+        const fullColorPalette = ['#000000', '#e60000', '#ff9900', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#003700', '#002966', '#3d1466', '#00A8E8', '#003459'];
 
-        // Configuration de Quill avec palette étendue
+        // Initialisation de Quill SANS module image (texte uniquement)
         const quill = new Quill('#editor', {
             theme: 'snow',
             placeholder: 'Rédigez ici le détail de votre article...',
             modules: {
-                imageResize: { modules: ['Resize', 'DisplaySize', 'Toolbar'] },
                 toolbar: {
                     container: [
                         [{ 'header': [2, 3, false] }],
@@ -603,36 +474,24 @@
             }
         });
 
-        // ============================================================
-        // EMOJI PICKER MODERNE NATIF (WhatsApp / PC / Mac / Mobile)
-        // ============================================================
+        // EMOJIS
         const emojiModal = new bootstrap.Modal(document.getElementById('emojiModal'));
-
-        // Ajout du bouton Emoji dans la barre d'outils Quill
-        function injectEmojiButtonInToolbar() {
+        setTimeout(() => {
             const toolbar = document.querySelector('.ql-toolbar');
             if (!toolbar) return;
-
             const span = document.createElement('span');
             span.className = 'ql-formats';
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'ql-emoji-btn';
-            btn.title = 'Insérer un émoji (PC / WhatsApp / Mobile)';
+            btn.title = 'Insérer un émoji';
             btn.innerHTML = '😊';
-            btn.style.fontSize = '1.15rem';
-            btn.style.lineHeight = '1';
-            btn.style.padding = '2px 4px';
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                emojiModal.show();
-            });
+            btn.style.cssText = 'font-size:1.15rem; line-height:1; padding:2px 4px;';
+            btn.addEventListener('click', (e) => { e.preventDefault(); emojiModal.show(); });
             span.appendChild(btn);
             toolbar.appendChild(span);
-        }
-        setTimeout(injectEmojiButtonInToolbar, 150);
+        }, 150);
 
-        // Insertion d'un émoji sélectionné dans le picker
         document.addEventListener('emoji-click', (event) => {
             const emojiChar = event.detail.unicode;
             if (emojiChar) {
@@ -643,760 +502,276 @@
             }
         });
 
-        // ============================================================
-        // INFOBULLES & PERSONNALISATION DE LA BARRE D'OUTILS
-        // ============================================================
-        function addToolbarTooltips() {
-            const tooltips = {
-                '.ql-header': 'Taille du titre',
-                '.ql-bold': 'Gras (Ctrl+B)',
-                '.ql-italic': 'Italique (Ctrl+I)',
-                '.ql-underline': 'Souligné (Ctrl+U)',
-                '.ql-strike': 'Barré',
-                '.ql-color': 'Couleur du texte',
-                '.ql-background': 'Couleur de surlignage',
-                '.ql-list[value="ordered"]': 'Liste numérotée',
-                '.ql-list[value="bullet"]': 'Liste à puces',
-                '.ql-align': 'Alignement du texte',
-                '.ql-blockquote': 'Citation mise en valeur',
-                '.ql-link': 'Insérer un lien web',
-                '.ql-emoji': 'Insérer un émoji',
-                '.ql-clean': 'Effacer toute la mise en forme (repasser en texte brut)'
-            };
-
-            for (const [selector, tip] of Object.entries(tooltips)) {
-                document.querySelectorAll(selector).forEach(el => {
-                    el.setAttribute('title', tip);
-                });
-            }
-        }
-        setTimeout(addToolbarTooltips, 200);
-
-        // ============================================================
-        // SMART LINK (BOUTON LIEN AVEC OU SANS SÉLECTION DE TEXTE)
-        // ============================================================
+        // SMART LINK
         let savedLinkRange = null;
         const smartLinkModal = new bootstrap.Modal(document.getElementById('smartLinkModal'));
-
-        const toolbarModule = quill.getModule('toolbar');
-        toolbarModule.addHandler('link', function (value) {
+        quill.getModule('toolbar').addHandler('link', function (value) {
             if (value) {
-                const range = quill.getSelection(true);
-                savedLinkRange = range;
-                const selectedText = (range && range.length > 0) ? quill.getText(range.index, range.length) : '';
-
-                document.getElementById('linkTextModal').value = selectedText;
+                savedLinkRange = quill.getSelection(true);
+                document.getElementById('linkTextModal').value = savedLinkRange.length > 0 ? quill.getText(savedLinkRange.index, savedLinkRange.length) : '';
                 document.getElementById('linkUrlModal').value = 'https://';
                 smartLinkModal.show();
-            } else {
-                quill.format('link', false);
-            }
+            } else { quill.format('link', false); }
         });
-
         document.getElementById('btnValidateLink').addEventListener('click', function () {
             const textVal = document.getElementById('linkTextModal').value.trim() || 'Lien';
             let urlVal = document.getElementById('linkUrlModal').value.trim();
-            if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
-                urlVal = 'https://' + urlVal;
-            }
-
+            if (!urlVal.startsWith('http')) urlVal = 'https://' + urlVal;
             if (savedLinkRange) {
-                if (savedLinkRange.length > 0) {
-                    quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
-                } else {
-                    quill.insertText(savedLinkRange.index, textVal, 'link', urlVal);
-                    quill.setSelection(savedLinkRange.index + textVal.length);
-                }
+                if (savedLinkRange.length > 0) quill.formatText(savedLinkRange.index, savedLinkRange.length, 'link', urlVal);
+                else { quill.insertText(savedLinkRange.index, textVal, 'link', urlVal); quill.setSelection(savedLinkRange.index + textVal.length); }
             }
             smartLinkModal.hide();
         });
 
-        // ============================================================
-        // TEMPLATES 1-CLIC
-        // ============================================================
+        // TEMPLATES
         const templates = {
-            sortie: `
-                <h3>🚌 Notre belle journée de sortie scolaire</h3>
-                <p>Ce vendredi, les élèves ont eu la chance de participer à une sortie inoubliable.</p>
-                <h4>🌟 Les moments forts de la visite :</h4>
-                <ul>
-                    <li>Découverte et ateliers pratiques avec les animateurs</li>
-                    <li>Pique-nique convivial tous ensemble sous le soleil</li>
-                    <li>Jeux de piste et énigmes résolues en petits groupes</li>
-                </ul>
-                <blockquote>« C'était trop bien, on a appris plein de choses ! » — Un élève de la classe</blockquote>
-                <p>Un grand merci aux parents accompagnateurs pour leur aide précieuse tout au long de cette journée !</p>
-            `,
-            projet: `
-                <h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3>
-                <p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p>
-                <h4>📋 Ce que nous avons réalisé :</h4>
-                <ul>
-                    <li>Recherches documentaires et esquisses préparatoires</li>
-                    <li>Mise en couleur et manipulation de différentes matières</li>
-                    <li>Présentation orale de chaque œuvre devant les camarades</li>
-                </ul>
-                <p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>
-            `,
-            sport: `
-                <h3>🏆 Rencontre sportive : Bravo à tous nos sportifs !</h3>
-                <p>Les élèves ont brillamment représenté l'École Saint Vincent lors de cette rencontre sportive inter-écoles.</p>
-                <h4>🏅 Au programme :</h4>
-                <ul>
-                    <li>Courses de relais et épreuves d'endurance</li>
-                    <li>Jeux collectifs dans un esprit d'équipe exemplaire</li>
-                    <li>Goûter bien mérité partagé entre tous les participants</li>
-                </ul>
-                <p>Félicitations à tous les enfants pour leur motivation, leurs sourires et leur fair-play !</p>
-            `,
-            mot: `
-                <h3>📢 Mot des enseignants : Informations importantes</h3>
-                <p>Chers parents,</p>
-                <p>Voici quelques informations utiles à noter pour les prochaines semaines :</p>
-                <ul>
-                    <li><strong>Dates à retenir :</strong> ...</li>
-                    <li><strong>Matériel à prévoir :</strong> ...</li>
-                    <li><strong>Rappel :</strong> ...</li>
-                </ul>
-                <p>Nous restons à votre disposition pour toute question via le carnet de liaison ou l'espace École Directe.</p>
-                <p>Bien cordialement,<br><em>L'équipe enseignante</em></p>
-            `
+            sortie: `<h3>🚌 Notre belle journée de sortie scolaire</h3><p>Ce vendredi, les élèves ont eu la chance de participer à une sortie inoubliable.</p><h4>🌟 Les moments forts de la visite :</h4><ul><li>Découverte et ateliers pratiques avec les animateurs</li><li>Pique-nique convivial tous ensemble sous le soleil</li><li>Jeux de piste et énigmes résolues en petits groupes</li></ul><blockquote>« C'était trop bien, on a appris plein de choses ! » — Un élève de la classe</blockquote><p>Un grand merci aux parents accompagnateurs pour leur aide précieuse tout au long de cette journée !</p>`,
+            projet: `<h3>🎨 Projet de classe : Nos petits artistes à l'œuvre !</h3><p>Depuis plusieurs semaines, notre classe travaille sur un projet créatif passionnant.</p><h4>📋 Ce que nous avons réalisé :</h4><ul><li>Recherches documentaires et esquisses préparatoires</li><li>Mise en couleur et manipulation de différentes matières</li><li>Présentation orale de chaque œuvre devant les camarades</li></ul><p>Les réalisations des enfants sont exposées dans le couloir de l'école. N'hésitez pas à jeter un œil lors des déposes du matin !</p>`
         };
-
         function applyTemplate(key) {
             if (templates[key]) {
-                if (quill.getText().trim() !== '') {
-                    if (!confirm("Voulez-vous remplacer le texte actuel par ce modèle ?")) return;
-                }
+                if (quill.getText().trim() !== '' && !confirm("Remplacer le texte actuel par ce modèle ?")) return;
                 quill.clipboard.dangerouslyPasteHTML(templates[key]);
                 updatePreview();
             }
         }
 
-        // ============================================================
-        // GESTION DU MOT DE PASSE UNIQUE (Persistance & Affichage)
-        // ============================================================
+        // MOT DE PASSE
         const secretCodeInput = document.getElementById('secretCode');
-        const savedPassword = localStorage.getItem('cms_school_pwd');
-        if (savedPassword && secretCodeInput) {
-            secretCodeInput.value = savedPassword;
-        }
-
         const PWD_KEY = 'cms_school_pwd';
+        if (localStorage.getItem(PWD_KEY)) secretCodeInput.value = localStorage.getItem(PWD_KEY);
         function rememberPassword(p) { try { localStorage.setItem(PWD_KEY, p); } catch (e) { } }
-        function forgetPassword() {
-            try { localStorage.removeItem(PWD_KEY); } catch (e) { }
-            secretCodeInput.value = '';
-            secretCodeInput.classList.add('is-invalid');
-            secretCodeInput.focus();
-            setTimeout(() => secretCodeInput.classList.remove('is-invalid'), 4000);
-        }
-        function isAuthError(data) {
-            return !!data && data.success === false && /acc[eè]s refus/i.test(data.message || '');
-        }
+        function forgetPassword() { try { localStorage.removeItem(PWD_KEY); } catch (e) { } secretCodeInput.value = ''; }
 
-        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
-        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-        if (togglePasswordBtn && secretCodeInput) {
-            togglePasswordBtn.addEventListener('click', () => {
-                if (secretCodeInput.type === 'password') {
-                    secretCodeInput.type = 'text';
-                    togglePasswordIcon.className = 'bi bi-eye-slash';
-                } else {
-                    secretCodeInput.type = 'password';
-                    togglePasswordIcon.className = 'bi bi-eye';
-                }
-            });
-        }
+        document.getElementById('togglePasswordBtn').addEventListener('click', () => {
+            secretCodeInput.type = secretCodeInput.type === 'password' ? 'text' : 'password';
+            document.getElementById('togglePasswordIcon').className = secretCodeInput.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+        });
 
         // ============================================================
-        // HELPERS FRILEREADER & OVERLAY DE CHARGEMENT
+        // GESTION UPLOAD MÉDIAS (PHOTOS MULTIPLES & VIDÉO UNIQUE)
         // ============================================================
-        function readFileAsBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const result = reader.result;
-                    const base64 = result.split(',')[1];
-                    resolve(base64);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
+        let uploadedPhotosUrls = [];
 
-        // Compression canvas automatique d'une image (max 1200px, 80% qualité JPEG)
-        function compressAndStoreImage(file) {
+        function showMediaOverlay(title, desc) {
+            document.getElementById('mediaOverlayTitle').textContent = title;
+            document.getElementById('mediaOverlayDesc').textContent = desc;
+            document.getElementById('mediaUploadOverlay').classList.replace('d-none', 'd-flex');
+        }
+        function hideMediaOverlay() { document.getElementById('mediaUploadOverlay').classList.replace('d-flex', 'd-none'); }
+
+        function compressImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = e => {
                     const img = new Image();
-                    img.onload = function () {
+                    img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxDim = 1200;
-
-                        if (width > maxDim || height > maxDim) {
-                            if (width > height) {
-                                height = Math.round((height * maxDim) / width);
-                                width = maxDim;
-                            } else {
-                                width = Math.round((width * maxDim) / height);
-                                height = maxDim;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                        resolve(compressedDataUrl);
+                        let w = img.width, h = img.height, max = 1200;
+                        if (w > max || h > max) { if (w > h) { h = Math.round(h * max / w); w = max; } else { w = Math.round(w * max / h); h = max; } }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
-                    img.onerror = () => reject(new Error('Image illisible (format non supporté ?)'));
+                    img.onerror = reject;
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
         }
-
-        const mediaOverlay = document.getElementById('mediaUploadOverlay');
-        function showMediaOverlay(title, desc) {
-            if (mediaOverlay) {
-                document.getElementById('mediaOverlayTitle').textContent = title || "Traitement en cours...";
-                document.getElementById('mediaOverlayDesc').textContent = desc || "Téléversement vers Google Drive.";
-                mediaOverlay.classList.remove('d-none');
-                mediaOverlay.classList.add('d-flex');
-            }
+        function readFileAsBase64(file) {
+            return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(file); });
         }
-        function hideMediaOverlay() {
-            if (mediaOverlay) {
-                mediaOverlay.classList.add('d-none');
-                mediaOverlay.classList.remove('d-flex');
-            }
-        }
-
-        // Suivi de la position du curseur dans l'éditeur Quill
-        let lastQuillSelection = null;
-        quill.on('selection-change', function (range) {
-            if (range) {
-                lastQuillSelection = range;
-            }
-        });
-
-        // ============================================================
-        // BARRE D'ACTIONS SUR UNE IMAGE (↑ ↓ ✕) + SUIVI DES ENVOIS DRIVE
-        // ============================================================
-        const Delta = Quill.import('delta');
-
-        function moveImage(img, dir) {
-            const blot = Quill.find(img);
-            if (!blot) return null;
-            const idx = quill.getIndex(blot);
-            const [line] = quill.getLine(idx);
-            const lineStart = quill.getIndex(line);
-            const lineLen = line.length();
-            const alone = (lineLen === 2);                 // image seule sur sa ligne
-            const segStart = alone ? lineStart : idx;
-            const segLen = alone ? lineLen : 1;
-            const seg = quill.getContents(segStart, segLen);
-            const style = img.getAttribute('style');
-            let T, newIdx, delta, nextWasLast = false;
-            if (dir < 0) {
-                if (lineStart === 0) return null;
-                T = quill.getIndex(quill.getLine(lineStart - 1)[0]);
-                delta = new Delta().retain(T).concat(seg).retain(segStart - T).delete(segLen);
-                newIdx = T;
-            } else {
-                const next = line.next;
-                if (!next) return null;
-                nextWasLast = alone && !next.next;
-                T = alone ? lineStart + lineLen + next.length() : lineStart + lineLen;
-                delta = new Delta().retain(segStart).delete(segLen).retain(T - segStart - segLen).concat(seg);
-                newIdx = T - segLen;
-            }
-            quill.updateContents(delta, 'user');
-            if (nextWasLast) {                              // évite un paragraphe vide en fin d'article
-                const L = quill.getLength();
-                if (L > 2 && quill.getText(L - 2, 2) === '\n\n') quill.deleteText(L - 2, 1, 'user');
-            }
-            const leaf = quill.getLeaf(newIdx)[0];
-            const node = leaf && leaf.domNode;
-            if (node && node.tagName === 'IMG') {
-                if (style) node.setAttribute('style', style);   // retrouve float / marges
-                return node;
-            }
-            return null;
-        }
-
-        function removeImage(img) {
-            const blot = Quill.find(img);
-            if (!blot) return;
-            const idx = quill.getIndex(blot);
-            const [line] = quill.getLine(idx);
-            const lineStart = quill.getIndex(line);
-            const alone = line.length() === 2 && lineStart + 2 < quill.getLength();
-            quill.deleteText(alone ? lineStart : idx, alone ? 2 : 1, 'user');
-        }
-
-        // Mini-barre flottante sous l'image sélectionnée
-        const imgBar = document.createElement('div');
-        imgBar.style.cssText = 'position:fixed;z-index:1090;display:none;gap:4px;background:#fff;border:1px solid #cbd5e1;border-radius:999px;padding:3px 6px;box-shadow:0 4px 14px rgba(0,0,0,.18)';
-        imgBar.innerHTML = `
-  <button type="button" data-act="up"   class="btn btn-sm btn-light rounded-pill" title="Monter d'un paragraphe">↑</button>
-  <button type="button" data-act="down" class="btn btn-sm btn-light rounded-pill" title="Descendre d'un paragraphe">↓</button>
-  <button type="button" data-act="del"  class="btn btn-sm btn-light rounded-pill text-danger" title="Retirer l'image">✕</button>`;
-        document.body.appendChild(imgBar);
-        let barImg = null;
-
-        function placeImgBar() {
-            if (!barImg || !document.body.contains(barImg)) { imgBar.style.display = 'none'; barImg = null; return; }
-            const r = barImg.getBoundingClientRect();
-            imgBar.style.display = 'flex';
-            imgBar.style.top = Math.min(window.innerHeight - 44, Math.max(8, r.bottom + 6)) + 'px';
-            imgBar.style.left = Math.max(8, r.left) + 'px';
-        }
-        quill.root.addEventListener('click', (e) => {
-            barImg = (e.target.tagName === 'IMG') ? e.target : null;
-            placeImgBar();
-        });
-        document.addEventListener('mousedown', (e) => {
-            if (!imgBar.contains(e.target) && !quill.container.contains(e.target)) {
-                barImg = null; imgBar.style.display = 'none';
-            }
-        });
-        window.addEventListener('scroll', placeImgBar, true);
-        window.addEventListener('resize', placeImgBar);
-        imgBar.addEventListener('mousedown', (e) => e.preventDefault());
-        imgBar.addEventListener('click', (e) => {
-            const btn = e.target.closest('button');
-            if (!btn || !barImg) return;
-            const resizer = quill.getModule('imageResize');
-            if (resizer && resizer.hide) resizer.hide();      // ferme les poignées de redimensionnement
-            if (btn.dataset.act === 'del') {
-                removeImage(barImg); barImg = null;
-            } else {
-                const moved = moveImage(barImg, btn.dataset.act === 'up' ? -1 : 1);
-                if (moved) barImg = moved;
-            }
-            requestAnimationFrame(placeImgBar);
-        });
-
-        // ============================================================
-        // ① VIGNETTE D'ACCUEIL UNIFIÉE (PHOTO OU VIDÉO)
-        // ============================================================
-        let uploadedBase64 = '';
-        let uploadedFilename = '';
-        let uploadedMimeType = '';
-
-        const vignetteFileInput = document.getElementById('vignetteFileInput');
-        const vignetteDropZone = document.getElementById('vignetteDropZone');
-        const vignettePreviewBox = document.getElementById('vignettePreviewBox');
-        const vignettePreviewImg = document.getElementById('vignettePreviewImg');
-        const vignettePreviewLabel = document.getElementById('vignettePreviewLabel');
-
-        // Drag & drop sur la vignette
-        window.handleVignetteDrop = function (event) {
-            event.preventDefault();
-            vignetteDropZone.classList.remove('drag-over');
-            if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-                processVignetteFile(event.dataTransfer.files[0]);
-            }
-        };
-
-        if (vignetteFileInput) {
-            vignetteFileInput.addEventListener('change', function (e) {
-                if (e.target.files && e.target.files.length > 0) {
-                    processVignetteFile(e.target.files[0]);
-                }
-            });
-        }
-
-        async function processVignetteFile(file) {
-            if (!file) return;
-
-            const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
-            if (isVideo) {
-                alert("La vignette doit être une photo. Pour une vidéo, utilisez « + Photo ou Vidéo » sous l'éditeur ou collez un lien YouTube.");
-                if (vignetteFileInput) vignetteFileInput.value = '';
-                return;
-            }
-
-            vignettePreviewLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Optimisation de la photo...';
-            vignettePreviewBox.classList.remove('d-none');
-            vignettePreviewImg.style.display = 'none';
-
-            uploadedFilename = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
-            uploadedMimeType = "image/jpeg";
-
-            let compressedDataUrl;
-            try {
-                compressedDataUrl = await compressAndStoreImage(file);
-            } catch (err) {
-                alert('❌ ' + err.message);
-                removeVignette();
-                return;
-            }
-            uploadedBase64 = compressedDataUrl.split(',')[1];
-
-            document.getElementById('imageUrl').value = '';
-            document.getElementById('videoUrl').value = '';
-            document.getElementById('vignetteType').value = 'image';
-
-            vignettePreviewImg.src = compressedDataUrl;
-            vignettePreviewImg.style.display = 'block';
-            vignettePreviewLabel.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>Photo prête : ${file.name} (optimisée)`;
-
-            const cat = document.getElementById('categorie').value;
-            document.getElementById('previewImgBox').innerHTML = `
-            <img src="${compressedDataUrl}" alt="Aperçu vignette">
-            <div class="position-absolute top-0 start-0 m-2">
-                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span>
-            </div>
-        `;
-        }
-
-        window.removeVignette = function () {
-            uploadedBase64 = '';
-            uploadedFilename = '';
-            uploadedMimeType = '';
-            document.getElementById('imageUrl').value = '';
-            document.getElementById('videoUrl').value = '';
-            document.getElementById('vignetteType').value = '';
-            if (vignetteFileInput) vignetteFileInput.value = '';
-            vignettePreviewBox.classList.add('d-none');
-            vignettePreviewImg.src = '';
-            vignettePreviewImg.style.display = 'none';
-
-            updatePreview();
-        };
-
-        // ============================================================
-        // ③ INSERTION PHOTO / VIDÉO DANS L'ARTICLE (AU CURSEUR)
-        // ============================================================
-        const btnInsertArticleMedia = document.getElementById('btnInsertArticleMedia');
-        const articleMediaInput = document.getElementById('articleMediaInput');
-        const btnOpenVideoLinkModal = document.getElementById('btnOpenVideoLinkModal');
-        const articleVideoModalEl = document.getElementById('articleVideoModal');
-        const articleVideoModal = articleVideoModalEl ? new bootstrap.Modal(articleVideoModalEl) : null;
 
         async function postToScript(payload) {
-            let lastErr;
-            for (let attempt = 0; attempt < 2; attempt++) {
-                try {
-                    const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                    const text = await res.text();
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        const snippet = text.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]*>/g, ' ')
-                            .replace(/\s+/g, ' ').trim().substring(0, 200);
-                        throw new Error('Réponse inattendue de Google : ' + (snippet || 'page vide'));
-                    }
-                } catch (err) {
-                    lastErr = err;
-                    if (attempt === 0) await new Promise(r => setTimeout(r, 1500));
-                }
-            }
-            throw lastErr;
+            const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+            const text = await res.text();
+            try { return JSON.parse(text); } catch (e) { throw new Error('Erreur serveur Google'); }
         }
 
-        async function uploadArticleFile(file, pwd) {
-            const isVideo = file.type.startsWith('video/') || /\.(mp4|avi|mov|webm|mkv)$/i.test(file.name);
+        async function uploadToDrive(file, pwd, isVideo = false) {
             const uploadId = Math.random().toString(36).slice(2, 10);
             let payload;
             if (isVideo) {
-                if (file.size > 26 * 1024 * 1024) throw new Error(`« ${file.name} » dépasse 25 Mo (utilisez un lien YouTube).`);
-                payload = {
-                    action: 'uploadVideo', uploadId, videoBase64: await readFileAsBase64(file),
-                    videoName: file.name, videoType: file.type || 'video/mp4', secretCode: pwd
-                };
+                if (file.size > 26 * 1024 * 1024) throw new Error(`Fichier trop lourd (max 25Mo)`);
+                payload = { action: 'uploadVideo', uploadId, videoBase64: await readFileAsBase64(file), videoName: file.name, videoType: file.type || 'video/mp4', secretCode: pwd };
             } else {
-                const dataUrl = await compressAndStoreImage(file);
-                payload = {
-                    action: 'uploadImage', uploadId, imageBase64: dataUrl.split(',')[1],
-                    imageName: file.name.replace(/\.[^/.]+$/, '') + '.jpg', imageType: 'image/jpeg', secretCode: pwd
-                };
+                const b64 = await compressImage(file);
+                payload = { action: 'uploadImage', uploadId, imageBase64: b64.split(',')[1], imageName: file.name.replace(/\.[^/.]+$/, '') + '.jpg', imageType: 'image/jpeg', secretCode: pwd };
             }
             const data = await postToScript(payload);
-            if (isAuthError(data)) { const e = new Error('Mot de passe refusé : ressaisissez-le.'); e.auth = true; throw e; }
-            if (!data.success || !data.url) throw new Error(data.message || 'Erreur serveur');
-            rememberPassword(pwd);
-            return { type: isVideo ? 'video' : 'image', url: data.url };
+            if (data.success === false && /acc[eè]s refus/i.test(data.message)) { const e = new Error('Mot de passe refusé'); e.auth = true; throw e; }
+            if (!data.success || !data.url) throw new Error(data.message || 'Erreur Drive');
+            return data.url;
         }
 
-        if (btnInsertArticleMedia && articleMediaInput) {
-            btnInsertArticleMedia.addEventListener('click', () => {
-                const pwd = secretCodeInput.value.trim();
-                if (!pwd) {
-                    secretCodeInput.focus();
-                    secretCodeInput.classList.add('is-invalid');
-                    setTimeout(() => secretCodeInput.classList.remove('is-invalid'), 2500);
-                    alert("Veuillez d'abord saisir le mot de passe de rédaction en haut de la page.");
-                    return;
+        // --- GESTION ZONE PHOTOS ---
+        const photosInput = document.getElementById('photosInput');
+
+        window.handlePhotosDrop = function (e) {
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) processPhotos(Array.from(e.dataTransfer.files));
+        };
+        photosInput.addEventListener('change', e => { if (e.target.files.length) processPhotos(Array.from(e.target.files)); });
+
+        async function processPhotos(files) {
+            const pwd = secretCodeInput.value.trim();
+            if (!pwd) { alert("Le mot de passe de rédaction est requis pour envoyer des photos."); return; }
+
+            for (let i = 0; i < files.length; i++) {
+                const f = files[i];
+                if (!f.type.startsWith('image/')) continue;
+                showMediaOverlay(`Envoi photo ${i + 1}/${files.length}`, f.name);
+                try {
+                    const thumb = await compressImage(f);
+                    const url = await uploadToDrive(f, pwd, false);
+                    uploadedPhotosUrls.push({ url, thumb });
+                    renderPhotosGrid();
+                    updatePreview();
+                } catch (err) {
+                    if (err.auth) { forgetPassword(); alert('🔒 ' + err.message); break; }
+                    alert('❌ ' + err.message);
                 }
-                articleMediaInput.click();
-            });
-
-            articleMediaInput.addEventListener('change', async (e) => {
-                const files = Array.from(e.target.files || []);
-                if (!files.length) return;
-                const pwd = secretCodeInput.value.trim();
-                if (!pwd) { alert("Mot de passe de rédaction manquant."); secretCodeInput.focus(); return; }
-
-                let at = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                    ? lastQuillSelection.index : quill.getLength() - 1;
-
-                for (let i = 0; i < files.length; i++) {
-                    showMediaOverlay(`Envoi ${i + 1} / ${files.length}…`, files[i].name);
-                    try {
-                        const r = await uploadArticleFile(files[i], pwd);
-                        quill.insertEmbed(at, r.type, r.url);
-                        quill.insertText(at + 1, '\n');
-                        at += 2;
-                    } catch (err) {
-                        if (err.auth) { forgetPassword(); alert('🔒 ' + err.message); break; }
-                        alert('❌ ' + err.message);
-                    }
-                }
-                hideMediaOverlay();
-                articleMediaInput.value = '';
-                quill.setSelection(at);
-                updatePreview();
-            });
-        }
-
-        if (btnOpenVideoLinkModal && articleVideoModal) {
-            btnOpenVideoLinkModal.addEventListener('click', () => {
-                articleVideoModal.show();
-            });
-        }
-
-        // Gestion de l'ancien modal vidéo si l'utilisateur colle un lien
-        const btnConfirmLinkVideo = document.getElementById('btnConfirmLinkVideo');
-        const modalVideoLinkInput = document.getElementById('modalVideoLinkInput');
-        if (btnConfirmLinkVideo) {
-            btnConfirmLinkVideo.addEventListener('click', () => {
-                const rawUrl = (modalVideoLinkInput.value || '').trim();
-                if (!rawUrl) {
-                    alert("Veuillez entrer une adresse URL.");
-                    return;
-                }
-                const formattedUrl = formatVideoEmbedUrl(rawUrl);
-                const targetIndex = (lastQuillSelection && lastQuillSelection.index !== undefined)
-                    ? lastQuillSelection.index
-                    : quill.getLength();
-                quill.insertEmbed(targetIndex, 'video', formattedUrl);
-                quill.insertText(targetIndex + 1, '\n');
-                quill.setSelection(targetIndex + 2);
-                modalVideoLinkInput.value = '';
-                if (articleVideoModal) articleVideoModal.hide();
-            });
-        }
-
-        function formatVideoEmbedUrl(url) {
-            if (!url) return '';
-            let clean = url.trim();
-            const ytMatch = clean.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-            if (ytMatch && ytMatch[1]) {
-                return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}`;
             }
-            const driveMatch = clean.match(/\/d\/([^/]+)/) || clean.match(/id=([^&]+)/);
-            if (driveMatch && driveMatch[1]) {
-                return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-            }
-            return clean;
+            hideMediaOverlay();
+            photosInput.value = '';
         }
+
+        function renderPhotosGrid() {
+            const grid = document.getElementById('photosPreviewGrid');
+            grid.innerHTML = '';
+            uploadedPhotosUrls.forEach((p, idx) => {
+                grid.innerHTML += `
+                    <div class="position-relative">
+                        <img src="${p.thumb}" class="photo-thumbnail">
+                        <button type="button" class="btn btn-danger btn-remove-photo" onclick="removePhoto(${idx})" title="Retirer"><i class="bi bi-x"></i></button>
+                    </div>
+                `;
+            });
+        }
+        window.removePhoto = function (idx) { uploadedPhotosUrls.splice(idx, 1); renderPhotosGrid(); updatePreview(); }
+
+        // --- GESTION ZONE VIDÉO ---
+        window.checkVideoLink = function () {
+            if (document.getElementById('videoLinkInput').value.trim() !== '') {
+                document.getElementById('btnRemoveVideo').classList.remove('d-none');
+            } else {
+                document.getElementById('btnRemoveVideo').classList.add('d-none');
+            }
+        }
+
+        window.removeVideo = function () {
+            const inp = document.getElementById('videoLinkInput');
+            inp.value = '';
+            inp.readOnly = false;
+            inp.classList.remove('bg-success-subtle', 'text-success', 'fw-bold');
+            checkVideoLink();
+        }
+
+        document.getElementById('videoInput').addEventListener('change', async e => {
+            const f = e.target.files[0];
+            if (!f) return;
+            const pwd = secretCodeInput.value.trim();
+            if (!pwd) { alert("Le mot de passe est requis."); return; }
+
+            showMediaOverlay("Envoi vidéo en cours...", "Patiente (jusqu'à 2 min pour les grosses vidéos)...");
+            try {
+                const url = await uploadToDrive(f, pwd, true);
+                const inp = document.getElementById('videoLinkInput');
+                inp.value = url;
+                inp.readOnly = true; // Verrouille le champ une fois l'upload Drive terminé
+                inp.classList.add('bg-success-subtle', 'text-success', 'fw-bold');
+                checkVideoLink();
+            } catch (err) {
+                if (err.auth) { forgetPassword(); alert('🔒 ' + err.message); } else alert('❌ ' + err.message);
+            }
+            hideMediaOverlay();
+            e.target.value = '';
+        });
 
         // ============================================================
-        // ⑤ APERÇU EN DIRECT
+        // APERÇU EN DIRECT
         // ============================================================
         function updatePreview() {
-            const t = document.getElementById('titre').value || "Titre de votre actualité";
-            const plainText = quill.getText().trim();
-            const d = plainText.length > 0
-                ? plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '')
-                : 'Le résumé sera généré automatiquement à partir du contenu...';
-            const c = document.getElementById('categorie').value;
-            const a = document.getElementById('auteur').value;
+            const cat = document.getElementById('categorie').value;
+            document.getElementById('previewTitle').textContent = document.getElementById('titre').value || "Titre de votre actualité";
+            const pt = quill.getText().trim();
+            document.getElementById('previewDesc').textContent = pt.length > 0 ? pt.substring(0, 150) + '...' : 'Le résumé sera généré automatiquement...';
 
-            document.getElementById('previewTitle').textContent = t;
-            document.getElementById('previewDesc').textContent = d;
-            const badge = document.getElementById('previewBadge');
-            if (badge) badge.textContent = c;
-            document.getElementById('previewAuthor').textContent = a ? "• " + a : "";
+            const badgeEl = document.getElementById('previewBadge');
+            if (badgeEl) badgeEl.textContent = cat;
 
-            // Gestion de l'image d'aperçu :
-            // 1. Si une vignette de couverture est définie (uploadedBase64 ou image preview)
-            // 2. Sinon repli automatique sur la 1ère photo insérée dans le texte de l'article !
-            const previewBox = document.getElementById('previewImgBox');
-            if (previewBox) {
-                if (uploadedBase64 && vignettePreviewImg && vignettePreviewImg.src) {
-                    previewBox.innerHTML = `
-                        <img src="${vignettePreviewImg.src}" alt="Aperçu vignette">
-                        <div class="position-absolute top-0 start-0 m-2">
-                            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${c}</span>
-                        </div>
-                    `;
-                } else {
-                    const firstQuillImg = quill.root.querySelector('img');
-                    if (firstQuillImg && firstQuillImg.src) {
-                        previewBox.innerHTML = `
-                            <img src="${firstQuillImg.src}" alt="Aperçu photo article">
-                            <div class="position-absolute top-0 start-0 m-2">
-                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${c}</span>
-                            </div>
-                        `;
-                    } else {
-                        previewBox.innerHTML = `
-                            <i class="bi bi-image display-4 text-muted opacity-50"></i>
-                            <div class="position-absolute top-0 start-0 m-2">
-                                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${c}</span>
-                            </div>
-                        `;
-                    }
-                }
+            document.getElementById('previewAuthor').textContent = document.getElementById('auteur').value ? "• " + document.getElementById('auteur').value : "";
+
+            const box = document.getElementById('previewImgBox');
+            if (uploadedPhotosUrls.length > 0) {
+                box.innerHTML = `<img src="${uploadedPhotosUrls[0].thumb}"><div class="position-absolute top-0 start-0 m-2"><span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span></div>`;
+            } else {
+                box.innerHTML = `<i class="bi bi-image display-4 text-muted opacity-50"></i><div class="position-absolute top-0 start-0 m-2"><span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 shadow-sm" id="previewBadge">${cat}</span></div>`;
             }
         }
-
-        document.getElementById('titre').addEventListener('input', updatePreview);
-        document.getElementById('categorie').addEventListener('change', updatePreview);
-        document.getElementById('auteur').addEventListener('input', updatePreview);
+        ['titre', 'categorie', 'auteur'].forEach(id => document.getElementById(id).addEventListener('input', updatePreview));
         quill.on('text-change', updatePreview);
 
         // ============================================================
-        // ⑥ WORKFLOW DE PUBLICATION (AVEC POP-UP "À LA UNE")
+        // PUBLICATION FINALE
         // ============================================================
-        const confirmPublishModalEl = document.getElementById('confirmPublishModal');
-        const confirmPublishModal = confirmPublishModalEl ? new bootstrap.Modal(confirmPublishModalEl) : null;
-        const btnPublishFeatured = document.getElementById('btnPublishFeatured');
-        const btnPublishNormal = document.getElementById('btnPublishNormal');
-
-        // Validation du formulaire et affichage du pop-up "À la une"
-        document.getElementById('newsForm').addEventListener('submit', function (e) {
+        const confirmPublishModal = new bootstrap.Modal(document.getElementById('confirmPublishModal'));
+        document.getElementById('newsForm').addEventListener('submit', e => {
             e.preventDefault();
-
-            const title = document.getElementById('titre').value.trim();
-            const secretCode = secretCodeInput.value.trim();
-
-            if (!title) {
-                alert("Veuillez renseigner un titre pour l'actualité.");
-                document.getElementById('titre').focus();
-                return;
-            }
-
-            if (!secretCode) {
-                alert("Veuillez renseigner le mot de passe de rédaction.");
-                secretCodeInput.focus();
-                return;
-            }
-
-            // Ouvrir le pop-up de choix "À la une"
-            if (confirmPublishModal) {
-                confirmPublishModal.show();
-            } else {
-                doPublishArticle(false);
-            }
+            if (!secretCodeInput.value.trim()) { alert("Mot de passe manquant"); return; }
+            confirmPublishModal.show();
         });
 
-        // Choix 1 : Publier À LA UNE
-        if (btnPublishFeatured) {
-            btnPublishFeatured.addEventListener('click', () => {
-                if (confirmPublishModal) confirmPublishModal.hide();
-                doPublishArticle(true);
-            });
-        }
+        document.getElementById('btnPublishFeatured').addEventListener('click', () => { confirmPublishModal.hide(); doPublish(true); });
+        document.getElementById('btnPublishNormal').addEventListener('click', () => { confirmPublishModal.hide(); doPublish(false); });
 
-        // Choix 2 : Publication standard
-        if (btnPublishNormal) {
-            btnPublishNormal.addEventListener('click', () => {
-                if (confirmPublishModal) confirmPublishModal.hide();
-                doPublishArticle(false);
-            });
-        }
-
-        // Exécution finale de l'envoi vers Google Apps Script
-        async function doPublishArticle(isFeatured) {
-            const submitBtn = document.getElementById('submitBtn');
-            const alertBox = document.getElementById('alertBox');
-            const secretCode = secretCodeInput.value.trim();
-            const articleTitle = document.getElementById('titre').value.trim();
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Publication en cours sur le site...';
+        async function doPublish(isFeatured) {
+            const btn = document.getElementById('submitBtn'), alertBox = document.getElementById('alertBox');
+            btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publication...';
             alertBox.className = 'alert d-none';
 
-            const plainText = quill.getText().trim();
-            const autoDescription = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+            // On ajoute secrètement les photos à la fin du code HTML !
+            let finalHtml = quill.root.innerHTML;
+            if (uploadedPhotosUrls.length > 0) {
+                uploadedPhotosUrls.forEach(p => finalHtml += `<p><img src="${p.url}"></p>`);
+            }
 
             const payload = {
                 action: 'publish',
-                titre: articleTitle,
+                titre: document.getElementById('titre').value.trim(),
                 categorie: document.getElementById('categorie').value,
                 auteur: document.getElementById('auteur').value,
-                secretCode: secretCode,
+                secretCode: secretCodeInput.value.trim(),
                 date: document.getElementById('date').value,
-                description: autoDescription,
-                contenu: quill.root.innerHTML,
-                imageUrl: document.getElementById('imageUrl').value,
-                imageBase64: uploadedBase64,
-                imageName: uploadedFilename,
-                imageType: uploadedMimeType,
-                videoUrl: document.getElementById('videoUrl').value,
+                description: quill.getText().trim().substring(0, 150) + '...',
+                contenu: finalHtml,
+                imageUrl: uploadedPhotosUrls.length > 0 ? uploadedPhotosUrls[0].url : '',
+                imageBase64: '', imageName: '', imageType: '', // Plus besoin, on uploade avant
+                videoUrl: document.getElementById('videoLinkInput').value.trim(),
                 epingle: isFeatured ? 'oui' : 'non'
             };
 
             try {
-                const res = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    body: JSON.stringify(payload)
-                });
-
-                const text = await res.text();
-                let data = {};
-                try {
-                    data = JSON.parse(text);
-                } catch (err) {
-                    data = { success: false, message: "Réponse inattendue du serveur : " + text.substring(0, 200) };
-                }
-
-                if (data.success !== false) {
-                    rememberPassword(secretCode);
+                const res = await postToScript(payload);
+                if (res.success !== false) {
+                    rememberPassword(payload.secretCode);
                     alertBox.className = 'alert alert-success rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
-                        <div>
-                            <h5 class="alert-heading fw-bold mb-1">Article publié avec succès !</h5>
-                            <p class="mb-0 small">Votre actualité <strong>« ${articleTitle} »</strong> a été enregistrée avec succès ${isFeatured ? '<strong>(À la une)</strong>' : ''}. Elle apparaîtra sur la page d'accueil du site dans un délai de 2 à 5 minutes (rafraîchissement automatique de Google).</p>
-                        </div>
-                    </div>
-                `;
-
+                    alertBox.innerHTML = `<h5><i class="bi bi-check-circle-fill text-success me-2"></i>Article publié !</h5><p class="mb-0 small">Visible d'ici quelques minutes sur l'accueil.</p>`;
                     document.getElementById('newsForm').reset();
                     quill.setContents([]);
-                    document.getElementById('date').valueAsDate = new Date();
-                    secretCodeInput.value = secretCode;
-                    removeVignette();
-                    updatePreview();
+                    uploadedPhotosUrls = []; renderPhotosGrid(); updatePreview();
+                    removeVideo(); // Réinitialise la zone vidéo proprement
                 } else {
-                    const authErr = isAuthError(data);
-                    if (authErr) forgetPassword();
-                    alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                    alertBox.innerHTML = authErr
-                        ? `<strong>🔒 Mot de passe refusé :</strong> il a peut-être été changé. Saisissez le nouveau mot de passe puis republiez.`
-                        : `<strong>❌ Erreur :</strong> ${data.message || 'Erreur inconnue'}`;
+                    if (isAuthError(res)) forgetPassword();
+                    throw new Error(res.message);
                 }
-            } catch (error) {
-                console.error('Erreur soumission:', error);
+            } catch (e) {
                 alertBox.className = 'alert alert-danger rounded-4 mb-4 shadow-sm';
-                alertBox.innerHTML = `<strong>❌ Erreur réseau :</strong> Impossible de contacter le serveur Google Apps Script (${error.message}). Vérifiez votre connexion.`;
+                alertBox.innerHTML = `<strong>❌ Erreur :</strong> ${e.message}`;
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier sur le site de l\'école';
+                btn.disabled = false; btn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier l\'article';
                 window.scrollTo({ top: alertBox.offsetTop - 80, behavior: 'smooth' });
             }
         }
