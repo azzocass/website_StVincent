@@ -73,13 +73,17 @@
         }
 
         .hero-noel h1,
-        .hero-noel p { color: white; }
+        .hero-noel p {
+            color: white;
+        }
 
         /* Flocons de neige animés */
         .snowflakes {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             overflow: hidden;
             z-index: 0;
@@ -94,7 +98,10 @@
         }
 
         @keyframes snowfall {
-            to { transform: translateY(310px) rotate(360deg); opacity: 0; }
+            to {
+                transform: translateY(310px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         /* ========== INFO CARDS HERO ========== */
@@ -127,10 +134,14 @@
             color: var(--noel-red) !important;
             box-shadow: none !important;
         }
+
         .accordion-button:focus {
             box-shadow: 0 0 0 0.2rem rgba(185, 28, 28, 0.15) !important;
         }
-        .accordion-item { border: none !important; }
+
+        .accordion-item {
+            border: none !important;
+        }
 
         /* Boutons stands */
         .btn-noel-stand {
@@ -140,13 +151,18 @@
             transition: all 0.2s ease !important;
             border-radius: 14px !important;
         }
-        .btn-check:checked + .btn-noel-stand,
+
+        .btn-check:checked+.btn-noel-stand,
         .btn-noel-stand:hover:not(:disabled) {
             background: linear-gradient(135deg, var(--noel-red), #dc2626) !important;
             color: white !important;
             border-color: var(--noel-red) !important;
         }
-        .btn-noel-stand:disabled { opacity: 0.4 !important; cursor: not-allowed !important; }
+
+        .btn-noel-stand:disabled {
+            opacity: 0.4 !important;
+            cursor: not-allowed !important;
+        }
 
         /* ========== BADGES PLACES ========== */
         .places-badge {
@@ -155,9 +171,21 @@
             padding: 0.2rem 0.65rem;
             font-weight: 600;
         }
-        .badge-dispo { background: var(--noel-green-light); color: var(--noel-green-dark); }
-        .badge-low   { background: var(--noel-gold-light); color: #78350f; }
-        .badge-full  { background: var(--noel-red-light); color: var(--noel-red-dark); }
+
+        .badge-dispo {
+            background: var(--noel-green-light);
+            color: var(--noel-green-dark);
+        }
+
+        .badge-low {
+            background: var(--noel-gold-light);
+            color: #78350f;
+        }
+
+        .badge-full {
+            background: var(--noel-red-light);
+            color: var(--noel-red-dark);
+        }
 
         /* ========== BOUTON SUBMIT ========== */
         .btn-submit-noel {
@@ -175,8 +203,18 @@
             transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 6px 20px rgba(185, 28, 28, 0.35);
         }
-        .btn-submit-noel:hover { opacity: 0.92; transform: translateY(-2px); color: white; }
-        .btn-submit-noel:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-submit-noel:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-submit-noel:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         /* ========== SÉPARATEUR DÉCORATIF ========== */
         .noel-divider {
@@ -187,6 +225,7 @@
             color: var(--noel-red);
             font-size: 1.2rem;
         }
+
         .noel-divider::before,
         .noel-divider::after {
             content: '';
@@ -194,36 +233,93 @@
             height: 1px;
             background: linear-gradient(to right, transparent, rgba(185, 28, 28, 0.3));
         }
-        .noel-divider::after { background: linear-gradient(to left, transparent, rgba(185, 28, 28, 0.3)); }
+
+        .noel-divider::after {
+            background: linear-gradient(to left, transparent, rgba(185, 28, 28, 0.3));
+        }
 
         /* ========== DARK MODE ========== */
-        [data-theme="dark"] .form-section { background: var(--color-bg-card, #1e1e1e) !important; border-color: #3f3f3f; }
-        [data-theme="dark"] .btn-noel-stand { background: #2d2d2d !important; color: #fca5a5 !important; }
-        [data-theme="dark"] .accordion-button { background: #1e1e1e !important; color: #f8fafc !important; }
-        [data-theme="dark"] .accordion-button:not(.collapsed) { background: #2d2d2d !important; color: #fca5a5 !important; }
-        [data-theme="dark"] .accordion-body { background: #161616 !important; }
+        [data-theme="dark"] .form-section {
+            background: var(--color-bg-card, #1e1e1e) !important;
+            border-color: #3f3f3f;
+        }
+
+        [data-theme="dark"] .btn-noel-stand {
+            background: #2d2d2d !important;
+            color: #fca5a5 !important;
+        }
+
+        [data-theme="dark"] .accordion-button {
+            background: #1e1e1e !important;
+            color: #f8fafc !important;
+        }
+
+        [data-theme="dark"] .accordion-button:not(.collapsed) {
+            background: #2d2d2d !important;
+            color: #fca5a5 !important;
+        }
+
+        [data-theme="dark"] .accordion-body {
+            background: #161616 !important;
+        }
+
         [data-theme="dark"] .form-control,
-        [data-theme="dark"] .form-select { background-color: #1e1e1e; border-color: #3f3f3f; color: #f8fafc; }
-        [data-theme="dark"] .form-check-label { color: #f8fafc; }
+        [data-theme="dark"] .form-select {
+            background-color: #1e1e1e;
+            border-color: #3f3f3f;
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .form-check-label {
+            color: #f8fafc;
+        }
 
         /* ========== FAB ========== */
         #fabContact {
-            position: fixed; bottom: 28px; right: 28px; z-index: 1040;
-            display: flex; align-items: center; gap: 10px;
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             background: linear-gradient(135deg, var(--noel-red), #dc2626);
-            color: white; text-decoration: none; border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
             padding: 0.75rem 1.2rem 0.75rem 1rem;
             box-shadow: 0 6px 20px rgba(185, 28, 28, 0.4);
-            font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
             transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, bottom 0.3s;
             white-space: nowrap;
         }
-        #fabContact:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(185,28,28,0.5); color: white; }
-        #fabContact.fab-hidden { opacity: 0; pointer-events: none; }
-        #fabContact.fab-shifted { bottom: 95px; }
+
+        #fabContact:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(185, 28, 28, 0.5);
+            color: white;
+        }
+
+        #fabContact.fab-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #fabContact.fab-shifted {
+            bottom: 95px;
+        }
+
         @media (max-width: 767px) {
-            #fabContact { right: 16px; padding: 0.85rem; }
-            #fabContact .fab-label { display: none; }
+            #fabContact {
+                right: 16px;
+                padding: 0.85rem;
+            }
+
+            #fabContact .fab-label {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -325,18 +421,21 @@
                             <div class="invalid-feedback">Veuillez renseigner votre nom.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="prenom" class="form-label fw-bold">Prénom <span class="text-danger">*</span></label>
+                            <label for="prenom" class="form-label fw-bold">Prénom <span
+                                    class="text-danger">*</span></label>
                             <input type="text" class="form-control rounded-3" id="prenom" name="prenom" required>
                             <div class="invalid-feedback">Veuillez renseigner votre prénom.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="email" class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                            <label for="email" class="form-label fw-bold">Email <span
+                                    class="text-danger">*</span></label>
                             <input type="email" class="form-control rounded-3" id="email" name="email" required
                                 pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$">
                             <div class="invalid-feedback">Veuillez saisir une adresse email valide.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="telephone" class="form-label fw-bold">Téléphone <span class="text-danger">*</span></label>
+                            <label for="telephone" class="form-label fw-bold">Téléphone <span
+                                    class="text-danger">*</span></label>
                             <input type="tel" class="form-control rounded-3" id="telephone" name="telephone" required
                                 pattern="^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.\-]*\d{2}){4}$">
                             <div class="invalid-feedback">Veuillez saisir un numéro valide (ex: 0612345678).</div>
@@ -357,7 +456,8 @@
                     </div>
                     <div class="form-check form-switch custom-switch-lg mb-2">
                         <input class="form-check-input" type="checkbox" role="switch" id="demontageRangement">
-                        <label class="form-check-label fw-bold opacity-75" for="demontageRangement" style="cursor:pointer">
+                        <label class="form-check-label fw-bold opacity-75" for="demontageRangement"
+                            style="cursor:pointer">
                             Je veux aider au rangement après la fermeture.
                         </label>
                     </div>
@@ -416,8 +516,7 @@
                             placeholder="votre@email.com">
                     </div>
                     <div class="col-sm-4">
-                        <button onclick="chargerMesInscriptions()"
-                            class="btn w-100 rounded-pill fw-bold"
+                        <button onclick="chargerMesInscriptions()" class="btn w-100 rounded-pill fw-bold"
                             style="border: 2px solid var(--noel-red); color: var(--noel-red);">
                             <i class="bi bi-eye me-1"></i>Vérifier
                         </button>
@@ -450,23 +549,21 @@
         // dédié au Marché de Noël (créer un nouveau projet Google Apps Script
         // sur le modèle du script de la kermesse, avec un onglet "MarcheNoel"
         // dans le Google Sheet de l'école).
-        const URL_SCRIPT = 'VOTRE_URL_APPS_SCRIPT_MARCHE_NOEL_ICI';
+        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbwOYoWvM9eVHEIUZjc5dtqRGQeJDZ-nKLVRjwF1MTedcV8Rz3WoglvuVTuiEVa35qhI/exec';
 
         // Stands du Marché de Noël — adaptez selon vos stands réels
         const STANDS_INFO = {
-            'Vin chaud':          { label: 'Vin chaud',           icon: '🍷' },
-            'Boissons chaudes':   { label: 'Boissons chaudes',    icon: '☕' },
-            'Patisseries':        { label: 'Pâtisseries',         icon: '🍰' },
-            'Crepes':             { label: 'Crêpes',              icon: '🥞' },
-            'Bonbons':            { label: 'Bonbons',             icon: '🍬' },
-            'Artisanat':          { label: 'Artisanat',           icon: '🎨' },
-            'Sapins Decorations': { label: 'Sapins / Déco',       icon: '🎄' },
-            'Jeux enfants':       { label: 'Jeux enfants',        icon: '🎲' },
-            'Photo Pere Noel':    { label: 'Photo Père Noël',     icon: '🎅' },
-            'Tombola':            { label: 'Tombola',             icon: '🎁' },
-            'Caisse Accueil':     { label: 'Caisse / Accueil',    icon: '🏪' },
-            'Montage':            { label: 'Montage',             icon: '🛠️' },
-            'Demontage':          { label: 'Démontage',           icon: '🧹' }
+            'Vin chaud': { label: 'Vin chaud', icon: '🍷' },
+            'Boissons chaudes': { label: 'Boissons chaudes', icon: '☕' },
+            'Patisseries': { label: 'Pâtisseries', icon: '🍰' },
+            'Bonbons': { label: 'Bonbons', icon: '🍬' },
+            'Artisanat': { label: 'Artisanat', icon: '🎨' },
+            'Sapins Decorations': { label: 'Sapins / Déco', icon: '🎄' },
+            'Jeux enfants': { label: 'Jeux enfants', icon: '🎲' },
+            'Photo Pere Noel': { label: 'Photo Père Noël', icon: '🎅' },
+            'Caisse Accueil': { label: 'Caisse / Accueil', icon: '🏪' },
+            'Montage': { label: 'Montage', icon: '🛠️' },
+            'Demontage': { label: 'Démontage', icon: '🧹' }
         };
 
         function getStandInfo(standId) {
@@ -721,7 +818,7 @@
             const el = document.getElementById('global-feedback');
             let cls = 'bg-light border-secondary';
             if (type === 'success') cls = 'bg-success-subtle border-success text-success-emphasis';
-            if (type === 'error')   cls = 'bg-danger-subtle border-danger text-danger-emphasis';
+            if (type === 'error') cls = 'bg-danger-subtle border-danger text-danger-emphasis';
             if (type === 'warning') cls = 'bg-warning-subtle border-warning text-warning-emphasis';
             el.innerHTML = '<div class="p-4 rounded border shadow-sm ' + cls + '">' + msg + '</div>';
         }
@@ -729,7 +826,7 @@
         function lancerConfettisNoel() {
             if (typeof confetti !== 'function') return;
             // Confettis aux couleurs de Noël : rouge, vert, or, blanc
-            confetti({ particleCount: 80,  spread: 60, origin: { y: 0.6 }, colors: ['#b91c1c', '#15803d', '#d97706', '#ffffff'] });
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 }, colors: ['#b91c1c', '#15803d', '#d97706', '#ffffff'] });
             setTimeout(() => confetti({ particleCount: 60, spread: 80, origin: { y: 0.5 }, colors: ['#b91c1c', '#15803d', '#fef3c7'] }), 400);
         }
 
