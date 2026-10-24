@@ -267,8 +267,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const fileId = videoUrl.match(/\/d\/([\w-]+)/)?.[1];
             if (fileId) {
                 return `
-                    <div class="ratio ratio-16x9 w-100 rounded-4 overflow-hidden shadow-sm mb-4 position-relative bg-black" style="min-height: 250px;">
+                    <div class="ratio ratio-16x9 w-100 rounded-4 overflow-hidden shadow-sm mb-2 position-relative bg-light border" style="min-height: 250px;">
                         <iframe src="https://drive.google.com/file/d/${fileId}/preview" allow="autoplay; encrypted-media" allowfullscreen style="border:none; width:100%; height:100%; position:absolute; top:0; left:0;"></iframe>
+                    </div>
+                    <div class="text-center mb-4">
+                        <a href="https://drive.google.com/file/d/${fileId}/view" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="bi bi-arrows-fullscreen me-1"></i>Ouvrir en plein écran mobile (sans bandeau)
+                        </a>
                     </div>
                 `;
             }
@@ -365,6 +370,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                             <span class="badge bg-danger rounded-pill px-3 py-1 fw-bold"><i class="bi bi-pin-angle-fill me-1"></i>À la une</span>
                                             <span class="badge ${badgeClass} rounded-pill px-3 py-1 fw-bold"><i class="bi ${catIcon} me-1"></i>${pinnedArticle.categorie}</span>
                                             ${formattedDate ? `<span class="text-muted small"><i class="bi bi-clock me-1"></i>${formattedDate}</span>` : ''}
+                                            ${pinnedArticle.auteur ? `<span class="badge bg-light text-royal border border-1 rounded-pill px-2 py-1 small"><i class="bi bi-person me-1"></i>${pinnedArticle.auteur}</span>` : ''}
                                         </div>
                                         <h3 class="fw-bold text-royal mb-3 font-heading">${pinnedArticle.titre}</h3>
                                         <p class="text-muted mb-4" style="line-height: 1.6;">${pinnedArticle.description || cleanContent}</p>
@@ -401,8 +407,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                             <div class="card-body p-4 d-flex flex-column justify-content-between flex-grow-1">
                                 <div>
-                                    <div class="d-flex align-items-center gap-2 text-muted small mb-2">
+                                    <div class="d-flex align-items-center gap-2 text-muted small mb-2 flex-wrap">
                                         ${formattedDate ? `<span><i class="bi bi-calendar3 me-1"></i>${formattedDate}</span>` : ''}
+                                        ${news.auteur ? `<span class="badge bg-light text-royal border border-1 rounded-pill px-2 py-1 small"><i class="bi bi-person me-1"></i>${news.auteur}</span>` : ''}
                                     </div>
                                     <h5 class="fw-bold text-royal mb-2 font-heading" style="font-size: 1.15rem;">${news.titre}</h5>
                                     <p class="text-muted small mb-3" style="line-height: 1.5;">${news.description || cleanContent.substring(0, 120) + '...'}</p>
@@ -454,8 +461,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (titleEl) titleEl.textContent = news.titre;
         if (dateEl) dateEl.innerHTML = `<i class="bi bi-calendar3 me-1"></i>${formatDisplayDate(news.date)}`;
         if (authorEl) {
-            if (news.auteur) { authorEl.innerHTML = `<i class="bi bi-person me-1"></i>${news.auteur}`; authorEl.classList.remove('d-none'); }
-            else { authorEl.classList.add('d-none'); }
+            if (news.auteur) {
+                authorEl.className = 'badge bg-light text-royal border border-1 rounded-pill px-3 py-1 small fw-semibold';
+                authorEl.innerHTML = `<i class="bi bi-person me-1"></i>${news.auteur}`;
+                authorEl.classList.remove('d-none');
+            } else {
+                authorEl.classList.add('d-none');
+            }
         }
         if (badgeEl) {
             badgeEl.className = `badge ${getCategoryBadgeClass(news.categorie)} rounded-pill px-3 py-1 fw-bold`;

@@ -117,24 +117,52 @@
             object-fit: cover;
         }
 
-        .photo-thumbnail {
-            width: 75px;
-            height: 75px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            border: 1px solid #e2e8f0;
+        .photo-card {
+            position: relative;
+            width: 110px;
+            border-radius: 0.75rem;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
 
-        .btn-remove-photo {
+        .photo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .photo-card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            gap: 2px;
+        }
+
+        .photo-card-actions button {
+            padding: 2px 6px;
+            font-size: 0.72rem;
+            line-height: 1.2;
+            border-radius: 0.35rem;
+        }
+
+        .photo-cover-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 22px;
-            height: 22px;
-            padding: 0;
-            line-height: 1;
-            border-radius: 50%;
-            font-size: 12px;
+            top: 8px;
+            left: 8px;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            pointer-events: none;
         }
 
         [data-theme="dark"] .editor-container-box,
@@ -317,7 +345,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold text-royal"><i
                                         class="bi bi-camera-video me-1"></i>Vidéo associée</label>
-                                <p class="small text-muted mb-2">Elle s'affichera tout en bas de votre article.</p>
+                                <p class="small text-muted mb-2">Elle s'affichera tout en bas de votre article. <br><span class="badge bg-primary-subtle text-royal mt-1 fw-normal border"><i class="bi bi-lightbulb-fill me-1 text-warning"></i><strong>Conseil mobile :</strong> Les vidéos <strong>YouTube</strong> (même en mode « Non répertoriée ») offrent une lecture fluide sans aucun filtre noir et avec la barre en bas.</span></p>
 
                                 <div class="input-group mb-3 shadow-sm">
                                     <span class="input-group-text bg-white"><i class="bi bi-link-45deg"></i></span>
@@ -451,6 +479,21 @@
                         id="btnPublishNormal"><i class="bi bi-send me-1"></i>Non, publication normale</button>
                     <button type="button" class="btn btn-light w-100 rounded-pill py-2 text-muted small"
                         data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Zoom Photo (Lightbox) -->
+    <div class="modal fade" id="photoZoomModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow-lg bg-dark text-white overflow-hidden">
+                <div class="modal-header border-0 pb-0 pt-3 px-3">
+                    <h6 class="modal-title text-white small" id="photoZoomTitle"><i class="bi bi-image me-2"></i>Aperçu de la photo</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body p-3 text-center">
+                    <img id="photoZoomImg" src="" alt="Agrandissement photo" class="img-fluid rounded-3 shadow" style="max-height: 75vh; object-fit: contain;">
                 </div>
             </div>
         </div>
@@ -632,51 +675,116 @@
             return data.url;
         }
 
-        // --- GESTION ZONE PHOTOS ---
+        // --- GESTION ZONE PHOTOS (Prévisualisation instantanée, Zoom & Réagencement) ---
         const photosInput = document.getElementById('photosInput');
+        const photoZoomModalEl = document.getElementById('photoZoomModal');
+        const photoZoomModal = photoZoomModalEl ? new bootstrap.Modal(photoZoomModalEl) : null;
 
         window.handlePhotosDrop = function (e) {
-            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) processPhotos(Array.from(e.dataTransfer.files));
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                processPhotos(Array.from(e.dataTransfer.files));
+            }
         };
-        photosInput.addEventListener('change', e => { if (e.target.files.length) processPhotos(Array.from(e.target.files)); });
+
+        photosInput.addEventListener('change', e => {
+            if (e.target.files.length) {
+                processPhotos(Array.from(e.target.files));
+            }
+        });
 
         async function processPhotos(files) {
-            const pwd = secretCodeInput.value.trim();
-            if (!pwd) { alert("Le mot de passe de rédaction est requis pour envoyer des photos."); return; }
+            const imageFiles = files.filter(f => f.type.startsWith('image/'));
+            if (!imageFiles.length) return;
 
-            for (let i = 0; i < files.length; i++) {
-                const f = files[i];
-                if (!f.type.startsWith('image/')) continue;
-                showMediaOverlay(`Envoi photo ${i + 1}/${files.length}`, f.name);
+            showMediaOverlay("Préparation des photos...", "Optimisation et affichage immédiat...");
+            for (let i = 0; i < imageFiles.length; i++) {
+                const f = imageFiles[i];
                 try {
                     const thumb = await compressImage(f);
-                    const url = await uploadToDrive(f, pwd, false);
-                    uploadedPhotosUrls.push({ url, thumb });
-                    renderPhotosGrid();
-                    updatePreview();
+                    uploadedPhotosUrls.push({
+                        id: 'photo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                        file: f,
+                        thumb: thumb,
+                        url: null,
+                        name: f.name
+                    });
                 } catch (err) {
-                    if (err.auth) { forgetPassword(); alert('🔒 ' + err.message); break; }
-                    alert('❌ ' + err.message);
+                    console.error("Erreur lecture photo :", err);
                 }
             }
             hideMediaOverlay();
             photosInput.value = '';
+            renderPhotosGrid();
+            updatePreview();
         }
 
         function renderPhotosGrid() {
             const grid = document.getElementById('photosPreviewGrid');
+            if (!grid) return;
             grid.innerHTML = '';
+
+            if (uploadedPhotosUrls.length === 0) {
+                grid.innerHTML = '<span class="text-muted small fst-italic">Aucune photo sélectionnée pour le moment.</span>';
+                return;
+            }
+
             uploadedPhotosUrls.forEach((p, idx) => {
-                grid.innerHTML += `
-                    <div class="position-relative">
-                        <img src="${p.thumb}" class="photo-thumbnail">
-                        <button type="button" class="btn btn-danger btn-remove-photo" onclick="removePhoto(${idx})" title="Retirer"><i class="bi bi-x"></i></button>
+                const isFirst = idx === 0;
+                const isLast = idx === uploadedPhotosUrls.length - 1;
+
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.innerHTML = `
+                    ${isFirst ? '<span class="badge bg-warning text-dark photo-cover-badge shadow-sm"><i class="bi bi-star-fill me-1"></i>Vignette</span>' : ''}
+                    <img src="${p.thumb}" alt="${p.name || 'Photo'}" title="Cliquer pour agrandir" onclick="zoomPhoto(${idx})">
+                    <div class="photo-card-actions">
+                        <button type="button" class="btn btn-light border text-royal" onclick="movePhoto(${idx}, -1)" ${isFirst ? 'disabled' : ''} title="Déplacer vers la gauche">◀</button>
+                        <button type="button" class="btn btn-light border text-primary" onclick="zoomPhoto(${idx})" title="Agrandir"><i class="bi bi-zoom-in"></i></button>
+                        <button type="button" class="btn btn-light border text-success" onclick="insertPhotoToQuill(${idx})" title="Insérer dans le texte de l'article"><i class="bi bi-pencil-square"></i></button>
+                        <button type="button" class="btn btn-light border text-royal" onclick="movePhoto(${idx}, 1)" ${isLast ? 'disabled' : ''} title="Déplacer vers la droite">▶</button>
+                        <button type="button" class="btn btn-outline-danger border-0" onclick="removePhoto(${idx})" title="Supprimer"><i class="bi bi-trash"></i></button>
                     </div>
                 `;
+                grid.appendChild(card);
             });
         }
-        window.removePhoto = function (idx) { uploadedPhotosUrls.splice(idx, 1); renderPhotosGrid(); updatePreview(); }
+
+        window.zoomPhoto = function (idx) {
+            if (!uploadedPhotosUrls[idx]) return;
+            const p = uploadedPhotosUrls[idx];
+            const imgEl = document.getElementById('photoZoomImg');
+            const titleEl = document.getElementById('photoZoomTitle');
+            if (imgEl) imgEl.src = p.thumb;
+            if (titleEl) titleEl.innerHTML = `<i class="bi bi-image me-2"></i>${p.name || 'Photo ' + (idx + 1)} ${idx === 0 ? '(Vignette de couverture)' : ''}`;
+            if (photoZoomModal) photoZoomModal.show();
+        };
+
+        window.movePhoto = function (idx, dir) {
+            const targetIdx = idx + dir;
+            if (targetIdx < 0 || targetIdx >= uploadedPhotosUrls.length) return;
+            const item = uploadedPhotosUrls.splice(idx, 1)[0];
+            uploadedPhotosUrls.splice(targetIdx, 0, item);
+            renderPhotosGrid();
+            updatePreview();
+        };
+
+        window.insertPhotoToQuill = function (idx) {
+            if (!uploadedPhotosUrls[idx]) return;
+            const p = uploadedPhotosUrls[idx];
+            const range = quill.getSelection(true) || { index: quill.getLength() };
+            quill.insertEmbed(range.index, 'image', p.thumb);
+            quill.insertText(range.index + 1, '\n');
+            quill.setSelection(range.index + 2);
+            updatePreview();
+        };
+
+        window.removePhoto = function (idx) {
+            uploadedPhotosUrls.splice(idx, 1);
+            renderPhotosGrid();
+            updatePreview();
+        };
 
         // --- GESTION ZONE VIDÉO ---
         window.checkVideoLink = function () {
@@ -754,25 +862,63 @@
         document.getElementById('btnPublishNormal').addEventListener('click', () => { confirmPublishModal.hide(); doPublish(false); });
 
         async function doPublish(isFeatured) {
+            const pwd = secretCodeInput.value.trim();
+            if (!pwd) {
+                alert("Le mot de passe de rédaction est requis pour publier.");
+                secretCodeInput.focus();
+                return;
+            }
+
             const btn = document.getElementById('submitBtn'), alertBox = document.getElementById('alertBox');
-            btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publication...';
+            btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publication en cours...';
             alertBox.className = 'alert d-none';
 
-            let finalHtml = quill.root.innerHTML;
-            if (uploadedPhotosUrls.length > 0) {
-                uploadedPhotosUrls.forEach(p => finalHtml += `<p><img src="${p.url}"></p>`);
+            // 1. Upload vers Google Drive des photos en attente
+            const pendingPhotos = uploadedPhotosUrls.filter(p => !p.url && p.file);
+            if (pendingPhotos.length > 0) {
+                showMediaOverlay("Envoi des photos vers Google Drive...", `Photo 1 / ${pendingPhotos.length}`);
+                try {
+                    for (let i = 0; i < pendingPhotos.length; i++) {
+                        const p = pendingPhotos[i];
+                        showMediaOverlay("Envoi des photos vers Google Drive...", `Photo ${i + 1} / ${pendingPhotos.length} (${p.name || 'Image'})`);
+                        p.url = await uploadToDrive(p.file, pwd, false);
+                    }
+                } catch (err) {
+                    hideMediaOverlay();
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publier l\'article';
+                    if (err.auth) { forgetPassword(); alert('🔒 ' + err.message); }
+                    else { alert('❌ Erreur lors de l\'envoi des photos vers Google Drive : ' + err.message); }
+                    return;
+                }
+                hideMediaOverlay();
             }
+
+            // 2. Remplacement des data URLs dans Quill par les URL Drive
+            let finalHtml = quill.root.innerHTML;
+            uploadedPhotosUrls.forEach(p => {
+                if (p.url && p.thumb) {
+                    finalHtml = finalHtml.split(p.thumb).join(p.url);
+                }
+            });
+
+            // Si des photos ne sont pas dans le texte, on les ajoute pour le carrousel/diaporama
+            uploadedPhotosUrls.forEach(p => {
+                if (p.url && !finalHtml.includes(p.url)) {
+                    finalHtml += `<p><img src="${p.url}"></p>`;
+                }
+            });
 
             const payload = {
                 action: 'publish',
                 titre: document.getElementById('titre').value.trim(),
                 categorie: document.getElementById('categorie').value,
                 auteur: document.getElementById('auteur').value,
-                secretCode: secretCodeInput.value.trim(),
+                secretCode: pwd,
                 date: document.getElementById('date').value,
                 description: quill.getText().trim().substring(0, 150) + '...',
                 contenu: finalHtml,
-                imageUrl: uploadedPhotosUrls.length > 0 ? uploadedPhotosUrls[0].url : '',
+                imageUrl: (uploadedPhotosUrls.length > 0 && uploadedPhotosUrls[0].url) ? uploadedPhotosUrls[0].url : '',
                 imageBase64: '', imageName: '', imageType: '',
                 videoUrl: document.getElementById('videoLinkInput').value.trim(),
                 epingle: isFeatured ? 'oui' : 'non'
