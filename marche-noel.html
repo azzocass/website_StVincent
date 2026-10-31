@@ -9,6 +9,8 @@
     <title>Marché de Noël – Inscription Bénévoles | École Saint Vincent</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://script.google.com" crossorigin>
+    <link rel="dns-prefetch" href="https://script.google.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
         rel="stylesheet">
@@ -668,7 +670,15 @@
                     icon: data[key].icon || ''
                 });
             });
-            creneauxList = Array.from(setCreneaux).sort();
+            // Tri chronologique naturel des créneaux (ex: 9h avant 16h, 16h avant 18h)
+            creneauxList = Array.from(setCreneaux).sort((a, b) => {
+                const matchA = a.match(/\d+/);
+                const matchB = b.match(/\d+/);
+                const numA = matchA ? parseInt(matchA[0], 10) : 0;
+                const numB = matchB ? parseInt(matchB[0], 10) : 0;
+                if (numA !== numB) return numA - numB;
+                return a.localeCompare(b, undefined, { numeric: true });
+            });
         }
 
         // ============================================================
