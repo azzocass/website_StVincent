@@ -551,28 +551,65 @@
         // dans le Google Sheet de l'école).
         const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbwOYoWvM9eVHEIUZjc5dtqRGQeJDZ-nKLVRjwF1MTedcV8Rz3WoglvuVTuiEVa35qhI/exec';
 
-        // Stands du Marché de Noël — adaptez selon vos stands réels
+        // Stands du Marché de Noël avec icônes festives
         const STANDS_INFO = {
+            'Bar': { label: 'Bar & Buvette', icon: '🍷' },
+            'Bonbons/Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
+            'Bonbons / Gateaux': { label: 'Bonbons / Gâteaux', icon: '🍬' },
+            'Atelier lutins': { label: 'Atelier lutins', icon: '🧝' },
+            'Maquillage': { label: 'Maquillage', icon: '🎨' },
             'Vin chaud': { label: 'Vin chaud', icon: '🍷' },
             'Boissons chaudes': { label: 'Boissons chaudes', icon: '☕' },
+            'Chocolat chaud': { label: 'Chocolat chaud', icon: '☕' },
             'Patisseries': { label: 'Pâtisseries', icon: '🍰' },
+            'Crêpes': { label: 'Crêpes / Gaufres', icon: '🥞' },
+            'Crepes': { label: 'Crêpes / Gaufres', icon: '🥞' },
             'Bonbons': { label: 'Bonbons', icon: '🍬' },
-            'Artisanat': { label: 'Artisanat', icon: '🎨' },
+            'Artisanat': { label: 'Artisanat & Cadeaux', icon: '🎁' },
             'Sapins Decorations': { label: 'Sapins / Déco', icon: '🎄' },
             'Jeux enfants': { label: 'Jeux enfants', icon: '🎲' },
             'Photo Pere Noel': { label: 'Photo Père Noël', icon: '🎅' },
             'Caisse Accueil': { label: 'Caisse / Accueil', icon: '🏪' },
+            'Restauration': { label: 'Restauration', icon: '🍲' },
+            'Tombola': { label: 'Tombola', icon: '🎟️' },
             'Montage': { label: 'Montage', icon: '🛠️' },
             'Demontage': { label: 'Démontage', icon: '🧹' }
         };
 
-        function getStandInfo(standId) {
+        // Détection robuste d'icône : 
+        // 1. Icône transmise par le Google Sheet (si définie)
+        // 2. Table officielle STANDS_INFO
+        // 3. Détection intelligente automatique par mots-clés
+        // 4. Icône de Noël par défaut (🎄)
+        function getStandInfo(standId, serverIcon) {
+            if (serverIcon && serverIcon.trim()) return { label: standId, icon: serverIcon.trim() };
             if (STANDS_INFO[standId]) return STANDS_INFO[standId];
-            const norm = standId.trim().toLowerCase();
+
+            const norm = (standId || '').trim().toLowerCase();
             for (const [key, val] of Object.entries(STANDS_INFO)) {
                 if (key.trim().toLowerCase() === norm) return val;
             }
-            return { label: standId, icon: '⭐' };
+
+            // Détection intelligente selon le nom du stand
+            if (norm.includes('lutin')) return { label: standId, icon: '🧝' };
+            if (norm.includes('bar') || norm.includes('buvette') || norm.includes('biere') || norm.includes('cidre')) return { label: standId, icon: '🍷' };
+            if (norm.includes('vin chaud') || norm.includes('vin')) return { label: standId, icon: '🍷' };
+            if (norm.includes('bonbon') || norm.includes('friandise')) return { label: standId, icon: '🍬' };
+            if (norm.includes('gateau') || norm.includes('gâteau') || norm.includes('patisserie') || norm.includes('pâtisserie')) return { label: standId, icon: '🍰' };
+            if (norm.includes('crepe') || norm.includes('crêpe') || norm.includes('gaufre')) return { label: standId, icon: '🥞' };
+            if (norm.includes('chocolat') || norm.includes('boisson') || norm.includes('cafe') || norm.includes('café') || norm.includes('the') || norm.includes('thé')) return { label: standId, icon: '☕' };
+            if (norm.includes('maquill')) return { label: standId, icon: '🎨' };
+            if (norm.includes('photo') || norm.includes('pere noel') || norm.includes('père noël') || norm.includes('santa')) return { label: standId, icon: '🎅' };
+            if (norm.includes('jeu') || norm.includes('peche') || norm.includes('pêche') || norm.includes('chamboule') || norm.includes('flechette')) return { label: standId, icon: '🎯' };
+            if (norm.includes('tombola') || norm.includes('lot') || norm.includes('enveloppe') || norm.includes('tirage')) return { label: standId, icon: '🎟️' };
+            if (norm.includes('sapin') || norm.includes('deco') || norm.includes('déco')) return { label: standId, icon: '🎄' };
+            if (norm.includes('artisanat') || norm.includes('cadeau') || norm.includes('boutique') || norm.includes('marche')) return { label: standId, icon: '🎁' };
+            if (norm.includes('caisse') || norm.includes('accueil') || norm.includes('jeton')) return { label: standId, icon: '🏪' };
+            if (norm.includes('frite') || norm.includes('snack') || norm.includes('restauration') || norm.includes('plat') || norm.includes('tartiflette') || norm.includes('sandwich')) return { label: standId, icon: '🍲' };
+            if (norm.includes('montage') || norm.includes('install')) return { label: standId, icon: '🛠️' };
+            if (norm.includes('demontage') || norm.includes('rangement') || norm.includes('menage')) return { label: standId, icon: '🧹' };
+
+            return { label: standId, icon: '🎄' };
         }
 
         let creneauxList = [];
@@ -623,7 +660,13 @@
                 const creneau = key.substring(lastIdx + 1);
                 setCreneaux.add(creneau);
                 if (!standsParCreneau[creneau]) standsParCreneau[creneau] = [];
-                standsParCreneau[creneau].push({ key, standId, restantes: data[key].restantes, max: data[key].max });
+                standsParCreneau[creneau].push({
+                    key,
+                    standId,
+                    restantes: data[key].restantes,
+                    max: data[key].max,
+                    icon: data[key].icon || ''
+                });
             });
             creneauxList = Array.from(setCreneaux).sort();
         }
@@ -667,7 +710,7 @@
                             <div class="row g-3">`;
 
                 standsParCreneau[creneau].forEach((item, si) => {
-                    const info = getStandInfo(item.standId);
+                    const info = getStandInfo(item.standId, item.icon);
                     const isFull = item.restantes <= 0;
                     const isLow = item.restantes > 0 && item.restantes <= Math.ceil(item.max * 0.3);
                     const badgeClass = isFull ? 'badge-full' : (isLow ? 'badge-low' : 'badge-dispo');
@@ -772,14 +815,14 @@
                     let detailHtml = '<ul class="list-unstyled mb-0 mt-3 text-start">';
 
                     response.details.forEach(d => {
-                        const info = STANDS_INFO[d.stand] || { label: d.stand };
+                        const info = getStandInfo(d.stand);
                         const creneauPropre = d.creneau.replace(/_/g, ' ');
                         if (d.result === 'success') {
                             successes++;
-                            detailHtml += '<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><strong>' + info.label + ' (' + creneauPropre + ')</strong></li>';
+                            detailHtml += '<li class="text-success mb-2"><i class="bi bi-check-circle-fill me-2"></i><span class="me-1">' + info.icon + '</span><strong>' + info.label + ' (' + creneauPropre + ')</strong></li>';
                         } else {
                             errors++;
-                            detailHtml += '<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>' + info.label + ' (' + creneauPropre + ')</strong> : ' + d.message + '</li>';
+                            detailHtml += '<li class="text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><span class="me-1">' + info.icon + '</span><strong>' + info.label + ' (' + creneauPropre + ')</strong> : ' + d.message + '</li>';
                         }
                     });
                     detailHtml += '</ul>';
@@ -852,7 +895,7 @@
                 if (data.result === 'success' && data.inscriptions && data.inscriptions.length > 0) {
                     let html = '<div class="card border-0 shadow-sm"><div class="list-group list-group-flush">';
                     data.inscriptions.forEach(ins => {
-                        const info = STANDS_INFO[ins.stand] || { label: ins.stand, icon: '⭐' };
+                        const info = getStandInfo(ins.stand);
                         html += '<div class="list-group-item d-flex justify-content-between align-items-center py-3"><div class="d-flex align-items-center"><span class="fs-4 me-3">' + info.icon + '</span><div><div class="fw-bold" style="color:var(--noel-red);">' + info.label + '</div><div class="small text-muted">' + ins.creneau.replace(/_/g, ' ') + '</div></div></div><span class="badge bg-success-subtle text-success rounded-pill px-3">Confirmé</span></div>';
                     });
                     html += '</div></div>';
