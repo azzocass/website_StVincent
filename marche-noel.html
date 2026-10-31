@@ -574,6 +574,10 @@
             'Caisse Accueil': { label: 'Caisse / Accueil', icon: '🏪' },
             'Restauration': { label: 'Restauration', icon: '🍲' },
             'Tombola': { label: 'Tombola', icon: '🎟️' },
+            'Jeux en bois': { label: 'Jeux en bois', icon: '🪵🎳' },
+            'Bourse aux livres': { label: 'Bourse aux livres', icon: '📚' },
+            'Deco et objets': { label: 'Déco & Objets', icon: '🎀✨' },
+            'Déco et objets': { label: 'Déco & Objets', icon: '🎀✨' },
             'Montage': { label: 'Montage', icon: '🛠️' },
             'Demontage': { label: 'Démontage', icon: '🧹' }
         };
@@ -602,10 +606,13 @@
             if (norm.includes('chocolat') || norm.includes('boisson') || norm.includes('cafe') || norm.includes('café') || norm.includes('the') || norm.includes('thé')) return { label: standId, icon: '☕' };
             if (norm.includes('maquill')) return { label: standId, icon: '🎨' };
             if (norm.includes('photo') || norm.includes('pere noel') || norm.includes('père noël') || norm.includes('santa')) return { label: standId, icon: '🎅' };
+            if (norm.includes('livre') || norm.includes('bourse') || norm.includes('lecture') || norm.includes('bd')) return { label: standId, icon: '📚' };
+            if (norm.includes('bois') || norm.includes('grenouille') || norm.includes('bowling') || norm.includes('quille') || norm.includes('cerceau') || norm.includes('tonneau')) return { label: standId, icon: '🪵🎳' };
+            if (norm.includes('deco') || norm.includes('déco') || norm.includes('objet')) return { label: standId, icon: '🎀✨' };
             if (norm.includes('jeu') || norm.includes('peche') || norm.includes('pêche') || norm.includes('chamboule') || norm.includes('flechette')) return { label: standId, icon: '🎯' };
             if (norm.includes('tombola') || norm.includes('lot') || norm.includes('enveloppe') || norm.includes('tirage')) return { label: standId, icon: '🎟️' };
-            if (norm.includes('sapin') || norm.includes('deco') || norm.includes('déco')) return { label: standId, icon: '🎄' };
-            if (norm.includes('artisanat') || norm.includes('cadeau') || norm.includes('boutique') || norm.includes('marche')) return { label: standId, icon: '🎁' };
+            if (norm.includes('sapin')) return { label: standId, icon: '🎄' };
+            if (norm.includes('artisanat') || norm.includes('cadeau') || norm.includes('boutique') || norm.includes('creation') || norm.includes('création')) return { label: standId, icon: '🎁' };
             if (norm.includes('caisse') || norm.includes('accueil') || norm.includes('jeton')) return { label: standId, icon: '🏪' };
             if (norm.includes('frite') || norm.includes('snack') || norm.includes('restauration') || norm.includes('plat') || norm.includes('tartiflette') || norm.includes('sandwich')) return { label: standId, icon: '🍲' };
             if (norm.includes('montage') || norm.includes('install')) return { label: standId, icon: '🛠️' };
