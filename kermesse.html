@@ -263,9 +263,9 @@
             <!-- POUR L'AN PROCHAIN : Retirez la classe "d-none" de la balise <form> ci-dessous pour réactiver le formulaire. -->
             <form id="kermesseForm" novalidate class="d-none">
 
-                <!-- Honey pot anti-bot (invisible pour les humains) -->
-                <div style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true">
-                    <input type="text" name="website" id="honeypot" tabindex="-1" autocomplete="off">
+                <!-- Honey pot anti-bot (invisible pour les humains, protégé de l'autofill) -->
+                <div style="display:none !important; position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
+                    <input type="text" name="hp_bot_check" id="honeypot" tabindex="-1" autocomplete="new-password" value="">
                 </div>
 
                 <!-- Coordonnées -->
@@ -681,10 +681,11 @@
             const commentaire = document.getElementById('commentaire').value.trim();
             const btnSubmit = document.getElementById('btnSubmit');
 
-            // Anti-bot : si le honey pot est rempli, on simule un succès silencieux
+            // Anti-bot : si le honey pot est rempli, on bloque la soumission
             const honeypot = document.getElementById('honeypot').value;
             if (honeypot) {
-                showGlobalFeedback('success', '🎉 Inscription enregistrée. Merci !');
+                console.warn('Honeypot actif : envoi bloqué.');
+                showGlobalFeedback('error', 'Erreur de sécurité : envoi automatisé suspect détecté.');
                 return;
             }
 
