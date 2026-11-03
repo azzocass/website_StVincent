@@ -65,7 +65,7 @@ const BANNERS_CONFIG = {
                 url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/sapins-de-noel-2026"
             },
             {
-                visible: false,
+                visible: true,
                 label: "Marché de Noël – Bénévoles",
                 icon: "🎄🎅🏻",
                 color: "#b91c1c",
