@@ -51,14 +51,14 @@ const BANNERS_CONFIG = {
                 url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/vente-gateaux-bijou-rentree-2026-2027"
             },
             {
-                visible: true,
+                visible: false,
                 label: "Vente Chocolat de noël",
                 icon: "🍫",
                 color: "#b68f5dff",
                 url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/vente-jeff-de-bruges-2-1"
             },
             {
-                visible: true,
+                visible: false,
                 label: "Vente Sapin de noël",
                 icon: "🌲",
                 color: "#487a51ff",
@@ -70,6 +70,21 @@ const BANNERS_CONFIG = {
                 icon: "🎄🎅🏻",
                 color: "#b91c1c",
                 url: "marche-noel.html"
+            },
+            {
+                visible: true,
+                label: "Marché de Noël – Traiteur",
+                icon: "🫕",
+                color: "#c2410c",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/evenements/repas-marche-de-noel-2026"
+            },
+            {
+                visible: true,
+                label: "Marché de Noël – Jetons",
+                icon: "🟡",
+                color: "#eab308",
+                textColor: "#1f2937",
+                url: "https://www.helloasso.com/associations/apel-st-vincent-ste-luce-sur-loire/boutiques/achat-jetons-pour-le-marche-de-noel-2026"
             },
             {
                 visible: false,
@@ -139,7 +154,8 @@ const BANNERS_CONFIG = {
     function renderButton(ev) {
         const isExternal = ev.url.startsWith('http');
         const isModal = ev.url.startsWith('#');
-        const style = 'background-color:' + ev.color + '; color:#fff; border:none; font-size:.8rem;';
+        const textColor = ev.textColor || '#fff';
+        const style = 'background-color:' + ev.color + '; color:' + textColor + '; border:none; font-size:.8rem;';
         const cls = 'btn btn-sm rounded-pill fw-bold px-3';
         const inner = ev.icon + ' ' + ev.label;
 
